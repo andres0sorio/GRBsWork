@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!ELEMENT ParameterList (Parameters)+ >
+<!ELEMENT Parameters (Par1,Par2,Par3,Par4,Par5,Par6,Par7,Par8,Par9,Par10,Par11,Par12,Par13,Par14) >
+<!ATTLIST Parameters
+  Id	CDATA	#REQUIRED
+>
+
+<!ELEMENT Par1 (#PCDATA) >
+<!ELEMENT Par2 (#PCDATA) >
+<!ELEMENT Par3 (#PCDATA) >
+<!ELEMENT Par4 (#PCDATA) >
+<!ELEMENT Par5 (#PCDATA) >
+<!ELEMENT Par6 (#PCDATA) >
+<!ELEMENT Par7 (#PCDATA) >
+<!ELEMENT Par8 (#PCDATA) >
+<!ELEMENT Par9 (#PCDATA) >
+<!ELEMENT Par10 (#PCDATA) >
+<!ELEMENT Par11 (#PCDATA) >  
+<!ELEMENT Par12 (#PCDATA) >
+<!ELEMENT Par13 (#PCDATA)> 
+<!ELEMENT Par14 (#PCDATA)> 
+
+<!ATTLIST Par1
+  Name	CDATA	#REQUIRED
+>
+
+<!ATTLIST Par2
+  Name	CDATA	#REQUIRED
+>
+
+<!ATTLIST Par3
+  Name	CDATA	#REQUIRED
+>
+
+<!ATTLIST Par4
+  Name	CDATA	#REQUIRED
+>
+
+<!ATTLIST Par5
+  Name	CDATA	#REQUIRED
+>
+
+<!ATTLIST Par6
+  Name	CDATA	#REQUIRED
+>
+
+<!ATTLIST Par7
+  Name	CDATA	#REQUIRED
+>
+
+<!ATTLIST Par8
+  Name	CDATA	#REQUIRED
+>
+
+<!ATTLIST Par9
+  Name	CDATA	#REQUIRED
+>
+
+<!ATTLIST Par10
+  Name	CDATA	#REQUIRED
+>
+
+<!ATTLIST Par11
+  Name	CDATA	#REQUIRED
+>
+
+<!ATTLIST Par12
+  Name	CDATA	#REQUIRED
+>
+
+<!ATTLIST Par13
+  Name	CDATA	#REQUIRED
+>
+
+<!ATTLIST Par14
+  Name	CDATA	#REQUIRED
+>
+

@@ -1,0 +1,14 @@
+implementation of the exact numerical method por neutrino oscillations in varying matter density 
+(T. Ohlsson et all Neutrino oscillations with three flavours in matter of varying density: 
+Eur. Phys. J. C 20 507-515 2001)
+
+added classes: NeutrinoOscInVarDensity
+
+nueosci14: this is the base starting point for development (copy from code14)
+objective: to make it into a production version for other people to use
+
+
+
+
+
+
