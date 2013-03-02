@@ -60,6 +60,12 @@ class ModelParameters : public TObject {
     
     for( itr = p.m_params.begin(); itr != p.m_params.end(); ++itr )
       out << "Par: " << (*itr).first << " " << (*itr).second << std::endl;
+   
+    std::map<std::string,float>::const_iterator str;
+
+    for( str  = p.m_params_name.begin(); str != p.m_params_name.end(); ++str )
+      out << " -> " << (*str).first << " " << (*str).second << std::endl;
+   
     return out;
     
   }

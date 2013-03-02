@@ -22,7 +22,7 @@ void makePlots()
 {
 
   //Output path
-  TString path("./slhc-plots/resolution/Taus/noPUC/isoStudies");
+  TString path("./results");
   
   gROOT->SetStyle("Plain");
   gROOT->SetBatch(false);
@@ -44,8 +44,8 @@ void makePlots()
   f1->cd();
 
   TTree * PeeTree = (TTree*)gDirectory->Get("ModelA_Pee/data");
-  TTree * PemTree = (TTree*)gDirectory->Get("ModelA_Pee/data");
-  TTree * PetTree = (TTree*)gDirectory->Get("ModelA_Pee/data");
+  TTree * PemTree = (TTree*)gDirectory->Get("ModelA_Pem/data");
+  TTree * PetTree = (TTree*)gDirectory->Get("ModelA_Pet/data");
   
   //Branches
   double xx = 0.0;
@@ -62,7 +62,8 @@ void makePlots()
   Prob[1] = new TGraph();
   Prob[2] = new TGraph();
   
-  TLegend * leg = new TLegend(0.21,0.72,0.44,0.86);
+  TLegend * leg = new TLegend(0.22,0.78,0.32,0.93);
+  
     
   Long64_t nentries = PeeTree->GetEntries();
   
@@ -71,6 +72,9 @@ void makePlots()
     Prob[0]->SetPoint( i, xx, yy);
   }
   
+  PemTree->SetBranchAddress("Ex",&xx);
+  PemTree->SetBranchAddress("Pb",&yy);
+
   nentries = PemTree->GetEntries();
   
   for (Long64_t i=0;i<nentries;i++) {
@@ -78,6 +82,9 @@ void makePlots()
     Prob[1]->SetPoint( i, xx, yy);
   }
   
+  PetTree->SetBranchAddress("Ex",&xx);
+  PetTree->SetBranchAddress("Pb",&yy);
+
   nentries = PetTree->GetEntries();
   
   for (Long64_t i=0;i<nentries;i++) {
@@ -89,18 +96,12 @@ void makePlots()
   {
     Prob[k]->SetMarkerStyle(1);
     Prob[k]->SetFillColor(10);
+    Prob[k]->SetMaximum(1.3);
+    
   }
   
-  c1->cd(1);
-  gPad->SetLogx();
-  Prob[0]->Draw("APL");
-  topTitle();
-  
-  c1->cd(2);
-  gPad->SetLogx();
-  Prob[1]->Draw("APL");
-  
-  leg->AddEntry( Prob[1], "#nu");
+  leg->AddEntry( Prob[0], "#nu");
+  leg->AddEntry( Prob[0], "#bar{#nu}");
   leg->SetBorderSize(0);
   leg->SetTextSize(0.1);
   leg->SetLineColor(1);
@@ -108,12 +109,22 @@ void makePlots()
   leg->SetLineWidth(1);
   leg->SetFillColor(0);
   leg->SetFillStyle(1001);
+    
+  c1->cd(1);
+  gPad->SetLogx();
+  Prob[0]->Draw("AP");
+  topTitle();
+  leg->DrawClone();
   
-  leg->Draw();
-  
+  c1->cd(2);
+  gPad->SetLogx();
+  Prob[1]->Draw("AP");
+  leg->DrawClone();
+    
   c1->cd(3);
   gPad->SetLogx();
-  Prob[2]->Draw("APL");
+  Prob[2]->Draw("AP");
+  leg->DrawClone();
 
   c1->cd();
   

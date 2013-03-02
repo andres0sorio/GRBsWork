@@ -34,6 +34,9 @@ NeutrinosInMediumPaper::NeutrinosInMediumPaper( MixingParameters * mixpars ) {
   m_Models["ModelA"] = (DensityModels*) new rhoModelA();
   m_Models["ModelB"] = (DensityModels*) new rhoModelB();
   m_Models["ModelC"] = (DensityModels*) new rhoModelC();
+
+  m_file = new TFile("output.root","RECREATE");
+  m_file->cd();
   
   m_debug = true;
   
@@ -166,8 +169,7 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * model,
 
   double m_Ex = 0.0;
   double m_Pb = 0.0;
-  
-  m_file = new TFile("output.root","RECREATE");
+
   m_file->mkdir(TString(model) + TString("_") + TString(probability))->cd();
 
   m_tree = new TTree("data","Data points");
@@ -191,6 +193,7 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * model,
   long double Ex   = (long double) modelpars->GetPar("Emin");
   long double Emax = (long double) modelpars->GetPar("Emax");
   long double dx   = (long double) modelpars->GetPar("Dx");  //this is the distance step
+  long double dE   = (long double) modelpars->GetPar("De");  //this is the energy step
   
   int maxpars = (int)modelpars->GetPar(0);
 
@@ -208,7 +211,7 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * model,
   
   int k = 0;
   
-  long double LRes1 = 0.1E9 * IProbabilityMatrix::InvEvfactor; //starting point along the radius of the star
+  //long double LRes1 = 0.1E9 * IProbabilityMatrix::InvEvfactor; //starting point along the radius of the star
   
   std::cout << "GenerateDatapoints> looping over energy> " << std::endl;
   
@@ -221,7 +224,7 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * model,
     tmp = new matrix<std::complex< long double> >(3,3);
     
     double long x1 = 0.0;
-    double long x2 = LRes1;
+    double long x2 = LMIN;
     
     int i = 0;
     
@@ -257,9 +260,9 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * model,
     k += 1; 
     
     if ( Ex < 1.0E12 )
-      Ex += 1.0E10L; // step in energy
+      Ex += dE; // step in energy
     else
-      Ex += 1.0E12L; //step in energy
+      Ex += (dE*10.0); //step in energy
     
     delete tmp;
     
@@ -268,6 +271,8 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * model,
   std::cout << "GenerateDatapoints> max pts: " << k << std::endl;
   
   m_tree->Write();
+
+  m_file->cd("../");
   
   std::cout << "GenerateDatapoints> all done " << std::endl;  
   

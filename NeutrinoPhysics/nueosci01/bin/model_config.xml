@@ -26,6 +26,9 @@
     <Par Id="7" Name="Dx">
       0.5E14
     </Par>
+    <Par Id="8" Name="De">
+      1.0E9
+    </Par>
   </ModelParameters>
   <ModelParameters Id="ModelB">
     <Par Id="0" Name="MaxPars">
