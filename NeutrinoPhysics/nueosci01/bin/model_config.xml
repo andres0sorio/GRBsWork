@@ -14,19 +14,16 @@
     <Par Id="3" Name="LMIN">
       4.0608e+15
     </Par>
-    <Par Id="4" Name="Emax">
+    <Par Id="4" Name="Emin">
       1.0E11
     </Par>
-    <Par Id="5" Name="Emin">
-      1.0E11
-    </Par>
-    <Par Id="6" Name="Emax">
+    <Par Id="5" Name="Emax">
       1.0E14
     </Par>
-    <Par Id="7" Name="Dx">
+    <Par Id="6" Name="Dx">
       0.5E14
     </Par>
-    <Par Id="8" Name="De">
+    <Par Id="7" Name="De">
       1.0E9
     </Par>
   </ModelParameters>
