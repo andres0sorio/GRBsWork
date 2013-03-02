@@ -22,15 +22,16 @@ public:
   DensityModels( ){}; 
   
   virtual ~DensityModels( ){}; ///< Destructor
+
+  virtual double operator() (double *x, double *p) = 0;
   
   double m_pars[10];
   static const double Mp;
   static const double GF;
   static const double InveV;
+  static const double InveV2;
   static const double TeV;
   
-  
-
 };
 
 class rhoAtResonance : public DensityModels {

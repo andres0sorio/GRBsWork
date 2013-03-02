@@ -71,7 +71,7 @@ int main(int iargv, char **argv) {
   else if ( valOpt == 4 ) 
     neuOsc->ValidateProfileA();
   else if ( valOpt == 5 ) 
-    neuOsc->TestProfileA();
+    neuOsc->TestProcedure();
   else {
     std::cout << "Not a valid option" << std::endl;
   }

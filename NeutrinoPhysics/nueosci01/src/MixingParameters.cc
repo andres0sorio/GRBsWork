@@ -90,6 +90,12 @@ MixingParameters* MixingParameterList::ParseParameters(TXMLNode *node, Int_t Id)
         x = atof(node->GetText());
         p1->SetPar7(x);
       }
+      
+      if (strcmp(node->GetNodeName(), "Par8") == 0) {
+        x = atof(node->GetText());
+        p1->SetPar8(x);
+      }
+
     }
   }
   

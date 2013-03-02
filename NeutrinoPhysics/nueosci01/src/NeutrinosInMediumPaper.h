@@ -3,8 +3,13 @@
 #define NEUTRINOSINMEDIUMPAPER_H 1
 
 // Include files
+#include <utility>
 #include <Graphics.h>
+#include <TTree.h>
+#include <TFile.h>
 #include <NeutrinoOscInVarDensity.h>
+#include <ModelParameters.h>
+#include <DensityModels.h>
 
 /** @class NeutrinosInMediumPaper NeutrinosInMediumPaper.h
  *  
@@ -19,19 +24,28 @@ public:
   NeutrinosInMediumPaper( ) { }; 
 
   NeutrinosInMediumPaper( MixingParameters * ); 
-  
+
   virtual ~NeutrinosInMediumPaper( ); ///< Destructor
   
-  NeutrinoOscInVarDensity * m_modelA;
+  NeutrinoOscInVarDensity * m_Physics;
   
-  void MakePlots();
-  
+  void Test();
+
+  void GenerateDatapoints(const char *, const char * , ModelParameters *);
+    
 protected:
 
 private:
 
   bool m_debug;
+
+  std::map<std::string, std::pair<int,int> > m_ProbIndex;
   
+  TFile * m_file;
+  
+  TTree * m_tree;
+  
+  std::map<std::string, DensityModels*> m_Models;
 
 };
 #endif // NEUTRINOSINMEDIUMPAPER_H

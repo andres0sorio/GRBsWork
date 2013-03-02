@@ -44,8 +44,8 @@ OBJS   = Graphics.o Integrals.o DOMParameters.o nuN_interpxsec.o PShadow.o \
 VALOBJS = DOMParameters.o MixingParameters.o IProbabilityMatrix.o \
 	DensityModels.o NeutrinoOscInVarDensity.o validate.o
 
-PAP01OBJS = DOMParameters.o MixingParameters.o IProbabilityMatrix.o \
-	DensityModels.o NeutrinoOscInVarDensity.o paper01.o
+PAP01OBJS = Graphics.o DOMParameters.o ModelParameters.o MixingParameters.o IProbabilityMatrix.o DensityModels.o \
+	NeutrinoOscInVarDensity.o NeutrinosInMediumPaper.o paper01.o
 
 all : evalxsec.exe validate.exe paper01.exe
 

@@ -17,9 +17,8 @@ double densityModA(double *x, double *par)
 {
   
   rhoModelA * rhoA = new rhoModelA (); // [eV^4]
-  double Gf = DensityModels::GF * 1.0E-18; // [1/eV^2]
-  double Mp = 938.0E6; // [eV]
-  double Ar = (1.0/sqrt(2.0)) * Gf * (1.0/Mp) * (*rhoA)( x, par );
+  double Gf = DensityModels::GF * DensityModels::InveV2; // [1/eV^2]
+  double Ar = (1.0/sqrt(2.0)) * Gf * (1.0/DensityModels::Mp) * (*rhoA)( x, par ); // This has a wrong factor of 2 (Sarira)
   delete rhoA;
   
   return Ar; // [eV]
@@ -150,9 +149,16 @@ void NeutrinoOscInVarDensity::initializeAngles()
 
   } else {
 
+    std::cout << "initializeAngles> reading parameters from XML" << std::endl;
+    
+    m_Ev = 10.0E9L;
+
     setAngle(1, 2, m_input->GetPar1() );  //theta_12
     setAngle(1, 3, m_input->GetPar2() );  //theta_13
     setAngle(2, 3, m_input->GetPar3() );  //theta_23
+
+    m_DeltamSq = m_input->GetPar8(); //Dm2_21 -> typically set to 8e-5
+    m_DeltaMSq = m_input->GetPar4(); //Dm2_32 -> typically set to 3e-3
 
   }
   
@@ -1646,7 +1652,7 @@ void NeutrinoOscInVarDensity::ValidateProfileA() {
 }
 
 
-void NeutrinoOscInVarDensity::TestProfileA()
+void NeutrinoOscInVarDensity::TestProcedure()
 {
   
   //.....................................................................................

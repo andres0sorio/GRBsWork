@@ -46,6 +46,11 @@ public:
   Int_t txtci;
 
   void SetOptions();
+
+  std::map<std::string, TCanvas *> h_canvas;
+
+  std::map<std::string, TGraph  *> h_paper01Graphs;
+  
   
 protected:
   

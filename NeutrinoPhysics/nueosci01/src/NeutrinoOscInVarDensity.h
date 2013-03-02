@@ -26,6 +26,8 @@
 
 using namespace boost::numeric::ublas;
 
+double densityModA(double *x, double *par);
+
 class NeutrinoOscInVarDensity : public IProbabilityMatrix {
 public: 
   
@@ -54,14 +56,10 @@ public:
   void   ValidateSolarProfile( );
   void   ValidateProfileA( );
   
-  void   TestProfileA( );
+  void   TestProcedure( );
   
   void   setPotential( TF1 * f1) { f_Ve = f1; } ;
   
-protected:
-
-private:
-
   bool m_debug;
   bool m_validation;
 
@@ -97,6 +95,12 @@ private:
   TF1 * f_Ve;
   
   TStyle * tdrStyle;
+
+protected:
+  
+private:
+  
+
   
 };
 #endif // NEUTRINOOSCINVARDENSITY_H

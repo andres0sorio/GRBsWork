@@ -3,25 +3,28 @@
 <MixingParameterList>
   <MixingParameters Id="1">
     <Par1 Name="theta_12">
-      33.0
+      33.8
     </Par1>
     <Par2 Name="theta_13">
-      6.0
+      8.8
     </Par2>
     <Par3 Name="theta_23">
       45.0
     </Par3>
     <Par4 Name="Dm23sq">
-      0.0608
+      0.0032
     </Par4>
     <Par5 Name="L[m]">
       1.0e5
     </Par5>
     <Par6 Name="Enu">
-      5e6
+      5.0e6
     </Par6>
     <Par7 Name="Ve">
       5.32e-13
     </Par7>
+    <Par8 Name="Dm21sq">
+      0.00008
+    </Par8>
   </MixingParameters>
 </MixingParameterList>

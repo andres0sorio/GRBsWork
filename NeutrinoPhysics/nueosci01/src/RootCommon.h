@@ -16,6 +16,7 @@
 #include <cstdio>
 #include <iomanip>
 #include <vector>
+#include <map>
 #include <iterator>
 #include <math.h>
 
