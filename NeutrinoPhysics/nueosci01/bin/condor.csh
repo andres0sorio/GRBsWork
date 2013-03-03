@@ -5,10 +5,10 @@ unsetenv CMS_PATH
 source /uscmst1/prod/sw/cms/cshrc prod
 pushd $MYDIR
 cmsenv
-popd
-
 setenv GSLPATH `scram tool tag gsl GSL_BASE`
 setenv BOOSTPATH `scram tool tag boost BOOST_BASE`
+
+popd
 
 setenv EMIN $1
 setenv EMAX $2
