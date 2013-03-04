@@ -90,9 +90,11 @@ public:
   
   virtual double operator() (double *x, double *p) { 
     
-    double k1 = pow( 10.0, 10.8 );
+    double rmin = pow( 10.0, 10.8 ) * p[3]; //p[3] ->to convert to natural units if needed
+    double rmax = 1.0E12 * p[3]; //p[3] ->to convert to natural units if needed
     
-    if ( x[0] >= k1 && x[0] <= 1.0E12 ) 
+    
+    if ( x[0] >= rmin && x[0] <= rmax ) 
       return p[0] * pow( (p[1]/x[0]), 2.42857 );
     else 
       return p[0] * pow( (p[1]/p[2]), 2.42857 ) * pow( (x[0] - p[1]), 5.0 ) / pow( (p[2]-p[1]), 5.0);
@@ -112,9 +114,10 @@ public:
   
   virtual double operator() (double *x, double *p) {
 
-    double k1 = pow( 10.0, 10.8 );
-
-    if ( x[0] >= k1 && x[0] <= 1.0E11 ) 
+    double rmin = pow( 10.0, 10.8 ) * p[2]; //p[2] ->to convert to natural units if needed
+    double rmax = 1.0E11 * p[2]; //p[2] ->to convert to natural units if needed
+    
+    if ( x[0] >= rmin && x[0] <= rmax ) 
       return p[0] * 20.0 * pow( ((p[1]/x[0])-1.0), 2.1 );
     else 
       return p[0] * 1.0  * pow( ((p[1]/x[0])-1.0), 2.5 );

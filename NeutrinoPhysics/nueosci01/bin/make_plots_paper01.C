@@ -20,10 +20,6 @@ void topTitle(const char *title)
 
 void makePlots() 
 {
-
-  //Output path
-  TString path("./results");
-  
   gROOT->SetStyle("Plain");
   gROOT->SetBatch(false);
   // --- Use the CMS TDR style
@@ -42,17 +38,19 @@ void makePlots()
   tdrStyle->cd();
 
   makePlots("ModelA");
-    
+  
 }
 
 void makePlots( const char * model ) 
 {
   
+  //Output path
+  TString path("./results");
+  
   TString dataPee = TString( model ) + TString("_Pee/data");
   TString dataPem = TString( model ) + TString("_Pem/data");
   TString dataPet = TString( model ) + TString("_Pet/data");
-  
-  
+    
   TList * v_Labels = new TList();
   TObjString *label;
   label = new TObjString( "Pee" );
@@ -62,8 +60,11 @@ void makePlots( const char * model )
   label = new TObjString( "Pe#tau" );
   v_Labels->Add( label ); 
   
-  TFile * f1 = new TFile("output-nu.root");
-  TFile * f2 = new TFile("output-antinu.root");
+  //TFile * f1 = new TFile("results/output-nu-A.root");
+  //TFile * f2 = new TFile("results/output-antinu-A.root");
+
+  TFile * f1 = new TFile("results/output-nu-A-f2.root");
+  TFile * f2 = new TFile("results/output-antinu-A-f2.root");
   
   f1->cd();
   
@@ -81,7 +82,7 @@ void makePlots( const char * model )
   double xx = 0.0;
   double yy = 0.0;
   
-  TCanvas * c1 = new TCanvas("ModelA", "Oscillation probabilities", 184, 60, 861, 670);
+  TCanvas * c1 = new TCanvas(model, "Oscillation probabilities", 184, 60, 861, 670);
   c1->Divide(1,3);
   
   TGraph * ProbNu[3];
@@ -215,7 +216,21 @@ void makePlots( const char * model )
   leg->DrawClone();
 
   c1->cd();
-  
+
+  std::stringstream saveAs;
+    
+  saveAs.str("");
+  saveAs << path << "/nueosc_" << model << "_f2" << ".pdf";
+  c1->SaveAs( saveAs.str().c_str() );
+    
+  saveAs.str("");
+  saveAs << path << "/nueosc_" << model << "_f2" << ".png";
+  c1->SaveAs( saveAs.str().c_str() );
+
+  saveAs.str("");
+  saveAs << path << "/nueosc_" << model << "_f2" << ".eps";
+  c1->SaveAs( saveAs.str().c_str() );
+    
     
 }
 

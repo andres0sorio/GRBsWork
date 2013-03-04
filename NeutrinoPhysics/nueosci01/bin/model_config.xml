@@ -15,27 +15,77 @@
       4.0608e+15
     </Par>
     <Par Id="4" Name="Emin">
-      1.0E11
+      1.0e11
     </Par>
     <Par Id="5" Name="Emax">
-      1.0E14
+      1.0e14
     </Par>
     <Par Id="6" Name="Dx">
-      0.5E14
+      0.5e14
     </Par>
     <Par Id="7" Name="De">
-      1.0E9
+      1.0e9
     </Par>
   </ModelParameters>
   <ModelParameters Id="ModelB">
     <Par Id="0" Name="MaxPars">
-      2.0
+      4.0
     </Par>
-    <Par Id="1" Name="par1">
-      -123.456
+    <Par Id="1" Name="KB">
+      1.28e-018
     </Par>
-    <Par Id="2" Name="par2">
-      -98.765
+    <Par Id="2" Name="LMAX">
+      1.5228e+17
+    </Par>
+    <Par Id="3" Name="rB">
+      5.076e+016
+    </Par>
+    <Par Id="4" Name="InvEvFactor">
+      5.076e+8
+    </Par>
+    <Par Id="5" Name="LMIN">
+      4.0608e+15
+    </Par>
+    <Par Id="6" Name="Emin">
+      1.0E11
+    </Par>
+    <Par Id="7" Name="Emax">
+      1.0E14
+    </Par>
+    <Par Id="8" Name="Dx">
+      0.5E14
+    </Par>
+    <Par Id="9" Name="De">
+      1.0E9
+    </Par>
+  </ModelParameters>
+  <ModelParameters Id="ModelC">
+    <Par Id="0" Name="MaxPars">
+      3.0
+    </Par>
+    <Par Id="1" Name="KC">
+      2.38e-019
+    </Par>
+    <Par Id="2" Name="LMAX">
+      1.5228e+17
+    </Par>
+    <Par Id="3" Name="InvEvFactor">
+      5.076e+8
+    </Par>
+    <Par Id="4" Name="LMIN">
+      4.0608e+15
+    </Par>
+    <Par Id="5" Name="Emin">
+      1.0e11
+    </Par>
+    <Par Id="6" Name="Emax">
+      1.0e14
+    </Par>
+    <Par Id="7" Name="Dx">
+      0.5e14
+    </Par>
+    <Par Id="8" Name="De">
+      1.0e9
     </Par>
   </ModelParameters>
  </ModelParameterList>
