@@ -44,9 +44,9 @@ NeutrinosInMediumPaper::NeutrinosInMediumPaper( MixingParameters * mixpars ) {
 
 NeutrinosInMediumPaper::NeutrinosInMediumPaper( MixingParameters * mixpars , TFile * prevStep ) {
 
-  m_Physics = new NeutrinoOscInVarDensity( mixpars );
-  m_Physics->use_default_pars = false;
-  
+  m_Physics_Vacuum =  new NeutrinoOscInVacuum( mixpars );
+  m_Physics_Vacuum->use_default_pars = false;
+
   //
   m_ProbIndex["Pee"] = std::make_pair( 0, 0);
   m_ProbIndex["Pem"] = std::make_pair( 0, 1);
@@ -57,10 +57,6 @@ NeutrinosInMediumPaper::NeutrinosInMediumPaper( MixingParameters * mixpars , TFi
   m_ProbIndex["Ptt"] = std::make_pair( 2, 2);
   m_ProbIndex["Pmt"] = std::make_pair( 2, 1);
   m_ProbIndex["Ptm"] = std::make_pair( 1, 2);
-
-  m_Models["ModelA"] = (DensityModels*) new rhoModelA();
-  m_Models["ModelB"] = (DensityModels*) new rhoModelB();
-  m_Models["ModelC"] = (DensityModels*) new rhoModelC();
 
   m_file = prevStep;
   
@@ -74,15 +70,19 @@ NeutrinosInMediumPaper::NeutrinosInMediumPaper( MixingParameters * mixpars , TFi
 // Destructor
 //=============================================================================
 NeutrinosInMediumPaper::~NeutrinosInMediumPaper() {
-
-  delete m_Physics;
-
-  delete m_Models["ModelA"];
-  delete m_Models["ModelB"];
-  delete m_Models["ModelC"];
-
+  
   m_file->Close();
 
+  if( m_Physics ) delete m_Physics;
+
+  if( m_Physics_Vacuum ) delete m_Physics_Vacuum;
+
+  std::map<std::string,DensityModels*>::iterator itr;
+  
+  for( itr = m_Models.begin(); itr != m_Models.end(); ++itr) 
+    delete (*itr).second;
+  
+  m_Models.clear();
   
 } 
 
@@ -195,21 +195,19 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * model,
                                                 ModelParameters * modelpars )
 {
 
-  double m_Ex  = 0.0;
-  double m_Pb  = 0.0;
-  double m_Phi = 0.0;
-
   bool  eval_flux = false;
   
   m_file->mkdir(TString(model) + TString("_") + TString(probability))->cd();
-
+  
   m_tree = new TTree("data","Data points");
   m_tree->Branch("Ex", &m_Ex, "Ex/d");
   m_tree->Branch("Pb", &m_Pb, "Pb/d");
-
-  if ( m_ProbIndex[probability].first == m_ProbIndex[probability].second ) {
+  
+  if ( (m_ProbIndex[probability].first == 0) && (m_ProbIndex[probability].second == 0) ) {
     eval_flux = true;
-    m_tree->Branch("Phi", &m_Phi, "Phi/d");
+    m_tree->Branch("Phi_e", &m_Phi_e, "Phi_e/d");
+    m_tree->Branch("Phi_m", &m_Phi_m, "Phi_m/d");
+    m_tree->Branch("Phi_t", &m_Phi_t, "Phi_t/d");
   }
   
   DensityModels * density_Mod = m_Models[model];
@@ -220,7 +218,7 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * model,
   double K0   = (4.0E-6) * 4.2951E18 * Ar;
   double LMAX = (3.0E10) * IProbabilityMatrix::InvEvfactor;
   double LMIN = (8.0E8)  * IProbabilityMatrix::InvEvfactor;
-
+  
   if (m_debug) std::cout << "Constants: " << '\n'
                          << "K0 " << K0 << '\n'
                          << "LMIN " << LMIN << '\n'
@@ -291,8 +289,11 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * model,
     if ( ! (boost::math::isnan)(d1) ) {
       m_Ex = Ex;
       m_Pb = d1;
-      if ( eval_flux ) 
-        m_Phi = m_Physics->Propagate( m_ProbIndex[probability].first, 1.0, 2.0, 0.0 ); 
+      if ( eval_flux ) {
+        m_Phi_e = m_Physics->Propagate( 0, 1.0, 2.0, 0.0 ); 
+        m_Phi_m = m_Physics->Propagate( 1, 1.0, 2.0, 0.0 ); 
+        m_Phi_t = m_Physics->Propagate( 2, 1.0, 2.0, 0.0 ); 
+      }
       m_tree->Fill();
     }
     
@@ -320,38 +321,67 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * model,
 }
 
 
-void NeutrinosInMediumPaper::PropagateVacuum( const char * model, const char * probability )
+void NeutrinosInMediumPaper::PropagateVacuum( const char * model )
 {
-
+  
   //Initialize input tree
   
-  //Init ( model, probability );
-
+  Init ( model );
+  
   // setup new output tree
   
-  m_file->mkdir(TString(model) + TString("_") + TString(probability) + TString("_Vacuum") )->cd();
-
-  double m_Ex = 0.0;
-  double m_Pb = 0.0;
-
+  m_file->mkdir(TString(model) + TString("_Vacuum") )->cd();
+  
   m_tree = new TTree("data","Data points");
   m_tree->Branch("Ex", &m_Ex, "Ex/d");
-  m_tree->Branch("Pb", &m_Pb, "Pb/d");
+  m_tree->Branch("Phi_e", &m_Phi_e, "Phi_e/d");
+  m_tree->Branch("Phi_m", &m_Phi_m, "Phi_m/d");
+  m_tree->Branch("Phi_t", &m_Phi_t, "Phi_t/d");
   
   //Loop over input, propagate and save into new tree
+  ////
+  Long64_t nentries = m_input_tree->GetEntries();
+  
+  std::cout << " data: " << nentries << std::endl;
+
+  m_Physics_Vacuum->initializeAngles();
+  
+  m_Physics_Vacuum->updateMixingMatrix();
+  
+  for (Long64_t i=0;i<nentries;i++) {
+    
+    m_input_tree->GetEntry(i);
+
+    m_Physics_Vacuum->calcProbabilities();
+        
+    m_Ex = m_Ex_in;
+    m_Phi_e = m_Physics_Vacuum->Propagate( 0, m_Phi_e_in, m_Phi_m_in, m_Phi_t_in ); 
+    m_Phi_m = m_Physics_Vacuum->Propagate( 1, m_Phi_e_in, m_Phi_m_in, m_Phi_t_in ); 
+    m_Phi_t = m_Physics_Vacuum->Propagate( 2, m_Phi_e_in, m_Phi_m_in, m_Phi_t_in ); 
+    
+    m_tree->Fill();
+    
+  }
   
   
-  //
+  m_tree->Write();
+  
+  m_file->cd("../");
+  
+  std::cout << "PropagateVacuum> done!" << std::endl;
 
 }
 
-void NeutrinosInMediumPaper::Init( const char * model, const char * probability )
+void NeutrinosInMediumPaper::Init( const char * model )
 {
   
-  TString path = TString(model) + TString("_") + TString(probability) + TString("/data");
+  TString path = TString(model) + TString("_") + TString("Pee/data");
   
-  m_in_Ex = 0;
-  m_in_Pb = 0;
+  m_Ex_in = 0;
+  m_Pb_in = 0;
+  m_Phi_e_in = 0.0;
+  m_Phi_m_in = 0.0;
+  m_Phi_t_in = 0.0;
   
   m_file->cd();
   
@@ -363,8 +393,12 @@ void NeutrinosInMediumPaper::Init( const char * model, const char * probability 
     return;
   }
   
-  m_input_tree->SetBranchAddress("Ex", &m_in_Ex, &b_in_Ex);
-  m_input_tree->SetBranchAddress("Pb", &m_in_Pb, &b_in_Pb);
+  m_input_tree->SetBranchAddress("Ex", &m_Ex_in, &b_Ex_in);
+  m_input_tree->SetBranchAddress("Pb", &m_Pb_in, &b_Pb_in);
+  m_input_tree->SetBranchAddress("Phi_e", &m_Phi_e_in, &b_Phi_e_in);
+  m_input_tree->SetBranchAddress("Phi_m", &m_Phi_m_in, &b_Phi_m_in);
+  m_input_tree->SetBranchAddress("Phi_t", &m_Phi_t_in, &b_Phi_t_in);
   
+ 
 }
 

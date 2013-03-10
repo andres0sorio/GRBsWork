@@ -37,7 +37,7 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  makePlots("ModelA","Pee");
+  makePlots("ModelA","Vacuum");
   
 }
 
@@ -58,7 +58,7 @@ void makePlots( const char * model, const char * flavour)
   label = new TObjString( "#phi_{#tau}" );
   v_Labels->Add( label ); 
   
-  TFile * f1 = new TFile("output_modelA_flux.root");
+  TFile * f1 = new TFile("output.root");
   
   f1->cd();
   
@@ -84,7 +84,6 @@ void makePlots( const char * model, const char * flavour)
   TLegend * leg = new TLegend(0.14,0.69,0.24,0.85);
   
   PeeTreeNu->SetBranchAddress("Ex",&xx);
-  PeeTreeNu->SetBranchAddress("Pb",&yy);
   PeeTreeNu->SetBranchAddress("Phi_e",&phi_e);
   PeeTreeNu->SetBranchAddress("Phi_m",&phi_m);
   PeeTreeNu->SetBranchAddress("Phi_t",&phi_t);
@@ -104,7 +103,7 @@ void makePlots( const char * model, const char * flavour)
   {
     ProbNu[k]->SetMarkerStyle(1);
     ProbNu[k]->SetFillColor(10);
-    ProbNu[k]->SetMaximum(1.3);
+    ProbNu[k]->SetMaximum(0.5);
     TString yaxis = ((TObjString*)v_Labels->At(k))->GetString();
     ProbNu[k]->GetYaxis()->SetTitle( yaxis.Data() );
     ProbNu[k]->GetXaxis()->SetTitle("E [eV]");

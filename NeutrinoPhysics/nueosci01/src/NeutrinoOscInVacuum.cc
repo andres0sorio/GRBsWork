@@ -55,16 +55,26 @@ void NeutrinoOscInVacuum::initializeAngles()
     for( int j=0; j < 3; ++j)
       (*m_Q)(i,j) = 0.0;
   
- if ( use_default_pars ) 
+  if ( use_default_pars ) 
   {
     setAngle(1, 2, 33.0);  //theta_12
     setAngle(1, 3,  0.0);  //theta_13
     setAngle(2, 3, 45.0);  //theta_23
+        
+    setPhase( 0.0 );
+    
   } else {
+
+    std::cout << "initializeAngles> reading parameters from XML" << std::endl;
+    
     setAngle(1, 2, m_input->GetPar1() );  //theta_12
     setAngle(1, 3, m_input->GetPar2() );  //theta_13
     setAngle(2, 3, m_input->GetPar3() );  //theta_23
- }
+
+    setPhase( 0.0 ); //Fix this: needs be read from XML
+    
+  }
+    
  
 }
 

@@ -45,7 +45,7 @@ VALOBJS = DOMParameters.o MixingParameters.o IProbabilityMatrix.o \
 	DensityModels.o NeutrinoOscInVarDensity.o validate.o
 
 PAP01OBJS = Graphics.o DOMParameters.o ModelParameters.o MixingParameters.o IProbabilityMatrix.o DensityModels.o \
-	NeutrinoOscInVarDensity.o NeutrinosInMediumPaper.o paper01.o
+	NeutrinoOscInVacuum.o NeutrinoOscInVarDensity.o NeutrinosInMediumPaper.o paper01.o
 
 all : evalxsec.exe validate.exe paper01.exe
 

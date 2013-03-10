@@ -107,7 +107,9 @@ int main(int iargv, char **argv) {
   }
       
   //............................................................................................
-  
+
+  //Step 1
+
   NeutrinosInMediumPaper * neuOsc = new NeutrinosInMediumPaper( mixpars );
   
   //neuOsc->Test();
@@ -125,12 +127,21 @@ int main(int iargv, char **argv) {
     neuOsc->GenerateDatapoints( model.c_str(), (*itr).c_str(), modpars );
     
   }
-  
 
   delete neuOsc;
  
   strs.clear();
- 
+
+  ///Step 2 
+
+  TFile * infile = new TFile("output.root","UPDATE");
+  
+  neuOsc = new NeutrinosInMediumPaper( mixpars , infile );
+  
+  neuOsc->PropagateVacuum( model.c_str() );
+  
+  delete neuOsc;
+  
   return 0;
   
 }

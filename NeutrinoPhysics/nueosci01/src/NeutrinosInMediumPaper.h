@@ -7,6 +7,7 @@
 #include <Graphics.h>
 #include <TTree.h>
 #include <TFile.h>
+#include <NeutrinoOscInVacuum.h>
 #include <NeutrinoOscInVarDensity.h>
 #include <ModelParameters.h>
 #include <DensityModels.h>
@@ -31,17 +32,19 @@ public:
   
   NeutrinoOscInVarDensity * m_Physics;
   
+  NeutrinoOscInVacuum     * m_Physics_Vacuum;
+    
   void Test();
   
   void GenerateDatapoints(const char *, const char * , ModelParameters *);
   
-  void PropagateVacuum(const char *, const char * );
+  void PropagateVacuum(const char * );
   
 protected:
   
 private:
 
-  void Init( const char *, const char * );
+  void Init( const char * );
 
   bool m_debug;
 
@@ -55,14 +58,27 @@ private:
   
   std::map<std::string, DensityModels*> m_Models;
 
-  float m_in_Ex;
+  double m_Ex_in;
+  double m_Pb_in;
   
-  float m_in_Pb;
-  
-  TBranch * b_in_Ex;
-  
-  TBranch * b_in_Pb;
-  
+  double m_Phi_e_in;
+  double m_Phi_m_in;
+  double m_Phi_t_in;
+
+  double m_Ex;
+  double m_Pb;
+
+  double m_Phi_e;
+  double m_Phi_m;
+  double m_Phi_t;
+
+  TBranch * b_Ex_in;
+  TBranch * b_Pb_in;
+
+  TBranch * b_Phi_e_in;
+  TBranch * b_Phi_m_in;
+  TBranch * b_Phi_t_in;
+    
 
 };
 #endif // NEUTRINOSINMEDIUMPAPER_H

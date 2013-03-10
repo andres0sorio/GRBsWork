@@ -13,6 +13,9 @@
 
 /** @class PShadow PShadow.h
  *  
+ * \brief Opacity of Earth to very high energy neutrinos, P shadow effectimplementation based on the following article:
+ * "High-energy neutrinos in the context of multimessenger astrophysics" Julia K. Becker,
+ *  Physics Reports 458 (2008) 173–246
  *
  *  @author Andres Osorio
  *  @date   2011-02-27
