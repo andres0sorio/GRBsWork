@@ -25,17 +25,23 @@ public:
 
   NeutrinosInMediumPaper( MixingParameters * ); 
 
+  NeutrinosInMediumPaper( MixingParameters * , TFile * ); 
+
   virtual ~NeutrinosInMediumPaper( ); ///< Destructor
   
   NeutrinoOscInVarDensity * m_Physics;
   
   void Test();
-
+  
   void GenerateDatapoints(const char *, const char * , ModelParameters *);
-    
+  
+  void PropagateVacuum(const char *, const char * );
+  
 protected:
-
+  
 private:
+
+  void Init( const char *, const char * );
 
   bool m_debug;
 
@@ -44,8 +50,19 @@ private:
   TFile * m_file;
   
   TTree * m_tree;
+
+  TTree * m_input_tree;
   
   std::map<std::string, DensityModels*> m_Models;
+
+  float m_in_Ex;
+  
+  float m_in_Pb;
+  
+  TBranch * b_in_Ex;
+  
+  TBranch * b_in_Pb;
+  
 
 };
 #endif // NEUTRINOSINMEDIUMPAPER_H

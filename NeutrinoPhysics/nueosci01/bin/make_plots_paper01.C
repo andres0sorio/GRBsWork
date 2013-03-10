@@ -37,7 +37,7 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  makePlots("ModelA");
+  makePlots("ModelC");
   
 }
 
@@ -60,11 +60,11 @@ void makePlots( const char * model )
   label = new TObjString( "Pe#tau" );
   v_Labels->Add( label ); 
   
-  //TFile * f1 = new TFile("results/output-nu-A.root");
-  //TFile * f2 = new TFile("results/output-antinu-A.root");
+  //TFile * f1 = new TFile("results/output-nu-C.root");
+  //TFile * f2 = new TFile("results/output-antinu-C.root");
 
-  TFile * f1 = new TFile("results/output-nu-A-f2.root");
-  TFile * f2 = new TFile("results/output-antinu-A-f2.root");
+  TFile * f1 = new TFile("results/output-nu-C-f2.root");
+  TFile * f2 = new TFile("results/output-antinu-C-f2.root");
   
   f1->cd();
   

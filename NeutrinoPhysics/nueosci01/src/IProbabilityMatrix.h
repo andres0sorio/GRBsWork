@@ -40,6 +40,8 @@ public:
 
   void   Propagate( double, double, double );
 
+  double Propagate( int, double, double, double );
+
   void   SetParameters( MixingParameters * input ) 
   {
     m_input = input;
