@@ -46,6 +46,8 @@ NeutrinosInMediumPaper::NeutrinosInMediumPaper( MixingParameters * mixpars ) {
 
 NeutrinosInMediumPaper::NeutrinosInMediumPaper( MixingParameters * mixpars , TFile * prevStep ) {
 
+  m_Physics = 0x0;
+
   m_Physics_Vacuum =  new NeutrinoOscInVacuum( mixpars );
   m_Physics_Vacuum->use_default_pars = false;
 
@@ -208,7 +210,7 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * model,
   
   unsigned found = Pxx.find("a");
   
-  if ( found != std::string::npos ) {
+  if ( found == 0 ) {
     anti_nu  = true;
     Pxx.erase(0,1);
     std::cout << "GenerateDatapoints> Will treat for anit-nu: " << Pxx << '\n';

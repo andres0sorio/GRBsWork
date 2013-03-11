@@ -37,8 +37,8 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  makePlots("EarthA","Pee","output.root");
-  makePlots("EarthA","aPee","output.root");
+  makePlots("ModelA","Pee","output.root");
+  makePlots("ModelA","aPee","output.root");
   
 }
 

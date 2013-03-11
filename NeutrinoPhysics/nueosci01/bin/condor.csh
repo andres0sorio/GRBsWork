@@ -14,7 +14,7 @@ setenv EMIN  $1
 setenv EMAX  $2
 setenv MODEL $3
 
-setenv CMD  "./paper01.exe --model "$MODEL" --prob Pee,Pmm,Ptt --erange "$EMIN","$EMAX
+setenv CMD  "./paper01.exe --model "$MODEL" --prob Pee,aPee,Pem,aPem,Pet,aPet,Pmt,aPmt --erange "$EMIN","$EMAX
 
 echo INFO:  launching command: $CMD
 
