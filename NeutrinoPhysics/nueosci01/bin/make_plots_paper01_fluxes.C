@@ -37,7 +37,7 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  makePlots("ModelA","Pee");
+  makePlots("ModelA","aPee");
   
 }
 
@@ -58,7 +58,7 @@ void makePlots( const char * model, const char * flavour)
   label = new TObjString( "#phi_{#tau}" );
   v_Labels->Add( label ); 
   
-  TFile * f1 = new TFile("output_modelA_flux.root");
+  TFile * f1 = new TFile("output-ModelA-vacuum-All.root");
   
   f1->cd();
   

@@ -226,7 +226,9 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * model,
   DensityModels * density_Mod = m_Models[model];
   
   if ( anti_nu ) density_Mod->treat_as_AntiNu();
-  
+
+  std::cout << " checking sign in front " << density_Mod->m_sign << std::endl;
+    
   double Gf = DensityModels::GF * DensityModels::InveV2; // [1/eV^2]
   double Ar = (1.0/sqrt(2.0)) * Gf * (1.0/DensityModels::Mp); // This has a wrong factor of 2 (Sarira)
   
@@ -263,6 +265,8 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * model,
   //long double LRes1 = 0.1E9 * IProbabilityMatrix::InvEvfactor; //starting point along the radius of the star
   
   std::cout << "GenerateDatapoints> looping over energy> " << std::endl;
+  
+  int counter = 0;
   
   while ( Ex <= Emax ) {
     
@@ -304,6 +308,9 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * model,
     if ( ! (boost::math::isnan)(d1) ) {
       m_Ex = Ex;
       m_Pb = d1;
+      
+      //std::cout << m_Ex << " " << m_Pb << std::endl;
+      
       if ( eval_flux ) {
         m_Phi_e = m_Physics->Propagate( 0, 1.0, 2.0, 0.0 ); 
         m_Phi_m = m_Physics->Propagate( 1, 1.0, 2.0, 0.0 ); 
@@ -322,7 +329,11 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * model,
       Ex += (dE*100.0); //step in energy
 
     delete tmp;
+  
+    //if ( counter > 10 ) break;
+    //++counter;
     
+  
   }
   
   std::cout << "GenerateDatapoints> max pts: " << k << std::endl;

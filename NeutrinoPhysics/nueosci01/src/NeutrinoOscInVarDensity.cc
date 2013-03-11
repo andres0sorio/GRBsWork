@@ -13,55 +13,6 @@
 // 2011-07-28 : Andres Osorio
 //-----------------------------------------------------------------------------
 
-double densityModA(double *x, double *par) 
-{
-  
-  rhoModelA * rhoA = new rhoModelA (); // [eV^4]
-  double Gf = DensityModels::GF * DensityModels::InveV2; // [1/eV^2]
-  double Ar = (1.0/sqrt(2.0)) * Gf * (1.0/DensityModels::Mp) * (*rhoA)( x, par ); // This has a wrong factor of 2 (Sarira)
-  delete rhoA;
-  
-  return Ar; // [eV]
-  
-}
-
-
-double stepProf(double *x, double *par)
-{
- 
-  double xx = x[0]; // distance
-  double L1 = 2885.E3 * IProbabilityMatrix::InvEvfactor;
-
-  //parameters just as needed
-  double A1 = par[0];
-  double A2 = par[1];
-
-  if ( xx <= L1 ) return A1;
-  else return A2;
-  
-  return 0.0;
-  
-}
-
-double mcProf(double *x, double *par)
-{
- 
-  double xx = x[0]; // distance
-  double L1 = 2885E3 * IProbabilityMatrix::InvEvfactor;
-  double L2 = L1 + ( 6972E3 * IProbabilityMatrix::InvEvfactor);
-  
-  //parameters just as needed
-  double A1 = par[0];
-  double A2 = par[1];
-
-  if ( xx <= L1 ) return A1;
-  else if ( xx > L1 && xx < L2 ) return A2;
-  else return A1;
-  
-  return 0.0;
-  
-}
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================

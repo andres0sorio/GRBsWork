@@ -15,6 +15,10 @@
  *  @date   2011-09-25
  */
 
+double mcProf(double *x, double *par);
+double stepProf(double *x, double *par);
+double densityModA(double *x, double *par);
+
 class DensityModels {
 public: 
   
