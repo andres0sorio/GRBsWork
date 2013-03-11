@@ -24,7 +24,7 @@
       0.5e14
     </Par>
     <Par Id="7" Name="De">
-      1.0e10
+      1.0e9
     </Par>
   </ModelParameters>
   <ModelParameters Id="ModelB">
@@ -40,7 +40,7 @@
     <Par Id="3" Name="rB">
       5.076e+016
     </Par>
-    <Par Id="4" Name="InvEvFactor">
+    <Par Id="4" Name="cm2InvEvFactor">
       5.076e+8
     </Par>
     <Par Id="5" Name="LMIN">
@@ -69,7 +69,7 @@
     <Par Id="2" Name="LMAX">
       1.5228e+17
     </Par>
-    <Par Id="3" Name="InvEvFactor">
+    <Par Id="3" Name="cm2InvEvFactor">
       5.076e+8
     </Par>
     <Par Id="4" Name="LMIN">
@@ -86,6 +86,44 @@
     </Par>
     <Par Id="8" Name="De">
       1.0e9
+    </Par>
+  </ModelParameters>
+  <ModelParameters Id="EarthA">
+    <Par Id="0" Name="MaxPars">
+      5.0
+    </Par>
+    <Par Id="1" Name="H1">
+      1.7E-13
+    </Par>
+    <Par Id="2" Name="H2">
+      4.4E-13
+    </Par>
+    <Par Id="3" Name="S1">
+      2.885e6
+    </Par>
+    <Par Id="4" Name="S2">
+      6.972e6
+    </Par>
+    <Par Id="5" Name="m2InvEvFactor">
+      5.076e+6
+    </Par>
+    <Par Id="6" Name="LMIN">
+      0.0
+    </Par>
+    <Par Id="7" Name="LMAX">
+      7.0780e13
+    </Par>
+    <Par Id="8" Name="Emin">
+      1.0e9
+    </Par>
+    <Par Id="9" Name="Emax">
+      1.0e10
+    </Par>
+    <Par Id="10" Name="Dx">
+      1.0e12
+    </Par>
+    <Par Id="11" Name="De">
+      1.0e8
     </Par>
   </ModelParameters>
  </ModelParameterList>

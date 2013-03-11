@@ -37,11 +37,12 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  makePlots("ModelA","aPee");
+  makePlots("EarthA","Pee","output.root");
+  makePlots("EarthA","aPee","output.root");
   
 }
 
-void makePlots( const char * model, const char * prob) 
+void makePlots( const char * model, const char * prob, const char * infile) 
 {
   
   //Output path
@@ -54,7 +55,7 @@ void makePlots( const char * model, const char * prob)
   label = new TObjString( prob );
   v_Labels->Add( label ); 
     
-  TFile * f1 = new TFile("output-ModelA-vacuum-All.root");
+  TFile * f1 = new TFile(infile);
   
   f1->cd();
   
@@ -64,7 +65,9 @@ void makePlots( const char * model, const char * prob)
   double xx = 0.0;
   double yy = 0.0;
   
-  TCanvas * c1 = new TCanvas(model, "Oscillation probabilities", 184,60,861,263); 
+  TString cname = TString(model) + TString("_") + TString(prob);
+  
+  TCanvas * c1 = new TCanvas( cname.Data(), "Oscillation probabilities", 184,60,861,263); 
     
   TGraph * ProbNu[3];
   ProbNu[0] = new TGraph();

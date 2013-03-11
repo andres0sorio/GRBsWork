@@ -34,6 +34,8 @@ NeutrinosInMediumPaper::NeutrinosInMediumPaper( MixingParameters * mixpars ) {
   m_Models["ModelA"] = (DensityModels*) new rhoModelA();
   m_Models["ModelB"] = (DensityModels*) new rhoModelB();
   m_Models["ModelC"] = (DensityModels*) new rhoModelC();
+  m_Models["EarthA"] = (DensityModels*) new rhoEarthA();
+  m_Models["EarthB"] = (DensityModels*) new rhoEarthB();
 
   m_file = new TFile("output.root","RECREATE");
   m_file->cd();
@@ -106,7 +108,7 @@ void NeutrinosInMediumPaper::Test()
                          << "K0 " << K0 << '\n'
                          << "LMIN " << LMIN << '\n'
                          << "LMAX " << LMAX << std::endl;
-
+ 
   m_Physics->initializeAngles();
 
   m_Physics->updateMixingMatrix();
@@ -227,31 +229,36 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * model,
   
   if ( anti_nu ) density_Mod->treat_as_AntiNu();
 
-  std::cout << " checking sign in front " << density_Mod->m_sign << std::endl;
-    
+  std::cout << " checking sign in front of the model: " << density_Mod->m_sign << std::endl;
+  
   double Gf = DensityModels::GF * DensityModels::InveV2; // [1/eV^2]
-  double Ar = (1.0/sqrt(2.0)) * Gf * (1.0/DensityModels::Mp); // This has a wrong factor of 2 (Sarira)
-  
+  double Ar = (2.0/sqrt(2.0)) * Gf * (1.0/DensityModels::Mp); // (Fixex factor of 2.0 in front of the potential (Sarira)
   double K0   = (4.0E-6) * 4.2951E18 * Ar;
-  double LMAX = (3.0E10) * IProbabilityMatrix::InvEvfactor;
-  double LMIN = (8.0E8)  * IProbabilityMatrix::InvEvfactor;
-  
-  if (m_debug) std::cout << "Constants: " << '\n'
-                         << "K0 " << K0 << '\n'
-                         << "LMIN " << LMIN << '\n'
-                         << "LMAX " << LMAX << std::endl;
 
+  //double LMAX = (3.0E10) * IProbabilityMatrix::InvEvfactor;
+  //double LMIN = (8.0E8)  * IProbabilityMatrix::InvEvfactor;
+  
+  double LMIN      = modelpars->GetPar("LMIN");
+  double LMAX      = modelpars->GetPar("LMAX");
   long double Ex   = (long double) modelpars->GetPar("Emin");
   long double Emax = (long double) modelpars->GetPar("Emax");
   long double dx   = (long double) modelpars->GetPar("Dx");  //this is the distance step
   long double dE   = (long double) modelpars->GetPar("De");  //this is the energy step
   
+  if (m_debug) std::cout << "Constants: "   << '\n'
+                         << "Gf "   << Gf   << '\n'
+                         << "Ar "   << Ar   << '\n'
+                         << "K0 "   << K0   << '\n'
+                         << "LMIN " << LMIN << '\n'
+                         << "LMAX " << LMAX << std::endl;
+
   int maxpars = (int)modelpars->GetPar(0);
 
   TF1 * profA = new TF1("profA", density_Mod, LMIN, LMAX, maxpars);
    
   for( int i=1; i <= maxpars; ++i) {
     profA->SetParameter( ( i-1 ), (modelpars->GetPar(i))  );
+    std::cout << " * par: " << (modelpars->GetPar(i)) << std::endl;
   }
   
   m_Physics->initializeAngles();
@@ -261,8 +268,6 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * model,
   m_Physics->setPotential( profA );
   
   int k = 0;
-  
-  //long double LRes1 = 0.1E9 * IProbabilityMatrix::InvEvfactor; //starting point along the radius of the star
   
   std::cout << "GenerateDatapoints> looping over energy> " << std::endl;
   
@@ -276,8 +281,8 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * model,
     matrix <std::complex< long double> >  * tmp;
     tmp = new matrix<std::complex< long double> >(3,3);
     
-    double long x1 = 0.0;
-    double long x2 = LMIN;
+    double long x1 = LMIN;
+    double long x2 = x1 + dx;
     
     int i = 0;
     
@@ -331,7 +336,7 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * model,
     delete tmp;
   
     //if ( counter > 10 ) break;
-    //++counter;
+    ++counter;
     
   
   }
