@@ -194,16 +194,29 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * model,
                                                 const char * probability , 
                                                 ModelParameters * modelpars )
 {
-
+  
+  bool  anti_nu   = false;
   bool  eval_flux = false;
   
   m_file->mkdir(TString(model) + TString("_") + TString(probability))->cd();
+
+  ///argument probability tells if we are working with neutrinos (default) or anti-neutrinos
+  
+  std::string Pxx( probability );
+  
+  unsigned found = Pxx.find("a");
+  
+  if ( found != std::string::npos ) {
+    anti_nu  = true;
+    Pxx.erase(0,1);
+    std::cout << "GenerateDatapoints> Will treat for anit-nu: " << Pxx << '\n';
+  }
   
   m_tree = new TTree("data","Data points");
   m_tree->Branch("Ex", &m_Ex, "Ex/d");
   m_tree->Branch("Pb", &m_Pb, "Pb/d");
   
-  if ( (m_ProbIndex[probability].first == 0) && (m_ProbIndex[probability].second == 0) ) {
+  if ( (m_ProbIndex[Pxx].first == 0) && (m_ProbIndex[Pxx].second == 0) ) {
     eval_flux = true;
     m_tree->Branch("Phi_e", &m_Phi_e, "Phi_e/d");
     m_tree->Branch("Phi_m", &m_Phi_m, "Phi_m/d");
@@ -211,6 +224,8 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * model,
   }
   
   DensityModels * density_Mod = m_Models[model];
+  
+  if ( anti_nu ) density_Mod->treat_as_AntiNu();
   
   double Gf = DensityModels::GF * DensityModels::InveV2; // [1/eV^2]
   double Ar = (1.0/sqrt(2.0)) * Gf * (1.0/DensityModels::Mp); // This has a wrong factor of 2 (Sarira)
@@ -284,7 +299,7 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * model,
     m_Physics->calcProbabilities();
 
     //get the Transition probability A->B
-    double d1 = (*m_Physics->m_Prob_AtoB)( m_ProbIndex[probability].first , m_ProbIndex[probability].second );
+    double d1 = (*m_Physics->m_Prob_AtoB)( m_ProbIndex[Pxx].first , m_ProbIndex[Pxx].second );
     
     if ( ! (boost::math::isnan)(d1) ) {
       m_Ex = Ex;
@@ -324,59 +339,73 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * model,
 void NeutrinosInMediumPaper::PropagateVacuum( const char * model )
 {
   
-  //Initialize input tree
+  //Initialize input trees
   
-  Init ( model );
+  std::vector<std::string> input;
+  std::vector<std::string>::iterator inputItr;
   
-  // setup new output tree
+  input.push_back( std::string("Pee") );
+  input.push_back( std::string("aPee") );
   
-  m_file->mkdir(TString(model) + TString("_Vacuum") )->cd();
-  
-  m_tree = new TTree("data","Data points");
-  m_tree->Branch("Ex", &m_Ex, "Ex/d");
-  m_tree->Branch("Phi_e", &m_Phi_e, "Phi_e/d");
-  m_tree->Branch("Phi_m", &m_Phi_m, "Phi_m/d");
-  m_tree->Branch("Phi_t", &m_Phi_t, "Phi_t/d");
-  
-  //Loop over input, propagate and save into new tree
-  ////
-  Long64_t nentries = m_input_tree->GetEntries();
-  
-  std::cout << " data: " << nentries << std::endl;
-
-  m_Physics_Vacuum->initializeAngles();
-  
-  m_Physics_Vacuum->updateMixingMatrix();
-  
-  for (Long64_t i=0;i<nentries;i++) {
+  for( inputItr = input.begin(); inputItr != input.end(); ++inputItr) {
     
-    m_input_tree->GetEntry(i);
-
-    m_Physics_Vacuum->calcProbabilities();
-        
-    m_Ex = m_Ex_in;
-    m_Phi_e = m_Physics_Vacuum->Propagate( 0, m_Phi_e_in, m_Phi_m_in, m_Phi_t_in ); 
-    m_Phi_m = m_Physics_Vacuum->Propagate( 1, m_Phi_e_in, m_Phi_m_in, m_Phi_t_in ); 
-    m_Phi_t = m_Physics_Vacuum->Propagate( 2, m_Phi_e_in, m_Phi_m_in, m_Phi_t_in ); 
+    bool valid = Init ( model, (*inputItr).c_str() );
     
-    m_tree->Fill();
+    if( !valid ) continue;
+    
+    // setup new output tree
+    
+    m_file->mkdir(TString(model) + TString("_") + TString("Vacuum") +  TString("_") + TString( (*inputItr).c_str() ) )->cd();
+    
+    m_tree = new TTree("data","Data points");
+    m_tree->Branch("Ex", &m_Ex, "Ex/d");
+    m_tree->Branch("Phi_e", &m_Phi_e, "Phi_e/d");
+    m_tree->Branch("Phi_m", &m_Phi_m, "Phi_m/d");
+    m_tree->Branch("Phi_t", &m_Phi_t, "Phi_t/d");
+    
+    //Loop over input, propagate and save into new tree
+    ////
+    
+    Long64_t nentries = m_input_tree->GetEntries();
+    
+    std::cout << " data: " << nentries << std::endl;
+    
+    m_Physics_Vacuum->initializeAngles();
+    
+    m_Physics_Vacuum->updateMixingMatrix();
+    
+    for (Long64_t i=0;i<nentries;i++) {
+      
+      m_input_tree->GetEntry(i);
+      
+      m_Physics_Vacuum->calcProbabilities();
+      
+      m_Ex = m_Ex_in;
+      m_Phi_e = m_Physics_Vacuum->Propagate( 0, m_Phi_e_in, m_Phi_m_in, m_Phi_t_in ); 
+      m_Phi_m = m_Physics_Vacuum->Propagate( 1, m_Phi_e_in, m_Phi_m_in, m_Phi_t_in ); 
+      m_Phi_t = m_Physics_Vacuum->Propagate( 2, m_Phi_e_in, m_Phi_m_in, m_Phi_t_in ); 
+      
+      m_tree->Fill();
+      
+    }
+    
+    m_tree->Write();
+    
+    m_file->cd("../");
     
   }
-  
-  
-  m_tree->Write();
-  
-  m_file->cd("../");
   
   std::cout << "PropagateVacuum> done!" << std::endl;
 
 }
 
-void NeutrinosInMediumPaper::Init( const char * model )
+bool NeutrinosInMediumPaper::Init( const char * model , const char * option)
 {
   
-  TString path = TString(model) + TString("_") + TString("Pee/data");
-  
+  TString path = TString(model) + TString("_") + TString(option) + TString("/data");
+
+  std::cout << "Init> initilizeing" << path << std::endl;
+    
   m_Ex_in = 0;
   m_Pb_in = 0;
   m_Phi_e_in = 0.0;
@@ -387,11 +416,12 @@ void NeutrinosInMediumPaper::Init( const char * model )
   
   m_input_tree = (TTree*)gDirectory->Get(path);
   
-  // Set branch addresses and branch pointers
   if (!m_input_tree)  { 
     std::cout << " Init> could not find Tree " << std::endl;
-    return;
+    return false;
   }
+  
+  // Set branch addresses and branch pointers
   
   m_input_tree->SetBranchAddress("Ex", &m_Ex_in, &b_Ex_in);
   m_input_tree->SetBranchAddress("Pb", &m_Pb_in, &b_Pb_in);
@@ -399,6 +429,7 @@ void NeutrinosInMediumPaper::Init( const char * model )
   m_input_tree->SetBranchAddress("Phi_m", &m_Phi_m_in, &b_Phi_m_in);
   m_input_tree->SetBranchAddress("Phi_t", &m_Phi_t_in, &b_Phi_t_in);
   
+  return true;
  
 }
 

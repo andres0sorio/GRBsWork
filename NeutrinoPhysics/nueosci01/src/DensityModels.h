@@ -24,6 +24,8 @@ public:
   virtual ~DensityModels( ){}; ///< Destructor
 
   virtual double operator() (double *x, double *p) = 0;
+
+  void treat_as_AntiNu() { m_sign = -1.0; };
   
   double m_pars[10];
   static const double Mp;
@@ -32,6 +34,8 @@ public:
   static const double InveV2;
   static const double TeV;
   
+  double m_sign; // m_sign: used for selecting nu vs anti-nu from construction
+
 };
 
 class rhoAtResonance : public DensityModels {
@@ -67,25 +71,24 @@ class rhoModelA : public DensityModels {
 public: 
   
   /// Standard constructor
-  rhoModelA( ) : DensityModels() {}; 
+  rhoModelA( ) : DensityModels() { m_sign = 1.0; };
   
   virtual ~rhoModelA( ){}; ///< Destructor
   
   virtual double operator() (double *x, double *p) {
     
-    return p[0] * pow( ((p[1]/x[0]) - 1.0), 3.0);
+    return m_sign * p[0] * pow( ((p[1]/x[0]) - 1.0), 3.0);
     
   };
-  
-  
+    
 };
 
 class rhoModelB : public DensityModels {
 public: 
   
   /// Standard constructor
-  rhoModelB( ) : DensityModels() {}; 
-  
+  rhoModelB( ) : DensityModels() { m_sign = 1.0; }; 
+    
   virtual ~rhoModelB( ){}; ///< Destructor
   
   virtual double operator() (double *x, double *p) { 
@@ -95,12 +98,11 @@ public:
     
     
     if ( x[0] >= rmin && x[0] <= rmax ) 
-      return p[0] * pow( (p[1]/x[0]), 2.42857 );
+      return m_sign * p[0] * pow( (p[1]/x[0]), 2.42857 );
     else 
-      return p[0] * pow( (p[1]/p[2]), 2.42857 ) * pow( (x[0] - p[1]), 5.0 ) / pow( (p[2]-p[1]), 5.0);
+      return m_sign * p[0] * pow( (p[1]/p[2]), 2.42857 ) * pow( (x[0] - p[1]), 5.0 ) / pow( (p[2]-p[1]), 5.0);
     
   };
-  
   
 };
 
@@ -118,12 +120,11 @@ public:
     double rmax = 1.0E11 * p[2]; //p[2] ->to convert to natural units if needed
     
     if ( x[0] >= rmin && x[0] <= rmax ) 
-      return p[0] * 20.0 * pow( ((p[1]/x[0])-1.0), 2.1 );
+      return m_sign * p[0] * 20.0 * pow( ((p[1]/x[0])-1.0), 2.1 );
     else 
-      return p[0] * 1.0  * pow( ((p[1]/x[0])-1.0), 2.5 );
+      return m_sign * p[0] * 1.0  * pow( ((p[1]/x[0])-1.0), 2.5 );
     
   };
-  
   
 };
 

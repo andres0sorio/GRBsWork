@@ -44,7 +44,7 @@ protected:
   
 private:
 
-  void Init( const char * );
+  bool Init( const char *, const char * );
 
   bool m_debug;
 

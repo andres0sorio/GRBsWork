@@ -37,88 +37,95 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  makePlots("ModelA","Vacuum");
+  makePlots("ModelC");
   
 }
 
-void makePlots( const char * model, const char * flavour) 
+void makePlots( const char * model ) 
 {
   
   //Output path
   TString path("./results");
   
-  TString dataPee = TString( model ) + TString("_") + TString(flavour) + TString("/data");
-  
+  TString dataPee = TString( model ) + TString("_Pee/data");
+  TString dataPem = TString( model ) + TString("_Pem/data");
+  TString dataPet = TString( model ) + TString("_Pet/data");
+    
   TList * v_Labels = new TList();
   TObjString *label;
-  label = new TObjString( "#phi_{e}" );
+  label = new TObjString( "Pee" );
   v_Labels->Add( label ); 
-  label = new TObjString( "#phi_{#mu}" );
+  label = new TObjString( "Pe#mu" );
   v_Labels->Add( label ); 
-  label = new TObjString( "#phi_{#tau}" );
+  label = new TObjString( "Pe#tau" );
   v_Labels->Add( label ); 
   
-  TFile * f1 = new TFile("output-modelA-flux-vac.root");
-  
+  TFile * f1 = new TFile("results/output-nu-C.root");
+    
   f1->cd();
   
   TTree * PeeTreeNu = (TTree*)gDirectory->Get( dataPee.Data() );
+  TTree * PemTreeNu = (TTree*)gDirectory->Get( dataPem.Data() );
+  TTree * PetTreeNu = (TTree*)gDirectory->Get( dataPet.Data() );
   
   //Branches
   double xx = 0.0;
   double yy = 0.0;
-  double phi_e = 0.0;
-  double phi_m = 0.0;
-  double phi_t = 0.0;
   
-  TCanvas * c1[3];
-  c1[0] = new TCanvas("c1", "Normalized flux", 182, 134, 825, 263);
-  c1[1] = new TCanvas("c2", "Normalized flux", 182, 134, 825, 263);
-  c1[2] = new TCanvas("c3", "Normalized flux", 182, 134, 825, 263);
-
+  TCanvas * c1 = new TCanvas(model, "Oscillation probabilities", 184, 60, 861, 670);
+  c1->Divide(1,3);
+  
   TGraph * ProbNu[3];
   ProbNu[0] = new TGraph();
   ProbNu[1] = new TGraph();
   ProbNu[2] = new TGraph();
   
   TLegend * leg = new TLegend(0.14,0.69,0.24,0.85);
-  
+    
   PeeTreeNu->SetBranchAddress("Ex",&xx);
-  PeeTreeNu->SetBranchAddress("Phi_e",&phi_e);
-  PeeTreeNu->SetBranchAddress("Phi_m",&phi_m);
-  PeeTreeNu->SetBranchAddress("Phi_t",&phi_t);
+  PeeTreeNu->SetBranchAddress("Pb",&yy);
   
   Long64_t nentries = PeeTreeNu->GetEntries();
   
-  std::cout << " data: " << nentries << std::endl;
-  
   for (Long64_t i=0;i<nentries;i++) {
     PeeTreeNu->GetEntry(i);
-    ProbNu[0]->SetPoint( i, xx, phi_e);
-    ProbNu[1]->SetPoint( i, xx, phi_m);
-    ProbNu[2]->SetPoint( i, xx, phi_t);
+    ProbNu[0]->SetPoint( i, xx, yy);
+  }
+
+  ///Pem
+  
+  PemTreeNu->SetBranchAddress("Ex",&xx);
+  PemTreeNu->SetBranchAddress("Pb",&yy);
+
+  nentries = PemTreeNu->GetEntries();
+  
+  for (Long64_t i=0;i<nentries;i++) {
+    PemTreeNu->GetEntry(i);
+    ProbNu[1]->SetPoint( i, xx, yy);
+  }
+  
+  ///Pet
+
+  PetTreeNu->SetBranchAddress("Ex",&xx);
+  PetTreeNu->SetBranchAddress("Pb",&yy);
+
+  nentries = PetTreeNu->GetEntries();
+  
+  for (Long64_t i=0;i<nentries;i++) {
+    PetTreeNu->GetEntry(i);
+    ProbNu[2]->SetPoint( i, xx, yy);
   }
   
   for( int k=0; k < 3; ++k) 
   {
     ProbNu[k]->SetMarkerStyle(1);
     ProbNu[k]->SetFillColor(10);
-    ProbNu[k]->SetMaximum(0.5);
+    ProbNu[k]->SetMaximum(1.3);
     TString yaxis = ((TObjString*)v_Labels->At(k))->GetString();
     ProbNu[k]->GetYaxis()->SetTitle( yaxis.Data() );
     ProbNu[k]->GetXaxis()->SetTitle("E [eV]");
     ProbNu[k]->GetYaxis()->CenterTitle(true); 
     ProbNu[k]->GetXaxis()->CenterTitle(true); 
-    ProbNu[k]->GetXaxis()->SetLabelOffset(0.007);
-    ProbNu[k]->GetXaxis()->SetLabelSize(0.07);
-    ProbNu[k]->GetXaxis()->SetTitleSize(0.06);
-    ProbNu[k]->GetXaxis()->SetTitleOffset(0.9);
-    ProbNu[k]->GetYaxis()->SetLabelOffset(0.007);
-    ProbNu[k]->GetYaxis()->SetLabelSize(0.07);
-    ProbNu[k]->GetYaxis()->SetTitleSize(0.06);
-    ProbNu[k]->GetYaxis()->SetTitleOffset(0.8);
-    ProbNu[k]->GetYaxis()->SetTitleFont(42);
-    
   }
   
   leg->AddEntry( ProbNu[0], "#nu");
@@ -129,40 +136,45 @@ void makePlots( const char * model, const char * flavour)
   leg->SetLineWidth(1);
   leg->SetFillColor(0);
   leg->SetFillStyle(1001);
+
+
+  c1->cd(1);
+  gPad->SetGridx();
+  gPad->SetGridy();
+  gPad->SetLogx();
+  ProbNu[0]->Draw("APL");
+  topTitle(model);
+  leg->DrawClone();
   
+  c1->cd(2);
+  gPad->SetGridx();
+  gPad->SetGridy();
+  gPad->SetLogx();
+  ProbNu[1]->Draw("APL");
+  leg->DrawClone();
+    
+  c1->cd(3);
+  gPad->SetGridx();
+  gPad->SetGridy();
+  gPad->SetLogx();
+  ProbNu[2]->Draw("APL");
+  leg->DrawClone();
+
+  c1->cd();
+
   std::stringstream saveAs;
-
-  for( int k=0; k < 3; ++k ) 
-  {
     
-    c1[k]->cd();
-    gPad->SetGridx();
-    gPad->SetGridy();
-    gPad->SetLogx();
-    ProbNu[k]->Draw("APL");
-    topTitle(model);
-    leg->DrawClone();
-
-    TLine *line = new TLine(8.4e+10,0.33,1.50e+14,0.33);
-    line->SetLineColor(2);
-    line->SetLineStyle(2);
-    line->SetLineWidth(2);
-    line->Draw();
-    c1[k]->Modified();
-    c1[k]->cd();
+  saveAs.str("");
+  saveAs << path << "/nueosc_" << model << "_f1" << ".pdf";
+  c1->SaveAs( saveAs.str().c_str() );
     
-    saveAs.str("");
-    saveAs << path << "/nueosc_flux_" << model << "_" << flavour << "_f1_" << k << ".pdf";
-    c1[k]->SaveAs( saveAs.str().c_str() );
-    
-    saveAs.str("");
-    saveAs << path << "/nueosc_flux_" << model << "_" << flavour << "_f1_" << k << ".png";
-    c1[k]->SaveAs( saveAs.str().c_str() );
-    
-  }
-    
+  saveAs.str("");
+  saveAs << path << "/nueosc_" << model << "_f1" << ".png";
+  c1->SaveAs( saveAs.str().c_str() );
   
-    
+  saveAs.str("");
+  saveAs << path << "/nueosc_" << model << "_f1" << ".eps";
+  c1->SaveAs( saveAs.str().c_str() );
   
     
 }
