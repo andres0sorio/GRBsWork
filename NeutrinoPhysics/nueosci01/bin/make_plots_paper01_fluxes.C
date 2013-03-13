@@ -13,9 +13,9 @@ void topTitle(const char *title)
   latex.SetNDC();
   latex.SetTextSize(0.06);
   latex.SetTextAlign(31); // align right
-  latex.DrawLatex(0.90,0.96, title);
+  latex.DrawLatex(0.90,0.92, title);
   latex.SetTextAlign(11); // align left
-  latex.DrawLatex(0.18,0.96,"Preliminary");
+  latex.DrawLatex(0.18,0.92,"Preliminary");
 }
 
 void makePlots() 
@@ -37,15 +37,17 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  makePlots("ModelA","aPee");
+  makePlots("ModelA","Pee","output-ModelA-vacuum-All.root");
   
 }
 
-void makePlots( const char * model, const char * flavour) 
+void makePlots( const char * model, const char * flavour, const char * infile) 
 {
   
+  tdrStyle->cd();
+
   //Output path
-  TString path("./results");
+  TString path("./paper01-plots/flux/");
   
   TString dataPee = TString( model ) + TString("_") + TString(flavour) + TString("/data");
   
@@ -58,7 +60,7 @@ void makePlots( const char * model, const char * flavour)
   label = new TObjString( "#phi_{#tau}" );
   v_Labels->Add( label ); 
   
-  TFile * f1 = new TFile("output-ModelA-vacuum-All.root");
+  TFile * f1 = new TFile(infile);
   
   f1->cd();
   
@@ -112,12 +114,12 @@ void makePlots( const char * model, const char * flavour)
     ProbNu[k]->GetXaxis()->CenterTitle(true); 
     ProbNu[k]->GetXaxis()->SetLabelOffset(0.007);
     ProbNu[k]->GetXaxis()->SetLabelSize(0.07);
-    ProbNu[k]->GetXaxis()->SetTitleSize(0.06);
+    ProbNu[k]->GetXaxis()->SetTitleSize(0.07);
     ProbNu[k]->GetXaxis()->SetTitleOffset(0.9);
     ProbNu[k]->GetYaxis()->SetLabelOffset(0.007);
     ProbNu[k]->GetYaxis()->SetLabelSize(0.07);
-    ProbNu[k]->GetYaxis()->SetTitleSize(0.06);
-    ProbNu[k]->GetYaxis()->SetTitleOffset(0.8);
+    ProbNu[k]->GetYaxis()->SetTitleSize(0.09);
+    ProbNu[k]->GetYaxis()->SetTitleOffset(0.45);
     ProbNu[k]->GetYaxis()->SetTitleFont(42);
     
   }
@@ -153,11 +155,15 @@ void makePlots( const char * model, const char * flavour)
     c1[k]->cd();
     
     saveAs.str("");
-    saveAs << path << "/nueosc_flux_" << model << "_" << flavour << "_f1_" << k << ".pdf";
+    saveAs << path  << model << "/pdf/" << "nueosc_flux_" << model << "_" << flavour << "_f1_" << k << ".pdf";
     c1[k]->SaveAs( saveAs.str().c_str() );
     
     saveAs.str("");
-    saveAs << path << "/nueosc_flux_" << model << "_" << flavour << "_f1_" << k << ".png";
+    saveAs << path  << model << "/png/" << "nueosc_flux_" << model << "_" << flavour << "_f1_" << k << ".png";
+    c1[k]->SaveAs( saveAs.str().c_str() );
+
+    saveAs.str("");
+    saveAs << path  << model << "/eps/" << "nueosc_flux_" << model << "_" << flavour << "_f1_" << k << ".eps";
     c1[k]->SaveAs( saveAs.str().c_str() );
     
   }

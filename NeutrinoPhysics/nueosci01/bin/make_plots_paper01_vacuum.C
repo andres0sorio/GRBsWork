@@ -37,17 +37,17 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  makePlots("ModelA","Vacuum");
+  makePlots("ModelA","output-ModelA-vacuum-All.root");
   
 }
 
-void makePlots( const char * model, const char * flavour) 
+void makePlots( const char * model, const char * infile) 
 {
   
   //Output path
-  TString path("./results");
+  TString path("./paper01-plots/flux/");
   
-  TString dataPee = TString( model ) + TString("_") + TString(flavour) + TString("/data");
+  TString dataPee = TString( model ) + TString("_Vacuum_Pee/data");
   
   TList * v_Labels = new TList();
   TObjString *label;
@@ -58,7 +58,7 @@ void makePlots( const char * model, const char * flavour)
   label = new TObjString( "#phi_{#tau}" );
   v_Labels->Add( label ); 
   
-  TFile * f1 = new TFile("output-modelA-flux-vac.root");
+  TFile * f1 = new TFile(infile);
   
   f1->cd();
   
@@ -152,11 +152,15 @@ void makePlots( const char * model, const char * flavour)
     c1[k]->cd();
     
     saveAs.str("");
-    saveAs << path << "/nueosc_flux_" << model << "_" << flavour << "_f1_" << k << ".pdf";
+    saveAs << path << model << "/pdf/" << "nueosc_flux_" << model << "_ind_" << k << ".pdf";
     c1[k]->SaveAs( saveAs.str().c_str() );
     
     saveAs.str("");
-    saveAs << path << "/nueosc_flux_" << model << "_" << flavour << "_f1_" << k << ".png";
+    saveAs << path << model << "/png/" << "nueosc_flux_" << model << "_ind_" << k << ".png";
+    c1[k]->SaveAs( saveAs.str().c_str() );
+
+    saveAs.str("");
+    saveAs << path << model << "/eps/" << "nueosc_flux_" << model << "_ind_" << k << ".eps";
     c1[k]->SaveAs( saveAs.str().c_str() );
     
   }

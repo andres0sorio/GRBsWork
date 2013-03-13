@@ -13,9 +13,9 @@ void topTitle(const char *title)
   latex.SetNDC();
   latex.SetTextSize(0.06);
   latex.SetTextAlign(31); // align right
-  latex.DrawLatex(0.90,0.96, title);
+  latex.DrawLatex(0.90,0.92, title);
   latex.SetTextAlign(11); // align left
-  latex.DrawLatex(0.18,0.96,"Preliminary");
+  latex.DrawLatex(0.18,0.92,"Preliminary");
 }
 
 void makePlots() 
@@ -37,8 +37,8 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  makePlots("ModelA","Pee","output.root");
-  makePlots("ModelA","aPee","output.root");
+  makePlots("ModelA","Pmt","output-ModelA-vacuum-All.root");
+  makePlots("ModelA","aPmt","output-ModelA-vacuum-All.root");
   
 }
 
@@ -46,7 +46,7 @@ void makePlots( const char * model, const char * prob, const char * infile)
 {
   
   //Output path
-  TString path("./results");
+  TString path("./paper01-plots/probs/");
   
   TString dataPxx = TString( model ) + TString("_") + TString(prob) +  TString("/data");
   
@@ -92,7 +92,18 @@ void makePlots( const char * model, const char * prob, const char * infile)
   ProbNu[0]->GetXaxis()->SetTitle("E [eV]");
   ProbNu[0]->GetYaxis()->CenterTitle(true); 
   ProbNu[0]->GetXaxis()->CenterTitle(true); 
-  
+  ProbNu[0]->GetXaxis()->SetLabelOffset(0.007);
+  ProbNu[0]->GetXaxis()->SetLabelSize(0.08);
+  ProbNu[0]->GetXaxis()->SetTitleSize(0.07);
+  ProbNu[0]->GetXaxis()->SetTitleOffset(0.9);
+  ProbNu[0]->GetXaxis()->SetLabelFont(42);
+  ProbNu[0]->GetYaxis()->SetLabelOffset(0.007);
+  ProbNu[0]->GetYaxis()->SetLabelSize(0.08);
+  ProbNu[0]->GetYaxis()->SetLabelFont(42);
+  ProbNu[0]->GetYaxis()->SetTitleSize(0.09);
+  ProbNu[0]->GetYaxis()->SetTitleOffset(0.45);
+  ProbNu[0]->GetYaxis()->SetTitleFont(42);
+
   leg->AddEntry( ProbNu[0], "#nu");
   leg->SetBorderSize(0);
   leg->SetTextSize(0.1);
@@ -115,11 +126,15 @@ void makePlots( const char * model, const char * prob, const char * infile)
   std::stringstream saveAs;
   
   saveAs.str("");
-  saveAs << path << "/nueosc_" << model << "_" << prob << "_f1" << ".pdf";
+  saveAs << path << model << "/pdf/" << "nueosc_" << model << "_" << prob << "_ind" << ".pdf";
   c1->SaveAs( saveAs.str().c_str() );
   
   saveAs.str("");
-  saveAs << path << "/nueosc_" << model << "_" << prob << "_f1" << ".png";
+  saveAs << path << model << "/png/" << "nueosc_" << model << "_" << prob << "_ind" << ".png";
+  c1->SaveAs( saveAs.str().c_str() );
+
+  saveAs.str("");
+  saveAs << path << model << "/eps/" << "nueosc_" << model << "_" << prob << "_ind" << ".eps";
   c1->SaveAs( saveAs.str().c_str() );
   
   

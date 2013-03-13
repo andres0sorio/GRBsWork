@@ -5,11 +5,15 @@
 // Include files
 #include <RootCommon.h>
 #include <cmath>
-#include "IProbabilityMatrix.h"
-
 
 /** @class DensityModels DensityModels.h
  *  
+ *  \brief Density models description file
+ *  This file contains all the density models -- all derive from DensityModels class
+ *  
+ *  Ref: 
+ *  [1] Olga Mena Phys.Rev.D75:063003,2007
+ *  [2] Julia Becker Phys. Reports 458 2008
  *
  *  @author Andres Osorio
  *  @date   2011-09-25
@@ -142,16 +146,17 @@ public:
   virtual ~rhoEarthA( ){}; ///< Destructor
   
   virtual double operator() (double *x, double *p) {
-    
-    double xx = x[0]; // distance
+
     double L1 = p[2] * p[4];
     double L2 = L1 + ( p[3] * p[4] );
     
+    double DX = (L2-L1)/2.0;
+    
+    double xx = abs( ( x[0]-(L1+DX) ) ); // distance
+    
     double result = 0.0;
     
-    if ( xx <= L1 ) 
-      result = p[0];
-    else if ( xx > L1 && xx < L2 ) 
+    if ( xx <= DX ) 
       result = p[1];
     else 
       result = p[0];
@@ -172,13 +177,13 @@ public:
   
   virtual double operator() (double *x, double *p) {
 
-    // rho [g/cm^3]: Ref Physics Reports 458 (2008) 173-246
-    
     double value = 0.0;
-
-    double xx = pow(x[0],2.0);
-    double xxx = pow(x[0],3.0);
-        
+    double LMAX  = p[0];
+    double DX    = LMAX/2.0;
+    double x0    = abs( ( x[0]-DX) ) / DX;
+    double xx    = pow( x0 , 2.0 );
+    double xxx   = pow( x0 , 3.0 );
+            
     if( x[0] < 0.192 )
       value = 13.0885 - 8.8381*x[0];
     else if( x[0] > 0.192 && x[0] < 0.546 )
@@ -201,11 +206,29 @@ public:
       value = 1.02;
     else value = -1.1111;
     
-    return m_sign * value;
+    return m_sign * value * 4.2951E+18 * 8.79e-33;
         
   };
   
 };
+
+class zeroPotencial : public DensityModels {
+public: 
+  
+  /// Standard constructor
+  zeroPotencial( ) : DensityModels() { m_sign = 1.0; }; 
+  
+  virtual ~zeroPotencial( ){}; ///< Destructor
+  
+  virtual double operator() (double *x, double *p) {
+
+    return 0.0;
+        
+  };
+  
+};
+
+
 
 class nvEnergy {
 public: 

@@ -36,6 +36,7 @@ NeutrinosInMediumPaper::NeutrinosInMediumPaper( MixingParameters * mixpars ) {
   m_Models["ModelC"] = (DensityModels*) new rhoModelC();
   m_Models["EarthA"] = (DensityModels*) new rhoEarthA();
   m_Models["EarthB"] = (DensityModels*) new rhoEarthB();
+  m_Models["Vacuum"] = (DensityModels*) new zeroPotencial(); // 
 
   m_file = new TFile("output.root","RECREATE");
   m_file->cd();

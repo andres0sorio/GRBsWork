@@ -5,7 +5,7 @@
 
 // local
 #include "DensityModels.h"
-
+#include "IProbabilityMatrix.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : DensityModels

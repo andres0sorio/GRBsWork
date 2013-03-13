@@ -13,9 +13,9 @@ void topTitle(const char *title)
   latex.SetNDC();
   latex.SetTextSize(0.06);
   latex.SetTextAlign(31); // align right
-  latex.DrawLatex(0.90,0.96, title);
+  latex.DrawLatex(0.90,0.92, title);
   latex.SetTextAlign(11); // align left
-  latex.DrawLatex(0.18,0.96,"Preliminary");
+  latex.DrawLatex(0.18,0.92,"Preliminary");
 }
 
 void makePlots() 
@@ -37,15 +37,15 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  makePlots("ModelA");
+  makePlots("ModelA","output-ModelA-vacuum-All.root");
   
 }
 
-void makePlots( const char * model ) 
+void makePlots( const char * model, const char * infile ) 
 {
   
   //Output path
-  TString path("./results");
+  TString path("./paper01-plots/probs/");
   
   TString dataPee  = TString( model ) + TString("_Pee/data");
   TString dataPem  = TString( model ) + TString("_Pem/data");
@@ -63,7 +63,7 @@ void makePlots( const char * model )
   label = new TObjString( "Pe#tau" );
   v_Labels->Add( label ); 
   
-  TFile * f1 = new TFile("results/");
+  TFile * f1 = new TFile(infile);
   
   f1->cd();
   
@@ -129,7 +129,7 @@ void makePlots( const char * model )
   PemTreeANu->SetBranchAddress("Ex",&xx);
   PemTreeANu->SetBranchAddress("Pb",&yy);
   
-  nentries = PeeTreeANu->GetEntries();
+  nentries = PemTreeANu->GetEntries();
   
   for (Long64_t i=0;i<nentries;i++) {
     PemTreeANu->GetEntry(i);
@@ -163,17 +163,30 @@ void makePlots( const char * model )
     ProbNu[k]->SetMarkerStyle(1);
     ProbNu[k]->SetFillColor(10);
     ProbNu[k]->SetMaximum(1.3);
+    TString yaxis = ((TObjString*)v_Labels->At(k))->GetString();
+    ProbNu[k]->GetYaxis()->SetTitle( yaxis.Data() );
+    ProbNu[k]->GetXaxis()->SetTitle("E [eV]");
+    ProbNu[k]->GetYaxis()->CenterTitle(true); 
+    ProbNu[k]->GetXaxis()->CenterTitle(true); 
+    ProbNu[k]->GetXaxis()->SetLabelOffset(0.007);
+    ProbNu[k]->GetXaxis()->SetLabelSize(0.08);
+    ProbNu[k]->GetXaxis()->SetTitleSize(0.07);
+    ProbNu[k]->GetXaxis()->SetTitleOffset(0.9);
+    ProbNu[k]->GetXaxis()->SetLabelFont(42);
+    ProbNu[k]->GetYaxis()->SetLabelOffset(0.007);
+    ProbNu[k]->GetYaxis()->SetLabelSize(0.08);
+    ProbNu[k]->GetYaxis()->SetLabelFont(42);
+    ProbNu[k]->GetYaxis()->SetTitleSize(0.09);
+    ProbNu[k]->GetYaxis()->SetTitleOffset(0.45);
+    ProbNu[k]->GetYaxis()->SetTitleFont(42);
+    
     ProbANu[k]->SetMarkerStyle(1);
     ProbANu[k]->SetMarkerColor(2);
     ProbANu[k]->SetLineColor(2);
     ProbANu[k]->SetFillColor(10);
     ProbANu[k]->SetMaximum(1.3);
     
-    TString yaxis = ((TObjString*)v_Labels->At(k))->GetString();
-    ProbNu[k]->GetYaxis()->SetTitle( yaxis.Data() );
-    ProbNu[k]->GetXaxis()->SetTitle("E [eV]");
-    ProbNu[k]->GetYaxis()->CenterTitle(true); 
-    ProbNu[k]->GetXaxis()->CenterTitle(true); 
+
   }
   
   leg->AddEntry( ProbNu[0], "#nu");
@@ -201,7 +214,7 @@ void makePlots( const char * model )
   gPad->SetGridy();
   gPad->SetLogx();
   ProbNu[1]->Draw("APL");
-  ProbANu[1]->Draw("PL");
+  ProbANu[1]->Draw("P");
   leg->DrawClone();
     
   c1->cd(3);
@@ -209,7 +222,7 @@ void makePlots( const char * model )
   gPad->SetGridy();
   gPad->SetLogx();
   ProbNu[2]->Draw("APL");
-  ProbANu[2]->Draw("PL");
+  ProbANu[2]->Draw("P");
   leg->DrawClone();
 
   c1->cd();
@@ -217,15 +230,15 @@ void makePlots( const char * model )
   std::stringstream saveAs;
     
   saveAs.str("");
-  saveAs << path << "/nueosc_" << model << "_f2" << ".pdf";
+  saveAs << path << model << "/pdf/" << "nueosc_probs_" << model << "_f2" << ".pdf";
   c1->SaveAs( saveAs.str().c_str() );
-    
+  
   saveAs.str("");
-  saveAs << path << "/nueosc_" << model << "_f2" << ".png";
+  saveAs << path << model << "/png/" << "nueosc_probs_" << model << "_f2" << ".png";
   c1->SaveAs( saveAs.str().c_str() );
 
   saveAs.str("");
-  saveAs << path << "/nueosc_" << model << "_f2" << ".eps";
+  saveAs << path << model << "/eps/" << "nueosc_probs_" << model << "_f2" << ".eps";
   c1->SaveAs( saveAs.str().c_str() );
     
     
