@@ -133,15 +133,27 @@ int main(int iargv, char **argv) {
   strs.clear();
 
   ///Step 2 
-
+  
   TFile * infile = new TFile("output.root","UPDATE");
   
   neuOsc = new NeutrinosInMediumPaper( mixpars , infile );
   
-  neuOsc->PropagateVacuum( model.c_str() );
+  neuOsc->PropagateVacuum( model.c_str(), "0" ); // the average method for propagation
   
   delete neuOsc;
+
+  ///Step 2 -> confirmation
   
+  infile = new TFile("output.root","UPDATE");
+
+  modpars =  modparlist.GetParameters( "ZeroPt" );
+
+  neuOsc = new NeutrinosInMediumPaper( mixpars , infile );
+  
+  neuOsc->Propagate( "ZeroPt", model.c_str(), "0", modpars); // the average method for propagation
+  
+  delete neuOsc;
+
   return 0;
   
 }

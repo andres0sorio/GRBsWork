@@ -37,17 +37,17 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  makePlots("ModelA","output-ModelA-vacuum-All.root");
+  makePlots("Vacuum","ModelA","output-ModelA-vacuum-All.root");
   
 }
 
-void makePlots( const char * model, const char * infile) 
+void makePlots( const char * model, const char * src, const char * infile) 
 {
   
   //Output path
   TString path("./paper01-plots/flux/");
   
-  TString dataPee = TString( model ) + TString("_Vacuum_Pee/data");
+  TString dataPee = TString( model ) +  + TString("_") + TString( src ) + TString("_Pee/data");
   
   TList * v_Labels = new TList();
   TObjString *label;

@@ -34,17 +34,18 @@ public:
   
   NeutrinoOscInVacuum     * m_Physics_Vacuum;
     
-  void Test();
+  void PropagateVacuum(const char *, const char * );
+  
+  void Propagate(const char *, const char *, const char *, ModelParameters *);
   
   void GenerateDatapoints(const char *, const char * , ModelParameters *);
   
-  void PropagateVacuum(const char * );
-  
+    
 protected:
   
 private:
 
-  bool Init( const char *, const char * );
+  bool Init( const char *,  const char *, const char * );
 
   bool m_debug;
 

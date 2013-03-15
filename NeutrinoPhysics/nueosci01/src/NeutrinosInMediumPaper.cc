@@ -36,7 +36,7 @@ NeutrinosInMediumPaper::NeutrinosInMediumPaper( MixingParameters * mixpars ) {
   m_Models["ModelC"] = (DensityModels*) new rhoModelC();
   m_Models["EarthA"] = (DensityModels*) new rhoEarthA();
   m_Models["EarthB"] = (DensityModels*) new rhoEarthB();
-  m_Models["Vacuum"] = (DensityModels*) new zeroPotencial(); // 
+  m_Models["ZeroPt"] = (DensityModels*) new zeroPotencial(); // 
 
   m_file = new TFile("output.root","RECREATE");
   m_file->cd();
@@ -47,7 +47,8 @@ NeutrinosInMediumPaper::NeutrinosInMediumPaper( MixingParameters * mixpars ) {
 
 NeutrinosInMediumPaper::NeutrinosInMediumPaper( MixingParameters * mixpars , TFile * prevStep ) {
 
-  m_Physics = 0x0;
+  m_Physics = new NeutrinoOscInVarDensity( mixpars );
+  m_Physics->use_default_pars = false;
 
   m_Physics_Vacuum =  new NeutrinoOscInVacuum( mixpars );
   m_Physics_Vacuum->use_default_pars = false;
@@ -62,6 +63,13 @@ NeutrinosInMediumPaper::NeutrinosInMediumPaper( MixingParameters * mixpars , TFi
   m_ProbIndex["Ptt"] = std::make_pair( 2, 2);
   m_ProbIndex["Pmt"] = std::make_pair( 2, 1);
   m_ProbIndex["Ptm"] = std::make_pair( 1, 2);
+
+  m_Models["ModelA"] = (DensityModels*) new rhoModelA();
+  m_Models["ModelB"] = (DensityModels*) new rhoModelB();
+  m_Models["ModelC"] = (DensityModels*) new rhoModelC();
+  m_Models["EarthA"] = (DensityModels*) new rhoEarthA();
+  m_Models["EarthB"] = (DensityModels*) new rhoEarthB();
+  m_Models["ZeroPt"] = (DensityModels*) new zeroPotencial(); // 
 
   m_file = prevStep;
   
@@ -91,111 +99,7 @@ NeutrinosInMediumPaper::~NeutrinosInMediumPaper() {
   
 } 
 
-//=============================================================================
-void NeutrinosInMediumPaper::Test()
-{
-
-  //... Make the bloody plots ;-)
-
-  h_canvas["PeePadA"] = new TCanvas("PeePadA", "Oscillation probabilities", 184, 60, 861, 670);
-
-  h_canvas["PeePadA"]->SetLogx();
-  
-  h_paper01Graphs["PeeA"] = new TGraph();
-  
-  double K0   = (4.0E-6) * 4.2951E18;
-  double LMIN = (8.0E8)  * IProbabilityMatrix::InvEvfactor;
-  double LMAX = (3.0E10) * IProbabilityMatrix::InvEvfactor;
-  
-  if (m_debug) std::cout << "Constants: " << '\n'
-                         << "K0 " << K0 << '\n'
-                         << "LMIN " << LMIN << '\n'
-                         << "LMAX " << LMAX << std::endl;
- 
-  m_Physics->initializeAngles();
-
-  m_Physics->updateMixingMatrix();
-  
-  //................ Profile A
-  
-  TF1 * profA = new TF1("profA", densityModA, LMIN, LMAX, 2);
-  profA->SetParameter(0, K0 );
-  profA->SetParameter(1, LMAX );
-  
-  m_Physics->setPotential( profA );
-  
-  long double Ex = 1.0E11L;
-  long double Emax = 1.0E14L;
-  long double dx = 0.5E14L; // This is the distance step
-  
-  int k = 0;
-  
-  long double LRes1 = 1.1E9 * IProbabilityMatrix::InvEvfactor; //starting point along the radius of the star
-  
-  while ( Ex <= Emax ) {
-    
-    m_Physics->m_Ev = Ex;
-    m_Physics->updateEab();
-    
-    matrix <std::complex< long double> >  * tmp;
-    tmp = new matrix<std::complex< long double> >(3,3);
-    
-    double long x1 = 0.0;
-    double long x2 = LRes1;
-    
-    int i = 0;
-    
-    while ( x2 <= LMAX ) {
-      
-      m_Physics->Eval_UFlavour( x2, x1 );
-      
-      if( i == 0) {
-        (*tmp) = (*m_Physics->m_Uf); 
-      } else
-        (*tmp) = prod( (*m_Physics->m_Uf), (*tmp) );
-      
-      x1  = x2;
-      x2 += dx;
-      
-      i += 1;
-            
-    }
-    
-    (*m_Physics->m_Uf) = (*tmp);
-    (*m_Physics->m_Ufd) = conj ( (*m_Physics->m_Uf) );
-    
-    m_Physics->calcProbabilities();
-    
-    double d1 = (*m_Physics->m_Prob_AtoB)(0,0);
-
-    if ( ! (boost::math::isnan)(d1) )
-      h_paper01Graphs["PeeA"]->SetPoint( k, Ex, d1);
-    
-    k += 1; 
-    
-    if ( Ex < 1.0E12 )
-      Ex += 1.0E10L; // step in energy
-    else
-      Ex += 1.0E12L; //step in energy
-    
-    delete tmp;
-    
-  }
-  
-  std::cout << "max pts: " << k << std::endl;
-  
-  h_canvas["PeePadA"]->cd();
-  h_paper01Graphs["PeeA"]->Draw("APL");
-  h_canvas["PeePadA"]->Print("results/profile-A-probabilities.png");
-  
-  std::cout << " all done " << std::endl;  
-  
-  delete h_canvas["PeePadA"];
-    
-}
-
-
-void NeutrinosInMediumPaper::GenerateDatapoints(const char * model, 
+void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model, 
                                                 const char * probability , 
                                                 ModelParameters * modelpars )
 {
@@ -203,8 +107,8 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * model,
   bool  anti_nu   = false;
   bool  eval_flux = false;
   
-  m_file->mkdir(TString(model) + TString("_") + TString(probability))->cd();
-
+  m_file->mkdir(TString(out_model) + TString("_0_") + TString(probability))->cd(); // 0 = no model
+  
   ///argument probability tells if we are working with neutrinos (default) or anti-neutrinos
   
   std::string Pxx( probability );
@@ -228,14 +132,14 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * model,
     m_tree->Branch("Phi_t", &m_Phi_t, "Phi_t/d");
   }
   
-  DensityModels * density_Mod = m_Models[model];
+  DensityModels * density_Mod = m_Models[out_model];
   
   if ( anti_nu ) density_Mod->treat_as_AntiNu();
 
-  std::cout << " checking sign in front of the model: " << density_Mod->m_sign << std::endl;
+  if( m_debug ) std::cout << " checking sign in front of the out_model: " << density_Mod->m_sign << std::endl;
   
   double Gf = DensityModels::GF * DensityModels::InveV2; // [1/eV^2]
-  double Ar = (2.0/sqrt(2.0)) * Gf * (1.0/DensityModels::Mp); // (Fixex factor of 2.0 in front of the potential (Sarira)
+  double Ar = (2.0/sqrt(2.0)) * Gf * (1.0/DensityModels::Mp); // (Fixed factor of 2.0 in front of the potential (Sarira)
   double K0   = (4.0E-6) * 4.2951E18 * Ar;
 
   //double LMAX = (3.0E10) * IProbabilityMatrix::InvEvfactor;
@@ -271,10 +175,6 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * model,
   m_Physics->setPotential( profA );
   
   int k = 0;
-  
-  std::cout << "GenerateDatapoints> looping over energy> " << std::endl;
-  
-  int counter = 0;
   
   while ( Ex <= Emax ) {
     
@@ -317,8 +217,6 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * model,
       m_Ex = Ex;
       m_Pb = d1;
       
-      //std::cout << m_Ex << " " << m_Pb << std::endl;
-      
       if ( eval_flux ) {
         m_Phi_e = m_Physics->Propagate( 0, 1.0, 2.0, 0.0 ); 
         m_Phi_m = m_Physics->Propagate( 1, 1.0, 2.0, 0.0 ); 
@@ -338,10 +236,8 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * model,
 
     delete tmp;
   
-    //if ( counter > 10 ) break;
-    ++counter;
-    
-  
+    //if ( k > 10 ) break;
+      
   }
   
   std::cout << "GenerateDatapoints> max pts: " << k << std::endl;
@@ -349,13 +245,146 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * model,
   m_tree->Write();
 
   m_file->cd("../");
-  
+
+  delete profA;
+    
   std::cout << "GenerateDatapoints> all done " << std::endl;  
   
 }
 
+void NeutrinosInMediumPaper::Propagate(const char * out_model, const char * in_model,  const char * prev_model,
+                                       ModelParameters * modelpars )
+{
+  
+  bool anti_nu = false;
+  
+  double LMIN      = modelpars->GetPar("LMIN");
+  double LMAX      = modelpars->GetPar("LMAX");
+  long double dx   = (long double) modelpars->GetPar("Dx");  //this is the distance step
+  
+  DensityModels * density_Mod = m_Models[out_model];
+  
+  if ( anti_nu ) density_Mod->treat_as_AntiNu();
+  
+  int maxpars = (int)modelpars->GetPar(0);
+  
+  std::cout << " checking sign in front of the model: " << density_Mod->m_sign <<  " " << maxpars << std::endl;
+  
+  TF1 * profA = new TF1("profA", density_Mod, LMIN, LMAX, maxpars);
+  
+  for( int i=1; i <= maxpars; ++i) {
+    profA->SetParameter( ( i-1 ), (modelpars->GetPar(i))  );
+    std::cout << " * par: " << (modelpars->GetPar(i)) << std::endl;
+  }
+  
+  m_Phi_e = 0.0;
+  m_Phi_m = 0.0;
+  m_Phi_t = 0.0;
+  
+  std::vector<std::string> input;
+  std::vector<std::string>::iterator inputItr;
+  
+  input.push_back( std::string("Pee") );
+  input.push_back( std::string("aPee") );
+  
+  for( inputItr = input.begin(); inputItr != input.end(); ++inputItr) {
+    
+    //Initialize input tree
+    bool valid = Init ( in_model, prev_model, (*inputItr).c_str() );
+    if( !valid ) continue;
+    
+    // setup new output tree
+        
+    m_file->mkdir(TString(out_model) + TString("_") + TString(in_model) + TString("_") + TString((*inputItr).c_str()))->cd();
 
-void NeutrinosInMediumPaper::PropagateVacuum( const char * model )
+    TString output = TString(out_model) + TString("_") + TString(in_model) + TString("_") + TString((*inputItr).c_str());
+    
+    std::cout << "Propagation> output_directory: " <<  output << std::endl;
+    
+    m_tree = new TTree("data","Data points");
+    m_tree->Branch("Ex", &m_Ex, "Ex/d");
+    m_tree->Branch("Phi_e", &m_Phi_e, "Phi_e/d");
+    m_tree->Branch("Phi_m", &m_Phi_m, "Phi_m/d");
+    m_tree->Branch("Phi_t", &m_Phi_t, "Phi_t/d");
+    
+    //Loop over input, propagate and save into new tree
+        
+    Long64_t nentries = m_input_tree->GetEntries();
+    
+    std::cout << "Propagation> n points : " << nentries << std::endl;
+    
+    m_Physics->initializeAngles();
+      
+    m_Physics->updateMixingMatrix();
+    
+    m_Physics->setPotential( profA );
+
+    for (Long64_t i=0;i<nentries;i++) {
+      
+      m_input_tree->GetEntry(i);
+      
+      //... we do now the propagation
+        
+      m_Physics->m_Ev = m_Ex_in;
+      m_Physics->updateEab();
+      
+      matrix <std::complex< long double> >  * tmp;
+      tmp = new matrix<std::complex< long double> >(3,3);
+      
+      double long x1 = LMIN;
+      double long x2 = x1 + dx;
+      
+      int i = 0;
+      
+      while ( x2 <= LMAX ) {
+        
+        m_Physics->Eval_UFlavour( x2, x1 );
+        
+        if( i == 0) {
+          (*tmp) = (*m_Physics->m_Uf); 
+        } else
+          (*tmp) = prod( (*m_Physics->m_Uf), (*tmp) );
+        
+        x1  = x2;
+        x2 += dx;
+        
+        i += 1;
+        
+      }
+                
+      (*m_Physics->m_Uf) = (*tmp);
+      (*m_Physics->m_Ufd) = conj ( (*m_Physics->m_Uf) );
+      
+      m_Physics->calcProbabilities();
+
+       double d1 = (*m_Physics->m_Prob_AtoB)( m_ProbIndex["Pee"].first , m_ProbIndex["Pee"].second );
+      
+      if ( ! (boost::math::isnan)(d1) ) {
+        
+        m_Ex = m_Ex_in;
+        m_Phi_e = m_Physics->Propagate( 0, m_Phi_e_in, m_Phi_m_in, m_Phi_t_in ); 
+        m_Phi_m = m_Physics->Propagate( 1, m_Phi_e_in, m_Phi_m_in, m_Phi_t_in ); 
+        m_Phi_t = m_Physics->Propagate( 2, m_Phi_e_in, m_Phi_m_in, m_Phi_t_in ); 
+        
+        m_tree->Fill();
+        
+      }
+      
+      delete tmp;
+      
+    }
+    
+    m_tree->Write();
+    
+    m_file->cd("../");
+    
+  }
+    
+  std::cout << "Propagate> all done " << std::endl;  
+  
+}
+
+void NeutrinosInMediumPaper::PropagateVacuum( const char * in_model, const char * src_model )
 {
   
   //Initialize input trees
@@ -368,13 +397,14 @@ void NeutrinosInMediumPaper::PropagateVacuum( const char * model )
   
   for( inputItr = input.begin(); inputItr != input.end(); ++inputItr) {
     
-    bool valid = Init ( model, (*inputItr).c_str() );
+    bool valid = Init ( in_model, src_model, (*inputItr).c_str() );
     
     if( !valid ) continue;
     
     // setup new output tree
-    
-    m_file->mkdir(TString(model) + TString("_") + TString("Vacuum") +  TString("_") + TString( (*inputItr).c_str() ) )->cd();
+
+    //
+    m_file->mkdir( TString("Vacuum") + TString("_") + TString(in_model) + TString("_") + TString( (*inputItr).c_str() ) )->cd();
     
     m_tree = new TTree("data","Data points");
     m_tree->Branch("Ex", &m_Ex, "Ex/d");
@@ -387,7 +417,7 @@ void NeutrinosInMediumPaper::PropagateVacuum( const char * model )
     
     Long64_t nentries = m_input_tree->GetEntries();
     
-    std::cout << " data: " << nentries << std::endl;
+    std::cout << " n points: " << nentries << std::endl;
     
     m_Physics_Vacuum->initializeAngles();
     
@@ -418,13 +448,15 @@ void NeutrinosInMediumPaper::PropagateVacuum( const char * model )
 
 }
 
-bool NeutrinosInMediumPaper::Init( const char * model , const char * option)
+bool NeutrinosInMediumPaper::Init( const char * in_model , const char * src_step, const char * option)
 {
   
-  TString path = TString(model) + TString("_") + TString(option) + TString("/data");
+  /////
 
-  std::cout << "Init> initilizeing" << path << std::endl;
-    
+  TString path = TString(in_model) + TString("_") + TString(src_step) + TString("_") + TString(option) + TString("/data"); //<- Need to fix this
+  
+  std::cout << "Init> initializing: " << path << std::endl;
+  
   m_Ex_in = 0;
   m_Pb_in = 0;
   m_Phi_e_in = 0.0;
@@ -448,6 +480,8 @@ bool NeutrinosInMediumPaper::Init( const char * model , const char * option)
   m_input_tree->SetBranchAddress("Phi_m", &m_Phi_m_in, &b_Phi_m_in);
   m_input_tree->SetBranchAddress("Phi_t", &m_Phi_t_in, &b_Phi_t_in);
   
+  std::cout << "Init> done" << path << std::endl;
+
   return true;
  
 }

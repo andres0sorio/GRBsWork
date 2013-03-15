@@ -37,18 +37,18 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  makePlots("ModelA","Pmt","output-ModelA-vacuum-All.root");
-  makePlots("ModelA","aPmt","output-ModelA-vacuum-All.root");
+  makePlots("ModelA","0", "Pee","output.root");
+  makePlots("ModelA","0", "aPee","output.root");
   
 }
 
-void makePlots( const char * model, const char * prob, const char * infile) 
+void makePlots( const char * model, const char * src, const char * prob, const char * infile) 
 {
   
   //Output path
   TString path("./paper01-plots/probs/");
   
-  TString dataPxx = TString( model ) + TString("_") + TString(prob) +  TString("/data");
+  TString dataPxx = TString( model ) + TString("_") + TString( src ) + TString("_") + TString(prob) +  TString("/data");
   
   TList * v_Labels = new TList();
   TObjString *label;

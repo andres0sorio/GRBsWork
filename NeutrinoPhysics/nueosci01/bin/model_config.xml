@@ -6,7 +6,7 @@
       2.0
     </Par>
     <Par Id="1" Name="K0">
-      1.51052e-19
+      3.02e-19
     </Par>
     <Par Id="2" Name="LMAX">
       1.5228e+17
@@ -32,7 +32,7 @@
       4.0
     </Par>
     <Par Id="1" Name="KB">
-      1.28e-018
+      2.57e-018
     </Par>
     <Par Id="2" Name="LMAX">
       1.5228e+17
@@ -56,7 +56,7 @@
       0.5E14
     </Par>
     <Par Id="9" Name="De">
-      1.0E9
+      1.0E10
     </Par>
   </ModelParameters>
   <ModelParameters Id="ModelC">
@@ -64,7 +64,7 @@
       3.0
     </Par>
     <Par Id="1" Name="KC">
-      2.38e-019
+      4.76e-019
     </Par>
     <Par Id="2" Name="LMAX">
       1.5228e+17
@@ -124,6 +124,20 @@
     </Par>
     <Par Id="11" Name="De">
       1.0e8
+    </Par>
+  </ModelParameters>
+  <ModelParameters Id="ZeroPt">
+    <Par Id="0" Name="MaxPars">
+      0.0
+    </Par>
+    <Par Id="1" Name="LMIN">
+      0.0
+    </Par>
+    <Par Id="2" Name="LMAX">
+      1.0e30
+    </Par>
+    <Par Id="3" Name="Dx">
+      1.0e24
     </Par>
   </ModelParameters>
  </ModelParameterList>
