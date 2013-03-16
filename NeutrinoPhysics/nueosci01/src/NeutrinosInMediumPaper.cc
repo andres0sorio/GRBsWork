@@ -109,7 +109,7 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
   
   m_file->mkdir(TString(out_model) + TString("_0_") + TString(probability))->cd(); // 0 = no model
   
-  ///argument probability tells if we are working with neutrinos (default) or anti-neutrinos
+  // Argument "probability" tells if we are working with neutrinos (default) or anti-neutrinos ("a" in front)
   
   std::string Pxx( probability );
   
@@ -138,13 +138,6 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
 
   if( m_debug ) std::cout << " checking sign in front of the out_model: " << density_Mod->m_sign << std::endl;
   
-  double Gf = DensityModels::GF * DensityModels::InveV2; // [1/eV^2]
-  double Ar = (2.0/sqrt(2.0)) * Gf * (1.0/DensityModels::Mp); // (Fixed factor of 2.0 in front of the potential (Sarira)
-  double K0   = (4.0E-6) * 4.2951E18 * Ar;
-
-  //double LMAX = (3.0E10) * IProbabilityMatrix::InvEvfactor;
-  //double LMIN = (8.0E8)  * IProbabilityMatrix::InvEvfactor;
-  
   double LMIN      = modelpars->GetPar("LMIN");
   double LMAX      = modelpars->GetPar("LMAX");
   long double Ex   = (long double) modelpars->GetPar("Emin");
@@ -153,16 +146,13 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
   long double dE   = (long double) modelpars->GetPar("De");  //this is the energy step
   
   if (m_debug) std::cout << "Constants: "   << '\n'
-                         << "Gf "   << Gf   << '\n'
-                         << "Ar "   << Ar   << '\n'
-                         << "K0 "   << K0   << '\n'
                          << "LMIN " << LMIN << '\n'
                          << "LMAX " << LMAX << std::endl;
-
+  
   int maxpars = (int)modelpars->GetPar(0);
-
+  
   TF1 * profA = new TF1("profA", density_Mod, LMIN, LMAX, maxpars);
-   
+  
   for( int i=1; i <= maxpars; ++i) {
     profA->SetParameter( ( i-1 ), (modelpars->GetPar(i))  );
     std::cout << " * par: " << (modelpars->GetPar(i)) << std::endl;
@@ -197,6 +187,8 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
         (*tmp) = (*m_Physics->m_Uf); 
       } else
         (*tmp) = prod( (*m_Physics->m_Uf), (*tmp) );
+    
+      //std::cout << " debugging: " << x1 << " " << x2 << " " << Ex << " " << profA->Eval( x2 ) << std::endl;
       
       x1  = x2;
       x2 += dx;
@@ -212,7 +204,7 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
 
     //get the Transition probability A->B
     double d1 = (*m_Physics->m_Prob_AtoB)( m_ProbIndex[Pxx].first , m_ProbIndex[Pxx].second );
-    
+
     if ( ! (boost::math::isnan)(d1) ) {
       m_Ex = Ex;
       m_Pb = d1;

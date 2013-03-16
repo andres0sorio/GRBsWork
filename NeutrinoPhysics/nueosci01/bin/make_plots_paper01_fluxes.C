@@ -106,7 +106,7 @@ void makePlots( const char * model, const char * src, const char * flavour, cons
   {
     ProbNu[k]->SetMarkerStyle(1);
     ProbNu[k]->SetFillColor(10);
-    ProbNu[k]->SetMaximum(1.3);
+    ProbNu[k]->SetMaximum(1.0);
     TString yaxis = ((TObjString*)v_Labels->At(k))->GetString();
     ProbNu[k]->GetYaxis()->SetTitle( yaxis.Data() );
     ProbNu[k]->GetXaxis()->SetTitle("E [eV]");

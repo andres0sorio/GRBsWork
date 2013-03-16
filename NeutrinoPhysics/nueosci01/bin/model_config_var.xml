@@ -9,7 +9,7 @@
       3.02e-19
     </Par>
     <Par Id="2" Name="LMAX">
-      1.5228e+17
+      #####STAR_RADIUS#####
     </Par>
     <Par Id="3" Name="LMIN">
       4.0608e+15

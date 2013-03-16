@@ -47,7 +47,10 @@ VALOBJS = DOMParameters.o MixingParameters.o IProbabilityMatrix.o \
 PAP01OBJS = Graphics.o DOMParameters.o ModelParameters.o MixingParameters.o IProbabilityMatrix.o DensityModels.o \
 	NeutrinoOscInVacuum.o NeutrinoOscInVarDensity.o NeutrinosInMediumPaper.o paper01.o
 
-all : evalxsec.exe validate.exe paper01.exe
+EARTHOBJS = Graphics.o DOMParameters.o ModelParameters.o MixingParameters.o IProbabilityMatrix.o DensityModels.o \
+	NeutrinoOscInVacuum.o NeutrinoOscInVarDensity.o NeutrinosInMediumPaper.o earthval.o
+
+all : evalxsec.exe validate.exe paper01.exe earthval.exe
 
 %.o : %.cc
 	$(CXX) $(CXXFLAGS) -c $< 	
@@ -60,6 +63,9 @@ validate.exe: $(VALOBJS)
 
 paper01.exe: $(PAP01OBJS)
 	 $(CXX) -o $(EXEDIR)/$@ $(PAP01OBJS) $(LINKFLAGS) $(LIBS)
+
+earthval.exe: $(EARTHOBJS)
+	 $(CXX) -o $(EXEDIR)/$@ $(EARTHOBJS) $(LINKFLAGS) $(LIBS)
 
 clean	:
 	$(RM) $(GARBAGE)

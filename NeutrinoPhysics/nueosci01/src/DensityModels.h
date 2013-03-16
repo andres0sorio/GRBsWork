@@ -178,36 +178,36 @@ public:
   virtual double operator() (double *x, double *p) {
 
     double value = 0.0;
-    double LMAX  = p[0];
-    double DX    = LMAX/2.0;
+    double LMAX  = p[0]; 
+    double DX    = LMAX/2.0; 
     double x0    = abs( ( x[0]-DX) ) / DX;
     double xx    = pow( x0 , 2.0 );
     double xxx   = pow( x0 , 3.0 );
-            
-    if( x[0] < 0.192 )
-      value = 13.0885 - 8.8381*x[0];
-    else if( x[0] > 0.192 && x[0] < 0.546 )
-      value = 12.5815 - 1.2638 * x[0] - 3.6426 * xx - 5.5281 * xxx;
-    else if( x[0] > 0.546 && x[0] < 0.895 ) 
-      value = 7.9565 - 6.4761 * x[0] + 5.5283 * xx - 3.0807 * xxx;
-    else if( x[0] > 0.895 && x[0] < 0.906) 
-      value = 5.3197 - 1.4836 * x[0];
-    else if( x[0] > 0.906 && x[0] < 0.937) 
-      value = 11.2494 - 8.0298 * x[0];
-    else if( x[0] > 0.937 && x[0] < 0.965) 
-      value = 7.1089 - 3.8045 * x[0];
-    else if( x[0] > 0.965 && x[0] < 0.996) 
-      value = 2.691 + 0.6924 * x[0];
-    else if( x[0] > 0.996 && x[0] < 0.998) 
+
+    if( x0 < 0.192 )
+      value = 13.0885 - 8.8381*x0;
+    else if( x0 > 0.192 && x0 < 0.546 )
+      value = 12.5815 - 1.2638 * x0 - 3.6426 * xx - 5.5281 * xxx;
+    else if( x0 > 0.546 && x0 < 0.895 ) 
+      value = 7.9565 - 6.4761 * x0 + 5.5283 * xx - 3.0807 * xxx;
+    else if( x0 > 0.895 && x0 < 0.906) 
+      value = 5.3197 - 1.4836 * x0;
+    else if( x0 > 0.906 && x0 < 0.937) 
+      value = 11.2494 - 8.0298 * x0;
+    else if( x0 > 0.937 && x0 < 0.965) 
+      value = 7.1089 - 3.8045 * x0;
+    else if( x0 > 0.965 && x0 < 0.996) 
+      value = 2.691 + 0.6924 * x0;
+    else if( x0 > 0.996 && x0 < 0.998) 
       value = 2.9;
-    else if( x[0] > 0.998 && x[0] < 0.999) 
+    else if( x0 > 0.998 && x0 < 0.999) 
       value = 2.6;
-    else if ( x[0] > 0.999 && x[0] <= 1.0) 
+    else if ( x0 > 0.999 && x0 <= 1.0) 
       value = 1.02;
     else value = -1.1111;
     
-    return m_sign * value * 4.2951E+18 * 8.79e-33;
-        
+    return m_sign * value * p[1] * p[2];
+    
   };
   
 };

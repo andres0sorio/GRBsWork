@@ -37,7 +37,7 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  makePlots("Vacuum","ZeroPt", "ModelA", "Pee", "output.root");
+  makePlots("Vacuum","ZeroPt", "ModelA", "Pee", "output-ModelA-Vacuum-validation.root");
   
 }
 
@@ -172,7 +172,9 @@ void makePlots( const char * model1, const char * model2, const char * src, cons
   
     TString yaxis = ((TObjString*)v_Labels->At(j))->GetString();
     TCanvas * compare = plotHistsAndRatio( h2 , h1, "h1","E [eV]", yaxis.Data());
-
+    
+    topTitle(src);
+    
     std::stringstream saveAs;
 
     saveAs.str("");

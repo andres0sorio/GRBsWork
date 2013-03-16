@@ -162,7 +162,7 @@ void makePlots( const char * model, const char * src, const char * infile )
   {
     ProbNu[k]->SetMarkerStyle(1);
     ProbNu[k]->SetFillColor(10);
-    ProbNu[k]->SetMaximum(1.3);
+    ProbNu[k]->SetMaximum(1.0);
     TString yaxis = ((TObjString*)v_Labels->At(k))->GetString();
     ProbNu[k]->GetYaxis()->SetTitle( yaxis.Data() );
     ProbNu[k]->GetXaxis()->SetTitle("E [eV]");
@@ -184,7 +184,7 @@ void makePlots( const char * model, const char * src, const char * infile )
     ProbANu[k]->SetMarkerColor(2);
     ProbANu[k]->SetLineColor(2);
     ProbANu[k]->SetFillColor(10);
-    ProbANu[k]->SetMaximum(1.3);
+    ProbANu[k]->SetMaximum(1.0);
     
 
   }

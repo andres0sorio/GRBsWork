@@ -15,6 +15,9 @@ int main(int iargv, char **argv) {
   std::string model;
   std::string prob;
   std::string erange;
+  std::string angles;
+  std::string dmass;
+  std::string modfile;
       
   try {
     
@@ -24,7 +27,10 @@ int main(int iargv, char **argv) {
       ("help"     , "produce help message")
       ("model"    , po::value<std::string>(), "model selection ( ModelA, ModelB, ModelC )")
       ("prob"     , po::value<std::string>(), "selected probability ( Pee,Pem,Pet,Pmm,Ptt,... )")
-      ("erange"   , po::value<std::string>(), "energy range ( emin,emax )")
+      ("erange"   , po::value<std::string>(), "energy range ( = emin,emax )")
+      ("angles"   , po::value<std::string>(), "use the following mixing angles ( = theta_1(12),theta_2(13),theta3(23) )")
+      ("dmass2"   , po::value<std::string>(), "use the following delta masses square ( = dm2(Dm23sq),dM2(Dm21sq) )")
+      ("modfile"  , po::value<std::string>(), "use the specified model paramater file ( mymodelfile.xml )")
       ;
     
     po::variables_map vm;
@@ -56,6 +62,32 @@ int main(int iargv, char **argv) {
     else {
       std::cout << "energy range reads from the configuration file \n";
     }
+
+    if (vm.count("angles")) {
+      angles = vm["angles"].as<std::string>();
+      std::cout << "mixing will be set to " <<  angles << std::endl;
+    } 
+    else {
+      std::cout << "using the mixing angles as in the configuration file \n";
+    }
+
+    if (vm.count("dmass2")) {
+      dmass = vm["dmass2"].as<std::string>();
+      std::cout << "dm2 and dM2 will be set to " <<  dmass << std::endl;
+    } 
+    else {
+      std::cout << "using dm2 and dM2 read from the configuration file \n";
+    }
+    
+    if (vm.count("modfile")) {
+      modfile = vm["modfile"].as<std::string>();
+      std::cout << "model configuration file will be set to " <<  modfile << std::endl;
+    } 
+    else {
+      std::cout << "using the default model configuration file \n";
+    }
+
+
     
   }
   
@@ -80,12 +112,54 @@ int main(int iargv, char **argv) {
   
   MixingParameters *mixpars =  mixparlist.GetParameters(0);
   
+  if( angles.size() != 0 )
+  {
+    std::vector<std::string> theta;
+    boost::split(theta, angles, boost::is_any_of(","));
+    if( theta.size() != 3 ) {
+      std::cout << " you need to provid all three angles in the correct order. Type --help" << std::endl;
+      return 1;
+    }
+    else 
+    {
+      mixpars->SetPar1( atof( theta[0].c_str() ) );
+      mixpars->SetPar2( atof( theta[1].c_str() ) );
+      mixpars->SetPar3( atof( theta[1].c_str() ) );
+    }
+    std::cout << (*mixpars) << std::endl;
+  }
+
+  if( dmass.size() != 0 )
+  {
+    std::vector<std::string> dmasses;
+    boost::split(dmasses, dmass, boost::is_any_of(","));
+    if( dmasses.size() != 2 ) {
+      std::cout << " you need to provide both mass differences. Type --help" << std::endl;
+      return 1;
+    }
+    else 
+    {
+      mixpars->SetPar4( atof( dmasses[0].c_str() ) );
+      mixpars->SetPar8( atof( dmasses[1].c_str() ) );
+    }
+    std::cout << (*mixpars) << std::endl;
+  }
+
   //............................................................................................
 
   ModelParameterList modparlist;
   
-  if (modparlist.ParseFile("model_config.xml") == 0) 
-    std::cout << modparlist;
+  if( modfile.size() != 0 )
+  {
+    if (modparlist.ParseFile( modfile.c_str() ) == 0) 
+      std::cout << modparlist;
+  }
+  else 
+  {
+    if (modparlist.ParseFile("model_config.xml") == 0) 
+      std::cout << modparlist;
+  }
+  
   std::cout << "ModelParameterList-------------------------------------------------" << '\n';
   
   ModelParameters *modpars =  modparlist.GetParameters(model.c_str());
@@ -143,16 +217,20 @@ int main(int iargv, char **argv) {
   delete neuOsc;
 
   ///Step 2 -> confirmation
-  
-  infile = new TFile("output.root","UPDATE");
 
-  modpars =  modparlist.GetParameters( "ZeroPt" );
+  //infile = new TFile("output.root","UPDATE");
+  //modpars =  modparlist.GetParameters( "ZeroPt" );
+  //neuOsc = new NeutrinosInMediumPaper( mixpars , infile );
+  //neuOsc->Propagate( "ZeroPt", model.c_str(), "0", modpars); // the average method for propagation
+  //delete neuOsc;
 
-  neuOsc = new NeutrinosInMediumPaper( mixpars , infile );
-  
-  neuOsc->Propagate( "ZeroPt", model.c_str(), "0", modpars); // the average method for propagation
-  
-  delete neuOsc;
+  //Step 3 (earth)
+
+  //infile = new TFile("output.root","UPDATE");
+  //modpars =  modparlist.GetParameters( "EarthA" );
+  //neuOsc = new NeutrinosInMediumPaper( mixpars , infile );
+  //neuOsc->Propagate( "EarthA", , model.c_str() , modpars); // the average method for propagation
+  //delete neuOsc;
 
   return 0;
   

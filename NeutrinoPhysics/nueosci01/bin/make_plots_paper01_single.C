@@ -37,8 +37,11 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  makePlots("ModelA","0", "Pee","output.root");
-  makePlots("ModelA","0", "aPee","output.root");
+  //makePlots("ModelA","0", "Pee","output.root");
+  //makePlots("ModelA","0", "aPee","output.root");
+
+  makePlots("EarthA","0", "Pme","output-earthA.root");
+  makePlots("EarthB","0", "Pme","output-earthB.root");
   
 }
 
@@ -86,7 +89,7 @@ void makePlots( const char * model, const char * src, const char * prob, const c
 
   ProbNu[0]->SetMarkerStyle(1);
   ProbNu[0]->SetFillColor(10);
-  ProbNu[0]->SetMaximum(1.3);
+  ProbNu[0]->SetMaximum(0.5);
   TString yaxis = ((TObjString*)v_Labels->At(0))->GetString();
   ProbNu[0]->GetYaxis()->SetTitle( yaxis.Data() );
   ProbNu[0]->GetXaxis()->SetTitle("E [eV]");
