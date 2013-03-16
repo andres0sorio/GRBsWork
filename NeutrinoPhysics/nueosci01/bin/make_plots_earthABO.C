@@ -68,7 +68,7 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  makePlots("output-earthA-x2.root","output-earthB-x2.root","earthA-Olshon-ref.csv");
+  makePlots("output-earthC-x2.root","output-earthB-x2.root","earthA-Olshon-ref.csv");
   
 }
 
@@ -254,19 +254,17 @@ void makePlots( const char * inputA, const char * inputB, const char * olson)
   std::stringstream saveAs;
     
   saveAs.str("");
-  saveAs << path << "EarthB" << "/pdf/" << "nueosc_earth_ohlsson-x2" << ".pdf";
+  saveAs << path << "EarthA" << "/pdf/" << "nueosc_earth_AB_ohlsson_x2" << ".pdf";
   c1->SaveAs( saveAs.str().c_str() );
   
   saveAs.str("");
-  saveAs << path << "EarthB" << "/png/" << "nueosc_earth_ohlsson-x2" << ".png";
+  saveAs << path << "EarthA" << "/png/" << "nueosc_earth_AB_ohlsson_x2" << ".png";
   c1->SaveAs( saveAs.str().c_str() );
   
   saveAs.str("");
-  saveAs << path << "EarthB" << "/eps/" << "nueosc_earth_ohlsson-x2" << ".eps";
+  saveAs << path << "EarthA" << "/eps/" << "nueosc_earth_AB_ohlsson_x2" << ".eps";
   c1->SaveAs( saveAs.str().c_str() );
     
-  
-
   
   
 }

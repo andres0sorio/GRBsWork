@@ -92,13 +92,13 @@ TCanvas* plotHistsAndRatio(vector<TH1F*> numeratorHistograms, TH1F* denominatorH
   
   int histDenominatorColor = kBlack;
   
-  float defaultRatioYmin = -2.0;
-  float defaultRatioYmax =  4.0;
+  float defaultRatioYmin = -1.0;
+  float defaultRatioYmax =  3.0;
   
   // END of Variables
   //*************************************************
 
-  TCanvas *c1 = new TCanvas("compare1", "c1", 51, 293, 862, 337);
+  TCanvas *c1 = new TCanvas("compare1", "Hists and Ratio", 51, 293, 862, 337);
   
   c1->Range(0,0,1,1);
 
@@ -193,6 +193,9 @@ TCanvas* plotHistsAndRatio(vector<TH1F*> numeratorHistograms, TH1F* denominatorH
     hists[i]->SetLineColor(histColors[i]);
     hists[i]->Draw("same");
   }
+
+    denominatorHistogram->Draw("same");
+
 
   return c1;
 

@@ -231,6 +231,43 @@ void NeutrinoOscInVarDensity::Eval_TnuT(  long double x )
 
 }
 
+void NeutrinoOscInVarDensity::Eval_TnuT(  long double x1, long double x2  ) 
+{
+  
+  initializeMatrix ( m_Tab );
+  
+  long double Ve1 = f_Ve->Eval( x1 );
+  long double Ve2 = f_Ve->Eval( x2 );
+
+  long double Ve  = ( Ve1 + Ve2 ) / 2.0L; //Take the average potential between the two points
+    
+  long double oneover3 = (1.0L/3.0L);
+  
+  (*m_Tab) (0,0) = Ve * ( (*m_Ur)(0,0) * (*m_Ur)(0,0) ) - ( oneover3 * Ve )
+    + oneover3 * ((*m_Eab)(0,1) + (*m_Eab)(0,2));
+  
+  (*m_Tab) (1,1) = Ve * ( (*m_Ur)(0,1) * (*m_Ur)(0,1) ) - ( oneover3 * Ve )
+    + oneover3 * ((*m_Eab)(1,0) + (*m_Eab)(1,2));
+  
+  (*m_Tab) (2,2) = Ve * ( (*m_Ur)(0,2) * (*m_Ur)(0,2) ) - ( oneover3 * Ve )
+    + oneover3 * ((*m_Eab)(2,0) + (*m_Eab)(2,1));
+  
+  (*m_Tab) (0,1) = Ve * (*m_Ur)(0,0) * (*m_Ur)(0,1);
+  (*m_Tab) (0,2) = Ve * (*m_Ur)(0,0) * (*m_Ur)(0,2);
+  (*m_Tab) (1,2) = Ve * (*m_Ur)(0,1) * (*m_Ur)(0,2);
+  
+  (*m_Tab) (1,0) = (*m_Tab) (0,1);
+  (*m_Tab) (2,0) = (*m_Tab) (0,2);
+  (*m_Tab) (2,1) = (*m_Tab) (1,2);
+  
+  matrix< long double > tmp_UT =  prod( (*m_Ur), (*m_Tab) );
+  
+  (*m_UTU) = prod( tmp_UT, (*m_invUr) );
+
+  (*m_UTUSq) = prod( (*m_UTU), (*m_UTU) );
+
+}
+
 void NeutrinoOscInVarDensity::Eval_UFlavour(  long double x  ) {
 
   initializeMatrix ( m_Uf  );
@@ -278,7 +315,8 @@ void NeutrinoOscInVarDensity::Eval_UFlavour(  long double x1, long double x0) {
   long double dx = x1 - x0;
   long double xH = x1 - (dx/2.0L);
   
-  this->Eval_TnuT( xH );
+  //this->Eval_TnuT( xH );
+  this->Eval_TnuT( x1, x0 );
   this->updateCoefficients();
   this->updateLambdas();
   this->Eval_UFlavour( dx );

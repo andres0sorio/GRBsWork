@@ -12,8 +12,10 @@
  *  This file contains all the density models -- all derive from DensityModels class
  *  
  *  Ref: 
- *  [1] Olga Mena Phys.Rev.D75:063003,2007
+ *
+ *  [1] Olga Mena Phys.Rev.D75:063003,2007 : Models rhoA, rhoB, rhoC
  *  [2] Julia Becker Phys. Reports 458 2008
+ *  [3] T. Ohlsson, Eur. Phys. J. C 20, 507–515 2001
  *
  *  @author Andres Osorio
  *  @date   2011-09-25
@@ -139,6 +141,8 @@ public:
 
 class rhoEarthA : public DensityModels {
 public: 
+
+  //Ref [3]
   
   /// Standard constructor
   rhoEarthA( ) : DensityModels() { m_sign = 1.0; }; 
@@ -146,20 +150,23 @@ public:
   virtual ~rhoEarthA( ){}; ///< Destructor
   
   virtual double operator() (double *x, double *p) {
-
+    
+    double xx = x[0];
+    
     double L1 = p[2] * p[4];
     double L2 = L1 + ( p[3] * p[4] );
-    
-    double DX = (L2-L1)/2.0;
-    
-    double xx = abs( ( x[0]-(L1+DX) ) ); // distance
+    double A1 = p[0];
+    double A2 = p[1];
     
     double result = 0.0;
     
-    if ( xx <= DX ) 
-      result = p[1];
-    else 
-      result = p[0];
+    if ( xx <= L1 ) 
+      result = A1;
+    else if ( xx > L1 && xx <= L2 )
+      result = A2;
+    else if ( xx >= L2 ) 
+      result = A1;
+    else result = -1.1111;
     
     return m_sign * result;
     
@@ -169,6 +176,8 @@ public:
 
 class rhoEarthB : public DensityModels {
 public: 
+
+  //Ref [2]
   
   /// Standard constructor
   rhoEarthB( ) : DensityModels() { m_sign = 1.0; }; 

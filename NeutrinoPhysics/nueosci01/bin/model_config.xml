@@ -98,11 +98,11 @@
     <Par Id="2" Name="H2">
       8.69e-13
     </Par>
-    <Par Id="3" Name="S1">
+    <Par Id="3" Name="L1">
       2.885e6
     </Par>
-    <Par Id="4" Name="S2">
-      6.972e6
+    <Par Id="4" Name="L2">
+      8.17e6
     </Par>
     <Par Id="5" Name="m2InvEvFactor">
       5.076e+6

@@ -37,7 +37,7 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  makePlots("Vacuum","ZeroPt", "ModelA", "Pee", "output-ModelA-Vacuum-validation.root");
+  makePlots("Vacuum","ZeroPt", "ModelA", "Pee", "output-ModelA-All-fineVacuum.root");
   
 }
 
@@ -156,7 +156,11 @@ void makePlots( const char * model1, const char * model2, const char * src, cons
     //char gname[10];
       
     TH1F * h1 =  ProbNu1[j]->GetHistogram()->Clone("g1");
+    h1->SetMaximum(0.6);
+    h1->SetMinimum(0.0);
+    
     TH1F * h2 =  h1->Clone("g2");
+  
     
     for(int k=1; k <= nentries; ++k) 
     {

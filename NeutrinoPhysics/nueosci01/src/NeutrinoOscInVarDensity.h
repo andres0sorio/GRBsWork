@@ -47,6 +47,7 @@ public:
   void   updateMixingMatrix();
 
   void   Eval_TnuT(  long double );
+  void   Eval_TnuT(  long double , long double );
   void   Eval_UFlavour( );
   void   Eval_UFlavour( long double );
   void   Eval_UFlavour( long double , long double );

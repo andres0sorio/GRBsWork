@@ -52,7 +52,7 @@ k = 0
 
 var = vmin
 
-while var < vmax:
+while var <= vmax:
 
 	outfile_name = outfile_prefix + '_' + str(k) + '.xml'
 	outfile = open( outfile_name,'w')
