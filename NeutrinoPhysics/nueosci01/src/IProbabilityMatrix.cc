@@ -149,7 +149,7 @@ double IProbabilityMatrix::Propagate(int ridx, double phi_e0, double phi_mu0, do
   double phi_b0_out = 0.0;
    
   double norm_factor = phi_e0 + phi_mu0 + phi_tau0;
-  
+
   phi_b0_in[0]  = phi_e0;
   phi_b0_in[1]  = phi_mu0;
   phi_b0_in[2]  = phi_tau0;
@@ -158,8 +158,6 @@ double IProbabilityMatrix::Propagate(int ridx, double phi_e0, double phi_mu0, do
   
   for(int b=0; b<3; ++b) 
     phi_b0_out += T_Prob_AtoB (b,ridx) * phi_b0_in[b];
-  
-  ///std::cout << "IProbabilityMatrix::Propagate> " << ( phi_b0_out / norm_factor ) << std::endl;
   
   delete [] phi_b0_in;
   

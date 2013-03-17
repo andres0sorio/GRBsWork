@@ -51,7 +51,7 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  makePlots("ModelA","0", "Pee","list_of_variations.txt");
+  makePlots("ModelA","0", "Pmt","file_list.txt");
   
 }
 
@@ -94,7 +94,7 @@ void makePlots( const char * model, const char * src, const char * prob, const c
     std::string input_file;
     in >> input_file;
     std::cout << "adding: " << input_file << std::endl;
-    if ( input_file.size() != 0 ) 
+    if ( input_file.size() != 0 && input_file.size() > 5) 
     {
       label = new TObjString( input_file.c_str() );
       v_Labels->Add( label ); 
@@ -117,15 +117,26 @@ void makePlots( const char * model, const char * src, const char * prob, const c
   radius[4] = 1.52228e+17;
   
   int idx = 0;
+
+  TList * v_Profiles = new TList();
+  
+  TProfile * pf1;
   
   for( int k = 0; k < v_Labels->GetSize(); ++k ) {
 
+    char pf1name[20];
+    sprintf(pf1name,"pf_%d", k);
+
+    pf1 = new TProfile(pf1name,"Profile histogram",500,1e11,1e14,0.0,1.0);
+
+    ////
+    
     TString name = ((TObjString*)v_Labels->At(k))->GetString();
 
-    TFile * f1 = TFile::Open( name.Data() );
+    TFile * f1 = TFile::Open( name.Data(), "READ");
     
     f1->cd();
-  
+        
     TTree * PxxTreeNu = (TTree*)gDirectory->Get( dataPxx.Data() );
     
     PxxTreeNu->SetBranchAddress("Ex",&xx);
@@ -134,26 +145,55 @@ void makePlots( const char * model, const char * src, const char * prob, const c
     Long64_t nentries = PxxTreeNu->GetEntries();
     
     for (Long64_t ni=0;ni<nentries;ni++) {
+    
       PxxTreeNu->GetEntry(ni);
-      radiusVar->SetPoint( idx, xx, double(k), yy);
-      if ( ni < 5 ) 
-        std::cout << ni << " " << k << " " <<  xx << " " <<  k << " " <<  yy << std::endl;
-      idx += 1;
+      pf1->Fill( xx, yy, 1.0);
+      
     }
-
+    
+    v_Profiles->Add( pf1 );
+    
     f1->Close();
+    std::cout << " done with file" << std::endl;
         
   }
+
+  //
+  
+  int idx = 0;
+  
+  int nprofiles = v_Profiles->GetEntries();
+  
+  for( int k = 0; k < nprofiles; ++k) 
+  {
+    
+    TProfile *pf1 = (TProfile*)v_Profiles->At(k);
+
+    int nbins = pf1->GetNbinsX();
+    
+    for( int j=1 ; j <= nbins; ++j ) 
+    {
+      
+      radiusVar->SetPoint( idx , j , k, pf1->GetBinContent(j) );
+      idx += 1;
+    }
+    
+  }
+  
   
   //....
   
   set_plot_style();
+  
+  std::cout << " drawing ... " << std::endl;
   
   c1->cd();
   gPad->SetLogx();
   radiusVar->Draw("COLZ");
   topTitle(model);
   c1->cd();
+
+  std::cout << " drawing ... done" << std::endl;
   
   std::stringstream saveAs;
   

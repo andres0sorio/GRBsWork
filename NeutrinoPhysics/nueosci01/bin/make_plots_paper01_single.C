@@ -37,8 +37,8 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  makePlots("ModelA","0", "Pmt","output-ModelA-Vacuum-validation.root");
-  makePlots("ModelA","0", "aPmt","output-ModelA-Vacuum-validation.root");
+  //makePlots("ModelA","0", "Pmt","output-ModelA-Vacuum-validation.root");
+  //makePlots("ModelA","0", "aPmt","output-ModelA-Vacuum-validation.root");
 
   //makePlots("EarthA","0", "Pme","output-earthA.root");
   //makePlots("EarthB","0", "Pme","output-earthB.root");

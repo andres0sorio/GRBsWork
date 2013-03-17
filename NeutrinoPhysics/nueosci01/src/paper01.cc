@@ -18,7 +18,8 @@ int main(int iargv, char **argv) {
   std::string angles;
   std::string dmass;
   std::string modfile;
-      
+  std::string steps; 
+
   try {
     
     po::options_description desc("Allowed options");
@@ -31,6 +32,7 @@ int main(int iargv, char **argv) {
       ("angles"   , po::value<std::string>(), "use the following mixing angles ( = theta_1(12),theta_2(13),theta3(23) )")
       ("dmass2"   , po::value<std::string>(), "use the following delta masses square ( = dm2(Dm23sq),dM2(Dm21sq) )")
       ("modfile"  , po::value<std::string>(), "use the specified model paramater file ( mymodelfile.xml )")
+      ("steps"    , po::value<std::string>(), "excecute steps ( 0,1,2,3,... )")
       ;
     
     po::variables_map vm;
@@ -86,7 +88,14 @@ int main(int iargv, char **argv) {
     else {
       std::cout << "using the default model configuration file \n";
     }
-
+    
+    if (vm.count("steps")) {
+      steps = vm["steps"].as<std::string>();
+      std::cout << "steps to run over " <<  steps << std::endl;
+    } 
+    else {
+      std::cout << "using the default step 0  \n";
+    }
 
     
   }
@@ -183,38 +192,63 @@ int main(int iargv, char **argv) {
   //............................................................................................
 
   //Step 1
-
-  NeutrinosInMediumPaper * neuOsc = new NeutrinosInMediumPaper( mixpars );
   
-  //neuOsc->Test();
+  std::map<std::string,bool> execSteps;
+  execSteps["1"] = true;
+  execSteps["2"] = false;
+  execSteps["3"] = false;
+  execSteps["4"] = false;
 
-  std::vector<std::string> strs;
-
-  boost::split(strs, prob, boost::is_any_of(","));
-
-  std::vector<std::string>::iterator itr;
-  
-  for( itr = strs.begin(); itr != strs.end(); ++itr ) 
+  if( steps.size() != 0 )
   {
-   
-    std::cout << (*itr) << std::endl;
-    neuOsc->GenerateDatapoints( model.c_str(), (*itr).c_str(), modpars );
+    std::vector<std::string> stepstr;
+    boost::split(stepstr, steps, boost::is_any_of(","));
+    std::vector<std::string>::iterator itr;
+    for( itr = stepstr.begin(); itr != stepstr.end(); ++itr) {
+      execSteps[ *itr ] = true;
+      std::cout << (*itr) << " turns true" << std::endl;
+    }
     
   }
 
-  delete neuOsc;
- 
-  strs.clear();
+  NeutrinosInMediumPaper * neuOsc;
+  
+  if( execSteps["1"] ) {
 
-  ///Step 2 
+    neuOsc = new NeutrinosInMediumPaper( mixpars );
   
-  TFile * infile = new TFile("output.root","UPDATE");
+    std::vector<std::string> strs;
+    
+    boost::split(strs, prob, boost::is_any_of(","));
+    
+    std::vector<std::string>::iterator itr;
+    
+    for( itr = strs.begin(); itr != strs.end(); ++itr ) 
+      {
+	
+	std::cout << (*itr) << std::endl;
+	neuOsc->GenerateDatapoints( model.c_str(), (*itr).c_str(), modpars );
+	
+      }
+    
+    delete neuOsc;
+    strs.clear();
   
-  neuOsc = new NeutrinosInMediumPaper( mixpars , infile );
+  }
+
+  TFile * infile;
+
+  if( execSteps["2"] ) {
+
+    infile = new TFile("output.root","UPDATE");
   
-  neuOsc->PropagateVacuum( model.c_str(), "0" ); // the average method for propagation
+    neuOsc = new NeutrinosInMediumPaper( mixpars , infile );
   
-  delete neuOsc;
+    neuOsc->PropagateVacuum( model.c_str(), "0" ); // the average method for propagation
+  
+    delete neuOsc;
+
+  }
 
   ///Step 2 -> confirmation
 

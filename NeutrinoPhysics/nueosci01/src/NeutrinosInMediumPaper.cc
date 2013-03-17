@@ -445,7 +445,7 @@ bool NeutrinosInMediumPaper::Init( const char * in_model , const char * src_step
   
   /////
 
-  TString path = TString(in_model) + TString("_") + TString(src_step) + TString("_") + TString(option) + TString("/data"); //<- Need to fix this
+  TString path = TString(in_model) + TString("_") + TString(src_step) + TString("_") + TString(option) + TString("/data"); 
   
   std::cout << "Init> initializing: " << path << std::endl;
   

@@ -26,9 +26,9 @@ SRCDIR       = .
 LIBDIR       = .
 EXEDIR       = ../bin
 
-GARBAGE      = *.o $(EXEDIR)/evalxsec.exe $(EXEDIR)/validate.exe $(EXEDIR)/paper01.exe
+GARBAGE      = *.o $(EXEDIR)/*.so $(EXEDIR)/*.d $(EXEDIR)/evalxsec.exe $(EXEDIR)/validate.exe $(EXEDIR)/paper01.exe $(EXEDIR)/earthval.exe
 
-SOGARBAGE    = *.so
+SOGARBAGE    = *.so 
 
 CXXFLAGS    += -I$(INCDIR) $(ROOTCFLAGS) $(GSLINC) $(BOOSTINC)
 LINKFLAGS    =

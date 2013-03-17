@@ -311,11 +311,13 @@ void NeutrinoOscInVarDensity::Eval_UFlavour(  long double x  ) {
 }
 
 void NeutrinoOscInVarDensity::Eval_UFlavour(  long double x1, long double x0) {
-  
+
   long double dx = x1 - x0;
-  long double xH = x1 - (dx/2.0L);
-  
+
+  //march 17: AO
+  //long double xH = x1 - (dx/2.0L);
   //this->Eval_TnuT( xH );
+
   this->Eval_TnuT( x1, x0 );
   this->updateCoefficients();
   this->updateLambdas();

@@ -37,7 +37,7 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  makePlots("ModelA","0", "Pee","output.root");
+  makePlots("ZeroPt","0", "Pee","output.root");
   
 }
 
