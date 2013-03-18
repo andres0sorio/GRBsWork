@@ -43,6 +43,8 @@ void makePlots()
   //makePlots("EarthA","0", "Pme","output-earthA.root");
   //makePlots("EarthB","0", "Pme","output-earthB.root");
   
+  makePlots("ModelC","0", "Pee","output.root");
+
 }
 
 void makePlots( const char * model, const char * src, const char * prob, const char * infile) 

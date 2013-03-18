@@ -15,7 +15,8 @@ if options.path is None:
 
 outfile = ['output','.root']
 
-for k in range(0,21):
+for k in range(0,50):
 	target = './' + options.path + '/' + outfile[0] + '_' + str(k) + '_' + outfile[1]
-	print target
+	if os.path.isfile(target):
+		print target
 

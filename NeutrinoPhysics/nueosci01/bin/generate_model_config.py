@@ -59,7 +59,7 @@ while var <= vmax:
 
 	for line in infile.readlines():
 		new_line = line.replace('#####'+param+'#####', str(var) )
-		outfile.writelines( new_line )
+                outfile.writelines( new_line )
 		
 	k += 1
 	var += delta

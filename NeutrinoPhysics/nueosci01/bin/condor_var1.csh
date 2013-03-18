@@ -14,10 +14,9 @@ setenv EMIN  $1
 setenv EMAX  $2
 setenv MODEL $3
 setenv STEP  $4
+setenv ANGLS $5
 
-##setenv CMD  "./paper01.exe --model "$MODEL" --prob Pee,aPee,Pem,aPem,Pet,aPet,Pmt,aPmt --erange "$EMIN","$EMAX" --step "$STEP
-
-setenv CMD  "./paper01.exe --model "$MODEL" --prob Pee,aPee --erange "$EMIN","$EMAX" --step "$STEP
+setenv CMD  "./paper01.exe --model "$MODEL" --prob Pee,aPee,Pem,aPem,Pet,aPet,Pmt,aPmt --erange "$EMIN","$EMAX" --step "$STEP" --angles "$ANGLS
 
 echo INFO:  launching command: $CMD
 

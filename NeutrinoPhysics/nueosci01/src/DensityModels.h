@@ -104,15 +104,27 @@ public:
   
   virtual double operator() (double *x, double *p) { 
     
-    double rmin = pow( 10.0, 10.8 ) * p[3]; //p[3] ->to convert to natural units if needed
-    double rmax = 1.0E12 * p[3]; //p[3] ->to convert to natural units if needed
+    //p[4] -> use to convert to natural units when needed
     
+    double Rstar = p[1] * p[4]; 
+    double Rb    = p[2] * p[4];
+    double Rmin  = p[3];
     
-    if ( x[0] >= rmin && x[0] <= rmax ) 
-      return m_sign * p[0] * pow( (p[1]/x[0]), 2.42857 );
+    double result = 0.0;
+    
+    if ( x[0] >= Rmin && x[0] < Rb ) 
+    
+      result = p[0] * pow( ( Rstar / x[0]), 2.42857 );
+    
+    else if ( x[0] >= Rb )
+      
+      result = p[0] * pow( (Rstar / Rb), 2.42857 ) * pow( (x[0] - Rstar) / (Rb - Rstar) , 5.0 );
+    
     else 
-      return m_sign * p[0] * pow( (p[1]/p[2]), 2.42857 ) * pow( (x[0] - p[1]), 5.0 ) / pow( (p[2]-p[1]), 5.0);
+      result = -1.123456;
     
+    return m_sign * result;
+
   };
   
 };
@@ -121,19 +133,36 @@ class rhoModelC : public DensityModels {
 public: 
   
   /// Standard constructor
-  rhoModelC( ) : DensityModels() {}; 
-  
+  rhoModelC( ) : DensityModels() { m_sign = 1.0; }; 
+    
   virtual ~rhoModelC( ){}; ///< Destructor
-  
+    
   virtual double operator() (double *x, double *p) {
 
-    double rmin = pow( 10.0, 10.8 ) * p[2]; //p[2] ->to convert to natural units if needed
-    double rmax = 1.0E11 * p[2]; //p[2] ->to convert to natural units if needed
+    //p[8] -> use to convert to natural units when needed
+
+    double Rstar  = p[1] * p[8];
+    double Rb     = p[2] * p[8];
+    double Rmin   = p[3];
+    double A1     = p[4];
+    double neff1  = p[5];
+    double A2     = p[6];
+    double neff2  = p[7];
+
+    double result = 0.0;
     
-    if ( x[0] >= rmin && x[0] <= rmax ) 
-      return m_sign * p[0] * 20.0 * pow( ((p[1]/x[0])-1.0), 2.1 );
-    else 
-      return m_sign * p[0] * 1.0  * pow( ((p[1]/x[0])-1.0), 2.5 );
+    if ( x[0] >= Rmin && x[0] < Rb ) 
+      
+      result = p[0] * A1 * pow( (( Rstar/x[0] ) - 1.0), neff1 );
+    
+    else if ( x[0] >= Rb )
+      
+      result = p[0] * A2 * pow( (( Rstar/x[0] ) - 1.0), neff2 );
+    
+    else
+      result =  -1.123456;
+
+    return m_sign * result;
     
   };
   

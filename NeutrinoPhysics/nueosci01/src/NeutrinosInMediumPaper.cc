@@ -203,8 +203,9 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
     m_Physics->calcProbabilities();
 
     //get the Transition probability A->B
+    
     double d1 = (*m_Physics->m_Prob_AtoB)( m_ProbIndex[Pxx].first , m_ProbIndex[Pxx].second );
-
+    
     if ( ! (boost::math::isnan)(d1) ) {
       m_Ex = Ex;
       m_Pb = d1;
@@ -214,8 +215,10 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
         m_Phi_m = m_Physics->Propagate( 1, 1.0, 2.0, 0.0 ); 
         m_Phi_t = m_Physics->Propagate( 2, 1.0, 2.0, 0.0 ); 
       }
+      
       m_tree->Fill();
-    }
+      
+    }     
     
     k += 1; 
     
@@ -228,7 +231,7 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
 
     delete tmp;
   
-    //if ( k > 10 ) break;
+    //if ( k > 1 ) break;
       
   }
   
@@ -360,7 +363,7 @@ void NeutrinosInMediumPaper::Propagate(const char * out_model, const char * in_m
         
         m_tree->Fill();
         
-      }
+      } 
       
       delete tmp;
       

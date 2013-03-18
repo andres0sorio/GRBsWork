@@ -18,8 +18,8 @@ int main(int iargv, char **argv) {
   std::string angles;
   std::string dmass;
   std::string modfile;
-  std::string steps; 
-
+  std::string steps;
+  
   try {
     
     po::options_description desc("Allowed options");
@@ -109,15 +109,15 @@ int main(int iargv, char **argv) {
     std::cerr << "Exception of unknown type!\n";
     return 1;
   }
-  
 
   //............................................................................................
   
   MixingParameterList mixparlist;
   
+  std::cout << " ---MixingParameterList: read ---" << '\n';
+  
   if (mixparlist.ParseFile("matrix_config.xml") == 0)
     std::cout << mixparlist;
-  std::cout << "MixingParameterList-------------------------------------------------" << '\n';
   
   MixingParameters *mixpars =  mixparlist.GetParameters(0);
   
@@ -137,7 +137,7 @@ int main(int iargv, char **argv) {
     }
     std::cout << (*mixpars) << std::endl;
   }
-
+  
   if( dmass.size() != 0 )
   {
     std::vector<std::string> dmasses;
@@ -153,10 +153,14 @@ int main(int iargv, char **argv) {
     }
     std::cout << (*mixpars) << std::endl;
   }
+  
+  std::cout << " ---MixingParameterList: read ---" << '\n';
 
   //............................................................................................
 
   ModelParameterList modparlist;
+
+  std::cout << " ---ModelParameterList---" << '\n';
   
   if( modfile.size() != 0 )
   {
@@ -168,8 +172,6 @@ int main(int iargv, char **argv) {
     if (modparlist.ParseFile("model_config.xml") == 0) 
       std::cout << modparlist;
   }
-  
-  std::cout << "ModelParameterList-------------------------------------------------" << '\n';
   
   ModelParameters *modpars =  modparlist.GetParameters(model.c_str());
   
@@ -188,10 +190,12 @@ int main(int iargv, char **argv) {
     }
     std::cout << (*modpars) << std::endl;
   }
-      
+
+  std::cout << " ---ModelParameterList: read ---" << '\n';
+  
   //............................................................................................
 
-  //Step 1
+  //Step Selection
   
   std::map<std::string,bool> execSteps;
   execSteps["1"] = true;
@@ -211,8 +215,12 @@ int main(int iargv, char **argv) {
     
   }
 
+  //............................................................................................
+
   NeutrinosInMediumPaper * neuOsc;
-  
+
+  //Step 1 (Star)
+
   if( execSteps["1"] ) {
 
     neuOsc = new NeutrinosInMediumPaper( mixpars );
@@ -224,17 +232,21 @@ int main(int iargv, char **argv) {
     std::vector<std::string>::iterator itr;
     
     for( itr = strs.begin(); itr != strs.end(); ++itr ) 
-      {
+    {
 	
-	std::cout << (*itr) << std::endl;
-	neuOsc->GenerateDatapoints( model.c_str(), (*itr).c_str(), modpars );
+      std::cout << (*itr) << std::endl;
+      neuOsc->GenerateDatapoints( model.c_str(), (*itr).c_str(), modpars );
 	
-      }
+    }
     
     delete neuOsc;
     strs.clear();
   
   }
+
+  //............................................................................................
+
+  //Step 2 (Vacuum)
 
   TFile * infile;
 
@@ -250,22 +262,29 @@ int main(int iargv, char **argv) {
 
   }
 
-  ///Step 2 -> confirmation
+  //............................................................................................
 
-  //infile = new TFile("output.root","UPDATE");
-  //modpars =  modparlist.GetParameters( "ZeroPt" );
-  //neuOsc = new NeutrinosInMediumPaper( mixpars , infile );
-  //neuOsc->Propagate( "ZeroPt", model.c_str(), "0", modpars); // the average method for propagation
-  //delete neuOsc;
+  //Step 3 (Earth)
+  
+  if( execSteps["3"] ) {
+    
+    
+    infile = new TFile("output.root","UPDATE");
+    
+    modpars =  modparlist.GetParameters( "EarthA" );
+    
+    neuOsc = new NeutrinosInMediumPaper( mixpars , infile );
+    
+    neuOsc->Propagate( "EarthA", "Vacuum" , model.c_str() , modpars); // Propagation through Earth
+    
+    delete neuOsc;
+    
+  }
 
-  //Step 3 (earth)
-
-  //infile = new TFile("output.root","UPDATE");
-  //modpars =  modparlist.GetParameters( "EarthA" );
-  //neuOsc = new NeutrinosInMediumPaper( mixpars , infile );
-  //neuOsc->Propagate( "EarthA", , model.c_str() , modpars); // the average method for propagation
-  //delete neuOsc;
-
+  //............................................................................................
+  
   return 0;
   
 }
+  
+

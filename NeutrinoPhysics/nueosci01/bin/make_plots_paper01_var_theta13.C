@@ -60,7 +60,7 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  makePlots("ModelA","0", "Pmt","file_list.txt");
+  makePlots("ModelA","0", "Pee","file_list_theta13.txt");
   
 }
 
@@ -83,7 +83,7 @@ void makePlots( const char * model, const char * src, const char * prob, const c
   c1->SetFrameBorderMode(0);
   c1->Draw();
   
-  int maxPads = 7;
+  int maxPads = 5;
   
   TString cnameB = TString(model) + TString("_") + TString(prob) + TString("_") + TString("B");
   
@@ -111,7 +111,7 @@ void makePlots( const char * model, const char * src, const char * prob, const c
   ifstream in;
   in.open(infile); //
   
-  int nfile = 0;
+  int i = 0;
   
   while ( in.good() ) 
   {
@@ -122,18 +122,18 @@ void makePlots( const char * model, const char * src, const char * prob, const c
     {
       label = new TObjString( input_file.c_str() );
       v_Labels->Add( label ); 
-      ++nfile;
+      ++i;
     }
     
   }
   
-  std::cout << "Total files added: " << nfile << " " << v_Labels->GetSize() <<std::endl; 
+  std::cout << "Total files added: " << i << " " << v_Labels->GetSize() <<std::endl; 
   
   in.close();
   
   //.......
   
-  double radius[nfile];
+  double radius[10];
   radius[0] = 1.37052e+17;
   radius[1] = 1.40012e+17;
   radius[2] = 1.42128e+17;
@@ -231,7 +231,7 @@ void makePlots( const char * model, const char * src, const char * prob, const c
     
     c2->cd(idx);
     gPad->SetLogx();
-    if ( (k) % 3 == 0 ) {
+    if ( (k) % 5 == 0 ) {
       std::cout << " pf: " << idx << " k " << k  << std::endl;
       pf1->Draw("hist");
       idx+=1;

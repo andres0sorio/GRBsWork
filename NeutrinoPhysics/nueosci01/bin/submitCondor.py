@@ -4,16 +4,18 @@ import sys, os, stat, shutil
 
 arguments = []
 
-model = 'ModelA'
+model = 'ModelC'
 xmax  = 1.0e14
 x0    = 1.0e11
 dx    = 10.0
+steps = '1,2,3'
 
 while x0 < xmax:
     x1 = x0*dx
     erange = str(x0)+','+str(x1)
     values = erange.split(',')
     values.append( model )
+    values.append( steps )
     arguments.append( values )
     x0 = x1
 
