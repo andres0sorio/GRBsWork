@@ -19,6 +19,7 @@ int main(int iargv, char **argv) {
   std::string dmass;
   std::string modfile;
   std::string steps;
+  std::string earth;
   
   try {
     
@@ -32,7 +33,9 @@ int main(int iargv, char **argv) {
       ("angles"   , po::value<std::string>(), "use the following mixing angles ( = theta_1(12),theta_2(13),theta3(23) )")
       ("dmass2"   , po::value<std::string>(), "use the following delta masses square ( = dm2(Dm23sq),dM2(Dm21sq) )")
       ("modfile"  , po::value<std::string>(), "use the specified model paramater file ( mymodelfile.xml )")
-      ("steps"    , po::value<std::string>(), "excecute steps ( 0,1,2,3,... )")
+      ("steps"    , po::value<std::string>(), "excecute steps ( 1,2,3,... )")
+      ("earth"    , po::value<std::string>(), "select earth model (EarthA, EarthB)")
+
       ;
     
     po::variables_map vm;
@@ -91,12 +94,20 @@ int main(int iargv, char **argv) {
     
     if (vm.count("steps")) {
       steps = vm["steps"].as<std::string>();
-      std::cout << "steps to run over " <<  steps << std::endl;
+      std::cout << "steps to run over " << steps << std::endl;
     } 
     else {
-      std::cout << "using the default step 0  \n";
+      std::cout << "using the default step 1  \n";
     }
-
+    
+    if (vm.count("earth")) {
+      earth = vm["earth"].as<std::string>();
+      std::cout << "select earth model " << earth << std::endl;
+    } 
+    else {
+      earth = std::string("EarthB");
+      std::cout << "using the default EarthB model \n";
+    }
     
   }
   
@@ -126,14 +137,14 @@ int main(int iargv, char **argv) {
     std::vector<std::string> theta;
     boost::split(theta, angles, boost::is_any_of(","));
     if( theta.size() != 3 ) {
-      std::cout << " you need to provid all three angles in the correct order. Type --help" << std::endl;
+      std::cout << " you need to provide all three angles in the correct order. Type --help" << std::endl;
       return 1;
     }
-    else 
+    else
     {
       mixpars->SetPar1( atof( theta[0].c_str() ) );
       mixpars->SetPar2( atof( theta[1].c_str() ) );
-      mixpars->SetPar3( atof( theta[1].c_str() ) );
+      mixpars->SetPar3( atof( theta[2].c_str() ) );
     }
     std::cout << (*mixpars) << std::endl;
   }
@@ -233,7 +244,7 @@ int main(int iargv, char **argv) {
     
     for( itr = strs.begin(); itr != strs.end(); ++itr ) 
     {
-	
+      
       std::cout << (*itr) << std::endl;
       neuOsc->GenerateDatapoints( model.c_str(), (*itr).c_str(), modpars );
 	
@@ -271,18 +282,25 @@ int main(int iargv, char **argv) {
     
     infile = new TFile("output.root","UPDATE");
     
-    modpars =  modparlist.GetParameters( "EarthA" );
+    modpars =  modparlist.GetParameters( earth.c_str() );
     
     neuOsc = new NeutrinosInMediumPaper( mixpars , infile );
     
-    neuOsc->Propagate( "EarthA", "Vacuum" , model.c_str() , modpars); // Propagation through Earth
+    neuOsc->Propagate( earth.c_str(), "Vacuum" , model.c_str() , modpars); // Propagation through Earth
     
     delete neuOsc;
     
   }
 
   //............................................................................................
+
+  //Step 4 ( IceCube! -> R calculation )
   
+  
+
+  
+  //............................................................................................
+
   return 0;
   
 }

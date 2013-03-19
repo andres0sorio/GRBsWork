@@ -67,6 +67,14 @@ void makePlots()
 void makePlots( const char * model, const char * src, const char * prob, const char * infile) 
 {
   
+  // X - range 
+  double xmin = 1.0e11;
+  double xmax = 1.0e14;
+  
+  // Y - range 
+  double ymin = 8.0;
+  double ymax = 13.00;
+
   //Output path
   TString path("./paper01-plots/probs/");
   
@@ -133,12 +141,14 @@ void makePlots( const char * model, const char * src, const char * prob, const c
   
   //.......
   
-  double radius[10];
-  radius[0] = 1.37052e+17;
-  radius[1] = 1.40012e+17;
-  radius[2] = 1.42128e+17;
-  radius[3] = 1.47204e+17;
-  radius[4] = 1.52228e+17;
+  double * theta = new double[30];
+  double value = ymin;
+  double dtheta = (ymax-ymin)/(double)(i-1);
+  for(int j=0; j< i; ++j) 
+  {
+    theta[j] = value;
+    value += dtheta;
+  }
   
   int idx = 0;
 
@@ -205,6 +215,12 @@ void makePlots( const char * model, const char * src, const char * prob, const c
   
   
   //....
+
+  TAxis *axis1 = radiusVar->GetXaxis();
+  axis1->SetLimits(xmin, xmax);
+
+  TAxis *axis2 = radiusVar->GetYaxis();
+  axis2->SetLimits(ymin, ymax);
   
   //set_plot_style();
   
@@ -215,6 +231,28 @@ void makePlots( const char * model, const char * src, const char * prob, const c
   
   c1->cd();
   gPad->SetLogx();
+
+  radiusVar->SetMaximum(1.0);
+  radiusVar->SetMinimum(0.0);
+  
+  radiusVar->GetYaxis()->SetNdivisions(509);
+  radiusVar->GetYaxis()->SetTitle( "#theta_{13}" );
+  radiusVar->GetYaxis()->SetLabelSize(0.05);
+  radiusVar->GetYaxis()->SetLabelFont(42);
+  radiusVar->GetYaxis()->SetTitleSize(0.05);
+  radiusVar->GetYaxis()->SetTitleOffset(0.45);
+  radiusVar->GetYaxis()->SetTitleFont(42);
+  radiusVar->GetYaxis()->SetLabelOffset(0.01);
+  radiusVar->GetYaxis()->CenterTitle(true); 
+  
+  radiusVar->GetXaxis()->SetTitle("E [eV]");
+  radiusVar->GetXaxis()->CenterTitle(true); 
+  radiusVar->GetXaxis()->SetLabelOffset(0.01);
+  radiusVar->GetXaxis()->SetLabelSize(0.05);
+  radiusVar->GetXaxis()->SetTitleSize(0.05);
+  radiusVar->GetXaxis()->SetTitleOffset(0.9);
+  radiusVar->GetXaxis()->SetLabelFont(42);
+
   radiusVar->Draw("COLZ");
   topTitle(model);
   c1->cd();
@@ -231,14 +269,36 @@ void makePlots( const char * model, const char * src, const char * prob, const c
     
     c2->cd(idx);
     gPad->SetLogx();
-    if ( (k) % 5 == 0 ) {
+    pf1->SetFillColor(5);
+    pf1->SetMinimum(0.0);
+    pf1->SetMaximum(1.0);
+    
+    pf1->GetYaxis()->SetNdivisions(504);
+    pf1->GetYaxis()->SetTitle( "Pxx" );
+    pf1->GetYaxis()->SetLabelSize(0.11);
+    pf1->GetYaxis()->SetLabelFont(42);
+    pf1->GetYaxis()->SetTitleSize(0.09);
+    pf1->GetYaxis()->SetTitleOffset(0.45);
+    pf1->GetYaxis()->SetTitleFont(42);
+    pf1->GetYaxis()->SetLabelOffset(0.007);
+    pf1->GetYaxis()->CenterTitle(true); 
+    
+    pf1->GetXaxis()->SetTitle("E [eV]");
+    pf1->GetXaxis()->CenterTitle(true); 
+    pf1->GetXaxis()->SetLabelOffset(0.007);
+    pf1->GetXaxis()->SetLabelSize(0.11);
+    pf1->GetXaxis()->SetTitleSize(0.07);
+    pf1->GetXaxis()->SetTitleOffset(0.9);
+    pf1->GetXaxis()->SetLabelFont(42);
+    
+    if ( (k) % 4 == 0 ) {
       std::cout << " pf: " << idx << " k " << k  << std::endl;
       pf1->Draw("hist");
       idx+=1;
       
     }
-    char aname[20];
-    sprintf(aname," k= %d",k );
+    char aname[50];
+    sprintf(aname,"#theta = %0.1f", theta[k] );
     plotId( aname );
 
     if ( idx > maxPads ) break;
@@ -248,23 +308,33 @@ void makePlots( const char * model, const char * src, const char * prob, const c
   
   std::cout << " drawing ... done" << std::endl;
   
-  /*
-  
   std::stringstream saveAs;
   
   saveAs.str("");
-  saveAs << path << model << "/pdf/" << "nueosc_" << model << "_" << prob << "_var" << ".pdf";
+  saveAs << path << model << "/pdf/" << "nueosc_" << model << "_" << prob << "_theta13_var" << ".pdf";
   c1->SaveAs( saveAs.str().c_str() );
   
   saveAs.str("");
-  saveAs << path << model << "/png/" << "nueosc_" << model << "_" << prob << "_var" << ".png";
+  saveAs << path << model << "/png/" << "nueosc_" << model << "_" << prob << "_theta13_var" << ".png";
   c1->SaveAs( saveAs.str().c_str() );
 
   saveAs.str("");
-  saveAs << path << model << "/eps/" << "nueosc_" << model << "_" << prob << "_var" << ".eps";
+  saveAs << path << model << "/eps/" << "nueosc_" << model << "_" << prob << "_theta13_var" << ".eps";
   c1->SaveAs( saveAs.str().c_str() );
+
+  saveAs.str("");
+  saveAs << path << model << "/pdf/" << "nueosc_" << model << "_" << prob << "_Profs_theta13_var" << ".pdf";
+  c2->SaveAs( saveAs.str().c_str() );
   
-  */
+  saveAs.str("");
+  saveAs << path << model << "/png/" << "nueosc_" << model << "_" << prob << "_Profs_theta13_var" << ".png";
+  c2->SaveAs( saveAs.str().c_str() );
+  
+  saveAs.str("");
+  saveAs << path << model << "/eps/" << "nueosc_" << model << "_" << prob << "_Profs_theta13_var" << ".eps";
+  c2->SaveAs( saveAs.str().c_str() );
+
+  delete[] theta;
   
 }
 

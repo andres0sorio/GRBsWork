@@ -68,7 +68,9 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  makePlots("output-earthC-x2.root","output-earthB-x2.root","earthA-Olshon-ref.csv");
+  makePlots("./root_files/Earth/output-earthA-x2.root",
+            "./root_files/Earth/output-earthB-x2.root",
+            "./root_files/Earth/earthA-Olshon-ref.csv");
   
 }
 
@@ -83,11 +85,11 @@ void makePlots( const char * inputA, const char * inputB, const char * olson)
   
   TList * v_Labels = new TList();
   TObjString *label;
-  label = new TObjString( "Ohlsson" );
+  label = new TObjString( "Ohlsson Fig 1" );
   v_Labels->Add( label ); 
-  label = new TObjString( "Earth model A" );
+  label = new TObjString( "Earth model A (Ohlsson)" );
   v_Labels->Add( label ); 
-  label = new TObjString( "Earth model B" );
+  label = new TObjString( "Earth model B (Becker)" );
   v_Labels->Add( label ); 
   
   TFile * f1 = new TFile(inputA);
@@ -247,7 +249,7 @@ void makePlots( const char * inputA, const char * inputB, const char * olson)
     
   }
   
-  topTitle("Earth (corrected)");
+  topTitle("Earth");
   
   /// All done!
   leg->Draw();

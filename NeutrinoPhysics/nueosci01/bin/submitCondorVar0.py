@@ -12,7 +12,7 @@ input_sandbox = ['matrix_config.xml',
                  'model_config.dtd',
                  'paper01.exe']
 
-script = './condor_var.csh'
+script = './condor_var0.csh'
 output = 'output.root'
 #--------------------------------------------------------
 

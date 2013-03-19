@@ -11,7 +11,7 @@ void topTitle(const char *title)
 {
   TLatex latex;
   latex.SetNDC();
-  latex.SetTextSize(0.03);
+  latex.SetTextSize(0.02);
   latex.SetTextAlign(31); // align right
   latex.DrawLatex(0.90,0.92, title);
   latex.SetTextAlign(11); // align left
@@ -21,7 +21,7 @@ void topTitle(const char *title)
 void plotId( const char *name )
 {
   TLatex *   tex = new TLatex(1.51e+11,0.67, name);
-  tex->SetTextSize(0.286);
+  tex->SetTextSize(0.180);
   tex->SetLineWidth(1);
   tex->Draw(); 
 }
@@ -67,6 +67,14 @@ void makePlots()
 void makePlots( const char * model, const char * src, const char * prob, const char * infile) 
 {
   
+  // X - range 
+  double xmin = 1.0e11;
+  double xmax = 1.0e14;
+  
+  // Y - range 
+  double ymin = 2.70e10;
+  double ymax = 3.16e10;
+
   //Output path
   TString path("./paper01-plots/probs/");
   
@@ -83,7 +91,7 @@ void makePlots( const char * model, const char * src, const char * prob, const c
   c1->SetFrameBorderMode(0);
   c1->Draw();
   
-  int maxPads = 7;
+  int maxPads = 5;
   
   TString cnameB = TString(model) + TString("_") + TString(prob) + TString("_") + TString("B");
   
@@ -100,8 +108,6 @@ void makePlots( const char * model, const char * src, const char * prob, const c
   //Branches
   double xx = 0.0;
   double yy = 0.0;
-  
-  TGraph2D * radiusVar= new TGraph2D();
   
   //.......
   
@@ -131,36 +137,36 @@ void makePlots( const char * model, const char * src, const char * prob, const c
   
   in.close();
   
-  //.......
-  
-  double radius[nfile];
-  radius[0] = 1.37052e+17;
-  radius[1] = 1.40012e+17;
-  radius[2] = 1.42128e+17;
-  radius[3] = 1.47204e+17;
-  radius[4] = 1.52228e+17;
+  double * radius = new double[30];
+  double value = ymin;
+  double dradius = (ymax-ymin)/(double)(nfile-1);
+  for(int j=0; j< nfile; ++j) 
+  {
+    radius[j] = value;
+    value += dradius;
+  }
   
   int idx = 0;
-
+  
   TList * v_Profiles = new TList();
   
   TProfile * pf1;
   
   for( int k = 0; k < v_Labels->GetSize(); ++k ) {
-
+    
     char pf1name[20];
     sprintf(pf1name,"pf_%d", k);
 
-    pf1 = new TProfile(pf1name,"Profile histogram",500,1e11,1e14,0.0,1.0);
-
+    pf1 = new TProfile(pf1name,"Profile histogram", 200, 1e11, 1e14, 0.0, 1.0);
+    
     ////
     
     TString name = ((TObjString*)v_Labels->At(k))->GetString();
-
+    
     TFile * f1 = TFile::Open( name.Data(), "READ");
     
     f1->cd();
-        
+    
     TTree * PxxTreeNu = (TTree*)gDirectory->Get( dataPxx.Data() );
     
     PxxTreeNu->SetBranchAddress("Ex",&xx);
@@ -184,6 +190,8 @@ void makePlots( const char * model, const char * src, const char * prob, const c
 
   //
   
+  TGraph2D * radiusVar= new TGraph2D();
+  
   idx = 0;
   
   int nprofiles = v_Profiles->GetEntries();
@@ -203,6 +211,11 @@ void makePlots( const char * model, const char * src, const char * prob, const c
     
   }
   
+  TAxis *axis1 = radiusVar->GetXaxis();
+  axis1->SetLimits(xmin, xmax);
+  
+  TAxis *axis2 = radiusVar->GetYaxis();
+  axis2->SetLimits(ymin, ymax);
   
   //....
   
@@ -214,7 +227,27 @@ void makePlots( const char * model, const char * src, const char * prob, const c
   std::cout << " drawing ... contours " << std::endl;
   
   c1->cd();
-  gPad->SetLogx();
+  c1->SetLogx();
+  radiusVar->SetMaximum(1.0);
+  
+  radiusVar->GetYaxis()->SetNdivisions(509);
+  radiusVar->GetYaxis()->SetTitle( "radius [cm]" );
+  radiusVar->GetYaxis()->SetLabelSize(0.04);
+  radiusVar->GetYaxis()->SetLabelFont(42);
+  radiusVar->GetYaxis()->SetTitleSize(0.05);
+  radiusVar->GetYaxis()->SetTitleOffset(0.70);
+  radiusVar->GetYaxis()->SetTitleFont(42);
+  radiusVar->GetYaxis()->SetLabelOffset(0.01);
+  radiusVar->GetYaxis()->CenterTitle(true); 
+  
+  radiusVar->GetXaxis()->SetTitle("E [eV]");
+  radiusVar->GetXaxis()->CenterTitle(true); 
+  radiusVar->GetXaxis()->SetLabelOffset(0.01);
+  radiusVar->GetXaxis()->SetLabelSize(0.05);
+  radiusVar->GetXaxis()->SetTitleSize(0.05);
+  radiusVar->GetXaxis()->SetTitleOffset(0.9);
+  radiusVar->GetXaxis()->SetLabelFont(42);
+
   radiusVar->Draw("COLZ");
   topTitle(model);
   c1->cd();
@@ -231,40 +264,73 @@ void makePlots( const char * model, const char * src, const char * prob, const c
     
     c2->cd(idx);
     gPad->SetLogx();
-    if ( (k) % 3 == 0 ) {
+    pf1->SetMaximum(1.0);
+    pf1->SetMinimum(0.0);
+    pf1->SetFillColor(5);
+    
+    pf1->GetYaxis()->SetNdivisions(504);
+    pf1->GetYaxis()->SetTitle( "Pxx" );
+    pf1->GetYaxis()->SetLabelSize(0.11);
+    pf1->GetYaxis()->SetLabelFont(42);
+    pf1->GetYaxis()->SetTitleSize(0.09);
+    pf1->GetYaxis()->SetTitleOffset(0.45);
+    pf1->GetYaxis()->SetTitleFont(42);
+    pf1->GetYaxis()->SetLabelOffset(0.007);
+    pf1->GetYaxis()->CenterTitle(true); 
+    
+    pf1->GetXaxis()->SetTitle("E [eV]");
+    pf1->GetXaxis()->CenterTitle(true); 
+    pf1->GetXaxis()->SetLabelOffset(0.007);
+    pf1->GetXaxis()->SetLabelSize(0.11);
+    pf1->GetXaxis()->SetTitleSize(0.07);
+    pf1->GetXaxis()->SetTitleOffset(0.9);
+    pf1->GetXaxis()->SetLabelFont(42);
+
+    if ( (k) % 5 == 0 ) {
       std::cout << " pf: " << idx << " k " << k  << std::endl;
       pf1->Draw("hist");
       idx+=1;
-      
     }
-    char aname[20];
-    sprintf(aname," k= %d",k );
+    
+    char aname[50];
+    sprintf(aname," k %d r = %0.2f ^10 cm", k , radius[k]/1.0e10 );
     plotId( aname );
-
+    
     if ( idx > maxPads ) break;
-
+    
   }
   
   
   std::cout << " drawing ... done" << std::endl;
   
-  /*
-  
   std::stringstream saveAs;
   
   saveAs.str("");
-  saveAs << path << model << "/pdf/" << "nueosc_" << model << "_" << prob << "_var" << ".pdf";
+  saveAs << path << model << "/pdf/" << "nueosc_" << model << "_" << prob << "_Rstar_var" << ".pdf";
   c1->SaveAs( saveAs.str().c_str() );
   
   saveAs.str("");
-  saveAs << path << model << "/png/" << "nueosc_" << model << "_" << prob << "_var" << ".png";
+  saveAs << path << model << "/png/" << "nueosc_" << model << "_" << prob << "_Rstar_var" << ".png";
+  c1->SaveAs( saveAs.str().c_str() );
+  
+  saveAs.str("");
+  saveAs << path << model << "/eps/" << "nueosc_" << model << "_" << prob << "_Rstar_var" << ".eps";
   c1->SaveAs( saveAs.str().c_str() );
 
-  saveAs.str("");
-  saveAs << path << model << "/eps/" << "nueosc_" << model << "_" << prob << "_var" << ".eps";
-  c1->SaveAs( saveAs.str().c_str() );
+  //
   
-  */
+  saveAs.str("");
+  saveAs << path << model << "/pdf/" << "nueosc_" << model << "_" << prob << "_Profs_Rstar_var" << ".pdf";
+  c2->SaveAs( saveAs.str().c_str() );
+  
+  saveAs.str("");
+  saveAs << path << model << "/png/" << "nueosc_" << model << "_" << prob << "_Profs_Rstar_var" << ".png";
+  c2->SaveAs( saveAs.str().c_str() );
+
+  saveAs.str("");
+  saveAs << path << model << "/eps/" << "nueosc_" << model << "_" << prob << "_Profs_Rstar_var" << ".eps";
+  c2->SaveAs( saveAs.str().c_str() );
+
   
 }
 

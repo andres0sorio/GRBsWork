@@ -41,28 +41,30 @@ nvar    = float( options.nvar )
 
 outfile_prefix = options.infile.split('.')[0]
 
-print param, range, nvar, outfile_prefix
+
 
 vmin = float( range[0] )
 vmax = float( range[1] )
 
 delta = (vmax - vmin) / nvar
+print param, range, nvar, outfile_prefix, delta
 
 k = 0
 
 var = vmin
 
-while var <= vmax:
+while k <= nvar:
 
 	outfile_name = outfile_prefix + '_' + str(k) + '.xml'
 	outfile = open( outfile_name,'w')
 
 	for line in infile.readlines():
 		new_line = line.replace('#####'+param+'#####', str(var) )
-                outfile.writelines( new_line )
-		
+		outfile.writelines( new_line )
 	k += 1
 	var += delta
 	outfile.close()
 	infile.seek(0)
+
+print 'Variation files ready.'
 

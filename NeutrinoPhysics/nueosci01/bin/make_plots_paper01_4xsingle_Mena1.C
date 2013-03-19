@@ -52,7 +52,7 @@ void makePlots( const char * modelA, const char * modelB, const char * src,
 {
   
   //Output path
-  TString path("./paper01-plots/probs/");
+  TString path("./paper01-plots/flux/");
 
   TFile * f1 = new TFile(infileA);
   TFile * f2 = new TFile(infileB);

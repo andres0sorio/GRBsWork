@@ -33,5 +33,5 @@ for job in jobs.select( first_job, last_job ):
 	os.system(cmd)
 	k+=1
 	
-print "job submission done."
+print "Total files transfered: ", (k-1)
 

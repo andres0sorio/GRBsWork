@@ -12,7 +12,7 @@
       #####STAR_RADIUS#####
     </Par>
     <Par Id="3" Name="LMIN">
-      4.0608e+15
+      3.20e+15
     </Par>
     <Par Id="4" Name="Emin">
       1.0e11
@@ -24,68 +24,95 @@
       0.5e14
     </Par>
     <Par Id="7" Name="De">
-      1.0e10
+      1.0e9
     </Par>
   </ModelParameters>
   <ModelParameters Id="ModelB">
     <Par Id="0" Name="MaxPars">
-      4.0
+      5.0
     </Par>
     <Par Id="1" Name="KB">
-      2.57e-018
+      2.57e-18
     </Par>
-    <Par Id="2" Name="LMAX">
-      1.5228e+17
+    <Par Id="2" Name="RstarCM">
+      3.16e12
     </Par>
-    <Par Id="3" Name="rB">
-      5.076e+016
+    <Par Id="3" Name="RbCM">
+      1.0e12
     </Par>
-    <Par Id="4" Name="cm2InvEvFactor">
-      5.076e+8
+    <Par Id="4" Name="Rmin">
+      3.202e+15
     </Par>
-    <Par Id="5" Name="LMIN">
-      4.0608e+15
+    <Par Id="5" Name="CM.to.invEV">
+      5.076e+4
     </Par>
-    <Par Id="6" Name="Emin">
+    <Par Id="6" Name="LMAX">
+      1.6040160e17
+    </Par>
+    <Par Id="7" Name="LMIN">
+      3.202e+15
+    </Par>
+    <Par Id="8" Name="Emin">
       1.0E11
     </Par>
-    <Par Id="7" Name="Emax">
+    <Par Id="9" Name="Emax">
       1.0E14
     </Par>
-    <Par Id="8" Name="Dx">
+    <Par Id="10" Name="Dx">
       0.5E14
     </Par>
-    <Par Id="9" Name="De">
-      1.0E10
+    <Par Id="11" Name="De">
+      1.0E9
     </Par>
   </ModelParameters>
   <ModelParameters Id="ModelC">
     <Par Id="0" Name="MaxPars">
-      3.0
+      9.0
     </Par>
     <Par Id="1" Name="KC">
-      4.76e-019
+      4.76e-19
     </Par>
-    <Par Id="2" Name="LMAX">
-      1.5228e+17
+    <Par Id="2" Name="RstarCM">
+      3.16e12
     </Par>
-    <Par Id="3" Name="cm2InvEvFactor">
-      5.076e+8
-    </Par>
-    <Par Id="4" Name="LMIN">
-      4.0608e+15
-    </Par>
-    <Par Id="5" Name="Emin">
+    <Par Id="3" Name="RbCM">
       1.0e11
     </Par>
-    <Par Id="6" Name="Emax">
+    <Par Id="4" Name="Rmin">
+      3.202e+15
+    </Par>
+    <Par Id="5" Name="A1">
+      20.0
+    </Par>
+    <Par Id="6" Name="neff1">
+      2.1
+    </Par>
+    <Par Id="7" Name="A2">
+      1.0
+    </Par>
+    <Par Id="8" Name="neff2">
+      2.5
+    </Par>
+    <Par Id="9" Name="CM.to.invEV">
+      5.076e+4
+    </Par>
+    <Par Id="10" Name="LMAX">
+      1.6040160e17
+    </Par>
+    <Par Id="11" Name="LMIN">
+      3.202e+15
+    </Par>
+    <Par Id="12" Name="Emin">
+      1.0e11
+    </Par>
+    <Par Id="13" Name="Emax">
       1.0e14
     </Par>
-    <Par Id="7" Name="Dx">
+    <Par Id="14" Name="Dx">
       0.5e14
     </Par>
-    <Par Id="8" Name="De">
-      1.0e10
+    <Par Id="15" Name="De">
+      1.0e9
     </Par>
   </ModelParameters>
   <ModelParameters Id="EarthA">
@@ -98,13 +125,13 @@
     <Par Id="2" Name="H2">
       8.69e-13
     </Par>
-    <Par Id="3" Name="S1">
+    <Par Id="3" Name="L1.m">
       2.885e6
     </Par>
-    <Par Id="4" Name="S2">
-      6.972e6
+    <Par Id="4" Name="L2.m">
+      8.17e6
     </Par>
-    <Par Id="5" Name="m2InvEvFactor">
+    <Par Id="5" Name="M.to.invEV">
       5.076e+6
     </Par>
     <Par Id="6" Name="LMIN">
@@ -162,14 +189,23 @@
     <Par Id="0" Name="MaxPars">
       0.0
     </Par>
-    <Par Id="1" Name="LMIN">
-      0.0
-    </Par>
     <Par Id="2" Name="LMAX">
-      1.0e30
+      1.61e+17
     </Par>
-    <Par Id="3" Name="Dx">
-      1.0e25
+    <Par Id="3" Name="LMIN">
+      3.20e+15
+    </Par>
+    <Par Id="4" Name="Emin">
+      1.0e11
+    </Par>
+    <Par Id="5" Name="Emax">
+      1.0e14
+    </Par>
+    <Par Id="6" Name="Dx">
+      0.5e14
+    </Par>
+    <Par Id="7" Name="De">
+      1.0e9
     </Par>
   </ModelParameters>
  </ModelParameterList>

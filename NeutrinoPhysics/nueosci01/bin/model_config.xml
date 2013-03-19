@@ -125,13 +125,13 @@
     <Par Id="2" Name="H2">
       8.69e-13
     </Par>
-    <Par Id="3" Name="L1">
+    <Par Id="3" Name="L1.m">
       2.885e6
     </Par>
-    <Par Id="4" Name="L2">
+    <Par Id="4" Name="L2.m">
       8.17e6
     </Par>
-    <Par Id="5" Name="m2InvEvFactor">
+    <Par Id="5" Name="M.to.invEV">
       5.076e+6
     </Par>
     <Par Id="6" Name="LMIN">

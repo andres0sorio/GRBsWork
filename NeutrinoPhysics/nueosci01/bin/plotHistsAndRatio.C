@@ -120,7 +120,7 @@ TCanvas* plotHistsAndRatio(vector<TH1F*> numeratorHistograms, TH1F* denominatorH
   //*************************************************
   // Bottom plot
   TPad *c1_1 = new TPad("c1_1", "newpad", 0.01, 0.02, 0.99, 0.32);
-  c1_1->SetLogx();
+  //c1_1->SetLogx();
   c1_1->Draw();
   c1_1->cd();
   c1_1->SetTopMargin(0.05);
@@ -163,7 +163,7 @@ TCanvas* plotHistsAndRatio(vector<TH1F*> numeratorHistograms, TH1F* denominatorH
   // Top Plot
   c1->cd();
   TPad * c1_2 = new TPad("c1_2", "newpad",0.01,0.33,0.99,0.99);
-  c1_2->SetLogx();
+  //c1_2->SetLogx();
   c1_2->Draw(); 
   c1_2->cd();
   c1_2->SetTopMargin(0.1);

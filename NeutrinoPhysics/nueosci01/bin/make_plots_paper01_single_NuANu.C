@@ -37,7 +37,7 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  makePlots("ModelA","0", "Pmt","root_files/output-ModelA-Vacuum-validation-mar-16.root");
+  makePlots("ModelC","0", "Pmt","root_files/Mena1/output_ModelC.root");
    
 }
 
