@@ -295,7 +295,7 @@ void NeutrinosInMediumPaper::Propagate(const char * out_model, const char * in_m
     TString output = TString(out_model) + TString("_") + TString(in_model) + TString("_") + TString((*inputItr).c_str());
     
     std::cout << "Propagation> output_directory: " <<  output << std::endl;
-    
+  
     m_tree = new TTree("data","Data points");
     m_tree->Branch("Ex", &m_Ex, "Ex/d");
     m_tree->Branch("Phi_e", &m_Phi_e, "Phi_e/d");
@@ -403,6 +403,7 @@ void NeutrinosInMediumPaper::PropagateVacuum( const char * in_model, const char 
     
     m_tree = new TTree("data","Data points");
     m_tree->Branch("Ex", &m_Ex, "Ex/d");
+    
     m_tree->Branch("Phi_e", &m_Phi_e, "Phi_e/d");
     m_tree->Branch("Phi_m", &m_Phi_m, "Phi_m/d");
     m_tree->Branch("Phi_t", &m_Phi_t, "Phi_t/d");

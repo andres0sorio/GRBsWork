@@ -20,6 +20,7 @@ void topTitle(const char *title)
 
 void makePlots() 
 {
+  
   gROOT->SetStyle("Plain");
   gROOT->SetBatch(false);
   // --- Use the CMS TDR style
@@ -37,8 +38,10 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  makePlots("ModelC","0","./root_files/Mena1/output_ModelC.root");
-  
+  //makePlots("EarthB","0","./root_files/output_0_.root");
+
+  makePlots("ModelA","0","./root_files/Mena1/output_ModelA.root");
+    
 }
 
 void makePlots( const char * model, const char * src, const char * infile )
@@ -73,7 +76,7 @@ void makePlots( const char * model, const char * src, const char * infile )
   
   TTree * PeeTreeANu = (TTree*)gDirectory->Get( dataAPee.Data() );
   TTree * PemTreeANu = (TTree*)gDirectory->Get( dataAPem.Data() );
-  TTree * PetTreeANu = (TTree*)gDirectory->Get( dataAPem.Data() );
+  TTree * PetTreeANu = (TTree*)gDirectory->Get( dataAPet.Data() );
   
   //Branches
   double xx = 0.0;

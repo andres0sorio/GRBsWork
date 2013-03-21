@@ -37,7 +37,7 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  makePlots("ModelC","0", "Pmt","root_files/Mena1/output_ModelC.root");
+  makePlots("ModelA","0", "Pem","output.root");
    
 }
 
