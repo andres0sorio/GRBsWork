@@ -55,8 +55,6 @@ public:
   void   Validate( );
   void   ValidateInVarDensity( );
   void   ValidateSolarProfile( );
-  void   ValidateProfileA( );
-  
   void   TestProcedure( );
   
   void   setPotential( TF1 * f1) { f_Ve = f1; } ;

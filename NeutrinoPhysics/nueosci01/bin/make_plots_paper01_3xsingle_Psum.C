@@ -44,9 +44,11 @@ void makePlots()
 
   //makePlots("ModelA","0","./root_files/Consistency/output_ModelA_OLDPAR_SetA_NOAvg_OldK0.root");
 
-  makePlots("ModelA","0","./root_files/output_0_.root");
+  //makePlots("ModelA","0","./root_files/Consistency/output_ModelA_SetI.root");
   
-
+  //makePlots("ModelA","0","output.root");
+  
+  makePlots("ModelA","0","./root_files/Consistency/output_ModelA_SetII.root");
     
 }
 
@@ -100,6 +102,9 @@ void makePlots( const char * model, const char * src, const char * infile )
   ProbANu[0] = new TGraph();
   ProbANu[1] = new TGraph();
   ProbANu[2] = new TGraph();
+  
+  TGraph * Psum = new TGraph();
+  TGraph * aPsum = new TGraph();
   
   TLegend * leg = new TLegend(0.14,0.69,0.24,0.85);
     
@@ -169,9 +174,15 @@ void makePlots( const char * model, const char * src, const char * infile )
 
   for( int k=0; k < 3; ++k) 
   {
-    ProbNu[k]->SetMarkerStyle(1);
+    
+    ProbNu[k]->SetLineColor(4);
+    ProbNu[k]->SetMarkerColor(4);
+    ProbNu[k]->SetMarkerStyle(7);
+    
     ProbNu[k]->SetFillColor(10);
     ProbNu[k]->SetMaximum(1.0);
+    ProbNu[k]->SetMinimum(0.0);
+    
     TString yaxis = ((TObjString*)v_Labels->At(k))->GetString();
     ProbNu[k]->GetYaxis()->SetTitle( yaxis.Data() );
     ProbNu[k]->GetXaxis()->SetTitle("E [eV]");
@@ -189,11 +200,13 @@ void makePlots( const char * model, const char * src, const char * infile )
     ProbNu[k]->GetYaxis()->SetTitleOffset(0.45);
     ProbNu[k]->GetYaxis()->SetTitleFont(42);
     
-    ProbANu[k]->SetMarkerStyle(1);
-    ProbANu[k]->SetMarkerColor(2);
-    ProbANu[k]->SetLineColor(2);
+    ProbANu[k]->SetMarkerColor(42);
+    ProbANu[k]->SetMarkerStyle(23);
+    ProbANu[k]->SetMarkerSize(0.3);
+    
     ProbANu[k]->SetFillColor(10);
     ProbANu[k]->SetMaximum(1.0);
+    ProbANu[k]->SetMinimum(0.0);
     
 
   }
@@ -223,7 +236,7 @@ void makePlots( const char * model, const char * src, const char * infile )
   gPad->SetGridy();
   gPad->SetLogx();
   ProbNu[1]->Draw("APL");
-  ProbANu[1]->Draw("P");
+  ProbANu[1]->Draw("PL");
   leg->DrawClone();
     
   c1->cd(3);
@@ -231,7 +244,7 @@ void makePlots( const char * model, const char * src, const char * infile )
   gPad->SetGridy();
   gPad->SetLogx();
   ProbNu[2]->Draw("APL");
-  ProbANu[2]->Draw("P");
+  ProbANu[2]->Draw("PL");
   leg->DrawClone();
 
   c1->cd();
@@ -249,7 +262,82 @@ void makePlots( const char * model, const char * src, const char * infile )
   saveAs.str("");
   saveAs << path << model << "/eps/" << "nueosc_probs_" << model << "_f2" << ".eps";
   c1->SaveAs( saveAs.str().c_str() );
+
+
+  for (Long64_t i=0;i<nentries;i++) {
     
+    double xx = 0.0;
+    double yy = 0.0;
+    double p1 = 0.0;
+    double p2 = 0.0;
+    double p3 = 0.0;
     
+    ProbNu[0]->GetPoint(i, xx, p1);
+    ProbNu[1]->GetPoint(i, xx, p2);
+    ProbNu[2]->GetPoint(i, xx, p3);
+    
+    yy = p1 + p2 + p3;
+    
+    if ( xx < 1.0e14 )
+      Psum->SetPoint( i, xx, yy);
+    else 
+      break;
+    
+  }
+
+  for (Long64_t i=0;i<nentries;i++) {
+    
+    double xx = 0.0;
+    double yy = 0.0;
+    double p1 = 0.0;
+    double p2 = 0.0;
+    double p3 = 0.0;
+    
+    ProbANu[0]->GetPoint(i, xx, p1);
+    ProbANu[1]->GetPoint(i, xx, p2);
+    ProbANu[2]->GetPoint(i, xx, p3);
+    
+    yy = p1 + p2 + p3;
+    
+    if ( xx < 1.0e14 )
+      aPsum->SetPoint( i, xx, yy);
+    else 
+      break;
+    
+  }
+  
+  TCanvas * c2 = new TCanvas("Sums", "Oscillation probabilities - SUMS", 184, 60, 861, 470);
+  c2->Divide(1,2);
+  
+  c2->cd(1);
+  
+  gPad->SetLogx();
+  Psum->SetMaximum(1.1);
+  Psum->SetMinimum(0.0);
+  Psum->Draw("APL");
+
+  TLatex *   tex = new TLatex(1.823945e+11,0.8753448,"Nu");
+  tex->SetLineWidth(2);
+  tex->Draw();
+
+  c2->Modified();
+  c2->cd();
+  
+  c2->cd(2);
+  
+  
+  gPad->SetLogx();
+  aPsum->SetMaximum(1.1);
+  aPsum->SetMinimum(0.0);
+  aPsum->Draw("APL");
+  tex = new TLatex(1.56236e+11,0.8214771,"anti-Nu");
+  tex->SetLineWidth(2);
+  tex->Draw();
+  c2->Modified();
+  c2->cd();
+  
+  c2->Print("sum-of-probabilities.png" );
+  
+
 }
 

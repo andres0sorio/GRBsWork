@@ -69,8 +69,6 @@ int main(int iargv, char **argv) {
   else if ( valOpt == 3 ) 
     neuOsc->ValidateSolarProfile();
   else if ( valOpt == 4 ) 
-    neuOsc->ValidateProfileA();
-  else if ( valOpt == 5 ) 
     neuOsc->TestProcedure();
   else {
     std::cout << "Not a valid option" << std::endl;

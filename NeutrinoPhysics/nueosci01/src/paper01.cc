@@ -159,8 +159,8 @@ int main(int iargv, char **argv) {
     }
     else 
     {
-      mixpars->SetPar4( atof( dmasses[0].c_str() ) );
-      mixpars->SetPar8( atof( dmasses[1].c_str() ) );
+      mixpars->SetPar4( atof( dmasses[0].c_str() ) ); // DM2 = DM(32)
+      mixpars->SetPar8( atof( dmasses[1].c_str() ) ); // Dm2 = DM(12)
     }
     std::cout << (*mixpars) << std::endl;
   }
@@ -292,13 +292,6 @@ int main(int iargv, char **argv) {
     
   }
 
-  //............................................................................................
-
-  //Step 4 ( IceCube! -> R calculation )
-  
-  
-
-  
   //............................................................................................
 
   return 0;

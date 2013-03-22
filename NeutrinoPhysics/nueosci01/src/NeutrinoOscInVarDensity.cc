@@ -107,10 +107,10 @@ void NeutrinoOscInVarDensity::initializeAngles()
     setAngle(1, 2, m_input->GetPar1() );  //theta_12
     setAngle(1, 3, m_input->GetPar2() );  //theta_13
     setAngle(2, 3, m_input->GetPar3() );  //theta_23
-
-    m_DeltamSq = m_input->GetPar8(); //Dm2_21 -> typically set to 8e-5
+    
     m_DeltaMSq = m_input->GetPar4(); //Dm2_32 -> typically set to 3e-3
-
+    m_DeltamSq = m_input->GetPar8(); //Dm2_21 -> typically set to 8e-5
+    
   }
   
 }
@@ -239,8 +239,12 @@ void NeutrinoOscInVarDensity::Eval_TnuT(  long double x1, long double x2  )
   long double Ve1 = f_Ve->Eval( x1 );
   long double Ve2 = f_Ve->Eval( x2 );
 
+  // There is a problem with the neutrino probabilities
+  
   long double Ve  = ( Ve1 + Ve2 ) / 2.0L; //Take the average potential between the two points
-    
+
+  /// std::cout << x2  << " v1 " << Ve1 << " v2 " << Ve2 << " average " << Ve << std::endl;
+  
   long double oneover3 = (1.0L/3.0L);
   
   (*m_Tab) (0,0) = Ve * ( (*m_Ur)(0,0) * (*m_Ur)(0,0) ) - ( oneover3 * Ve )
@@ -314,7 +318,7 @@ void NeutrinoOscInVarDensity::Eval_UFlavour(  long double x1, long double x0) {
 
   long double dx = x1 - x0;
 
-  //march 17: AO
+  //march 17: remove this method - better use average AO
   //long double xH = x1 - (dx/2.0L);
   //this->Eval_TnuT( xH );
 
@@ -1479,169 +1483,6 @@ void NeutrinoOscInVarDensity::ValidateSolarProfile() {
   cPap2->Print("results/solar-profile-paper_2.eps");
 
 }
-
-void NeutrinoOscInVarDensity::ValidateProfileA() {
-  
-  TGraph * gEv[5];
-  gEv[0] = new TGraph();
-  gEv[1] = new TGraph();
-  gEv[2] = new TGraph();
-  gEv[3] = new TGraph();
-  gEv[4] = new TGraph();
-  
-  TCanvas * valA = new TCanvas("menaProfA","Validation with profile A paper 3",100,100,1000,600);
-  tdrStyle->cd();
-  valA->SetFillColor(10);
-  valA->Divide(3,2);
-  
-  double K0   = (4.0E-6) * 4.2951E18;
-  double LMIN = (8.0E8)  * InvEvfactor;
-  double LMAX = (3.0E10) * InvEvfactor;
-  
-  if (m_debug) std::cout << "Constants: " << '\n'
-                         << "K0 " << K0 << '\n'
-                         << "LMIN " << LMIN << '\n'
-                         << "LMAX " << LMAX << std::endl;
-    
-  //................ Profile No A
-
-  TF1 * profA = new TF1("profA", densityModA, LMIN, LMAX, 2);
-  profA->SetParameter(0, K0 );
-  profA->SetParameter(1, LMAX );
-  this->setPotential( profA );
-
-  valA->cd(1);
-  gPad->SetLogx();
-  gPad->SetLogy();
-  profA->SetLineColor(2);
-  profA->SetLineWidth(1);
-  profA->Draw();
-  profA->GetXaxis()->SetTitle("r (1/eV)");
-  profA->GetYaxis()->SetTitle("A(r) (eV)");
-  profA->Draw();
-
-  setAngle(1, 2, 33.83);  //theta_12
-  setAngle(1, 3, 6.0);    //theta_13
-  setAngle(2, 3, 45.0);   //theta_23
-  
-  m_DeltamSq = 8.0E-5L;
-  m_DeltaMSq = 1.4E-3L;
-  
-  this->updateMixingMatrix();
-
-  long double Ex = 1.0E10L;
-  long double Emax = 1.0E12L;
-  long double dx = 0.5E14L;
-  
-  int k = 0;
-  int counter = 0;
-
-  long double LRes1 = 1.1E9 * InvEvfactor;
-  long double LRes2 = 1.3E9 * InvEvfactor;
-  
-  LMAX = LRes2;
-  
-  std::cout << "L near resonance: [" << LRes1 << "," << LRes2 << "]" << std::endl;
-  
-  while ( Ex <= Emax ) {
-    
-    m_Ev = Ex;
-    this->updateEab();
-    
-    matrix <std::complex< long double> >  * tmp;
-    tmp = new matrix<std::complex< long double> >(3,3);
-    
-    double long x1 = 0.0;
-    double long x2 = LRes1;
-    
-    int i = 0;
-    
-    while ( x2 <= LMAX ) {
-      
-      this->Eval_UFlavour( x2, x1 );
-      
-      if( i == 0) {
-        (*tmp) = (*m_Uf); 
-      } else
-        (*tmp) = prod( (*m_Uf), (*tmp) );
-      
-      x1  = x2;
-      x2 += dx;
-      
-      //std::cout << i << " " << x2 << std::endl;
-      
-      i += 1;
-      counter  += 1;
-      
-    }
-    
-    (*m_Uf) = (*tmp);
-    (*m_Ufd) = conj ( (*m_Uf) );
-    
-    this->calcProbabilities();
-    
-    double d1 = (*m_Prob_AtoB)(0,0);
-
-    if ( ! (boost::math::isnan)(d1) )
-      gEv[0]->SetPoint( k, Ex, d1);
-    
-    d1 = (*m_Prob_AtoB)(0,1);
-    if ( ! (boost::math::isnan)(d1) )
-      gEv[1]->SetPoint( k, Ex, d1);
-    
-    d1 = (*m_Prob_AtoB)(0,2);
-    if ( ! (boost::math::isnan)(d1) )
-      gEv[2]->SetPoint( k, Ex, d1);
-    
-    d1 = (*m_Prob_AtoB)(1,2);
-    if ( ! (boost::math::isnan)(d1) )
-      gEv[3]->SetPoint( k, Ex, d1);
-
-    //std::cout << k << " " << Ex << " " << d1 << std::endl;
-        
-    k += 1; 
-  
-    if ( Ex < 1.0E11 )
-      Ex += 0.5E9L;
-    else
-      Ex += 1.0E10L;
-
-    delete tmp;
-    
-  }
-
-  std::cout << "max pts: " << k << std::endl;
-  
-  std::vector<std::string> labels;
-  labels.push_back( std::string("Pee") );
-  labels.push_back( std::string("Pe#mu") );
-  labels.push_back( std::string("Pe#tau") );
-  labels.push_back( std::string("P#mu#tau") );
-
-  for(int i=0; i < 4; ++i) {
-    
-    valA->cd(i+2);
-    gPad->SetLogx();
-    gEv[i]->SetMaximum(1.2);
-    gEv[i]->Draw("AL");
-    gEv[i]->GetXaxis()->SetTitle("Ev (eV)");
-    gEv[i]->GetXaxis()->CenterTitle(true);
-    gEv[i]->GetYaxis()->SetTitle(labels[i].c_str());
-    gEv[i]->GetYaxis()->CenterTitle(true);
-    gEv[i]->GetXaxis()->SetLimits(1.0E10, 1.0E12);
-    gEv[i]->SetLineWidth(1);
-    gEv[i]->Draw("AL");
-    
-  }
-  
-
-  valA->cd();
-  valA->Print("results/profile-A-validation.eps");
- 
-  std::cout << " all done " << std::endl;
- 
-}
-
 
 void NeutrinoOscInVarDensity::TestProcedure()
 {

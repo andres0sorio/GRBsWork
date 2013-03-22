@@ -36,7 +36,9 @@ public:
   virtual double operator() (double *x, double *p) = 0;
 
   void treat_as_AntiNu() { m_sign = -1.0; };
-  
+
+  void treat_as_Nu() { m_sign = 1.0; };
+
   double m_pars[10];
   static const double Mp;
   static const double GF;

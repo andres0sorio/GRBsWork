@@ -4,20 +4,50 @@ import sys, os, stat, shutil
 
 arguments = []
 
-xmlfi = 'model_config_Earth.xml'
-model = 'EarthB'
+#xmlfi = 'model_config_OLD.xml' #march 21
+#xmlfi = 'model_config_SetI.xml' #march 21 - Sarira SetI parameters
+
+xmlfi = 'model_config_SetII.xml' #march 21 - Sarira SetII parameters
+
+model = 'ModelA'
+
 xmax  = 1.0e14
 x0    = 1.0e11
 dx    = 10.0
+
 steps = '1'
 
+#ONLY OLD Parameters - march 21
+#angles = '33.8,8.0,45.0'
+#dmasses = '0.0032,0.00008'
+
+#Set I - march 21
+#angles = '33.8,8.8,45.0'
+#dmasses = '0.0032,0.00008'
+
+#Set II - march 21
+angles = '33.8,12.0,45.0'
+dmasses = '0.0032,0.00008'
+
+if model == 'EarthB':
+    xmax  = 1.0e10
+    x0    = 1.0e9
+    dx    = 1.0e9
+
 while x0 < xmax:
-    x1 = x0*dx
+
+    if model == 'EarthB':
+        x1 = x0 + dx
+    else:
+        x1 = x0*dx
+
     erange = str(x0)+','+str(x1)
     values = erange.split(',')
     values.append( model )
     values.append( steps )
     values.append( xmlfi )
+    values.append( angles )
+    values.append( dmasses )
     arguments.append( values )
     x0 = x1
 

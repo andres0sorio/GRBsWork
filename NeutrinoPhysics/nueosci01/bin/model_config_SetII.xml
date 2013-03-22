@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE ModelParameterList PUBLIC "" "model_config.dtd" []>
+<ModelParameterList>
+  <ModelParameters Id="ModelA">
+    <Par Id="0" Name="MaxPars">
+      2.0
+    </Par>
+    <Par Id="1" Name="K0">
+      3.02e-19
+    </Par>
+    <Par Id="2" Name="LMAX">
+      1.3705E+017
+    </Par>
+    <Par Id="3" Name="LMIN">
+      3.2027E+015
+    </Par>
+    <Par Id="4" Name="Emin">
+      1.0e11
+    </Par>
+    <Par Id="5" Name="Emax">
+      1.0e14
+    </Par>
+    <Par Id="6" Name="Dx">
+      0.5e14
+    </Par>
+    <Par Id="7" Name="De">
+      1.0e9
+    </Par>
+  </ModelParameters>
+ </ModelParameterList>

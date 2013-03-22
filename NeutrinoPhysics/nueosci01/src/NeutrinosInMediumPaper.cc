@@ -119,7 +119,7 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
     anti_nu  = true;
     Pxx.erase(0,1);
     std::cout << "GenerateDatapoints> Will treat for anit-nu: " << Pxx << '\n';
-  }
+  } 
   
   m_tree = new TTree("data","Data points");
   m_tree->Branch("Ex", &m_Ex, "Ex/d");
@@ -134,8 +134,11 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
   
   DensityModels * density_Mod = m_Models[out_model];
   
-  if ( anti_nu ) density_Mod->treat_as_AntiNu();
-
+  if ( anti_nu ) 
+    density_Mod->treat_as_AntiNu();
+  else 
+    density_Mod->treat_as_Nu();
+  
   if( m_debug ) std::cout << " checking sign in front of the out_model: " << density_Mod->m_sign << std::endl;
   
   double LMIN      = modelpars->GetPar("LMIN");
@@ -145,10 +148,18 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
   long double dx   = (long double) modelpars->GetPar("Dx");  //this is the distance step
   long double dE   = (long double) modelpars->GetPar("De");  //this is the energy step
   
-  if (m_debug) std::cout << "Constants: "   << '\n'
+  if (m_debug) std::cout << "GenerateDatapoints> Constants: "   << '\n'
                          << "LMIN " << LMIN << '\n'
                          << "LMAX " << LMAX << std::endl;
   
+  if (m_debug) std::cout << "GenerateDatapoints> Mixing parameters: " 
+                         << "theta1 "   <<  m_Physics->m_input->GetPar1() << '\t'
+                         << "theta2 "   <<  m_Physics->m_input->GetPar2() << '\t'
+                         << "theta3 "   <<  m_Physics->m_input->GetPar3() << '\t'
+                         << "DM2 (32) " <<  m_Physics->m_input->GetPar4() << '\t'
+                         << "Dm2 (21) " <<  m_Physics->m_input->GetPar8() << '\n';
+  
+
   int maxpars = (int)modelpars->GetPar(0);
   
   TF1 * profA = new TF1("profA", density_Mod, LMIN, LMAX, maxpars);
@@ -230,7 +241,7 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
       Ex += (dE*100.0); //step in energy
 
     delete tmp;
-  
+    
     //if ( k > 1 ) break;
       
   }
@@ -295,7 +306,7 @@ void NeutrinosInMediumPaper::Propagate(const char * out_model, const char * in_m
     TString output = TString(out_model) + TString("_") + TString(in_model) + TString("_") + TString((*inputItr).c_str());
     
     std::cout << "Propagation> output_directory: " <<  output << std::endl;
-  
+    
     m_tree = new TTree("data","Data points");
     m_tree->Branch("Ex", &m_Ex, "Ex/d");
     m_tree->Branch("Phi_e", &m_Phi_e, "Phi_e/d");
@@ -403,7 +414,6 @@ void NeutrinosInMediumPaper::PropagateVacuum( const char * in_model, const char 
     
     m_tree = new TTree("data","Data points");
     m_tree->Branch("Ex", &m_Ex, "Ex/d");
-    
     m_tree->Branch("Phi_e", &m_Phi_e, "Phi_e/d");
     m_tree->Branch("Phi_m", &m_Phi_m, "Phi_m/d");
     m_tree->Branch("Phi_t", &m_Phi_t, "Phi_t/d");

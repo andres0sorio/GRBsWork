@@ -37,7 +37,18 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  makePlots("ModelA","0","./root_files/Mena1/output_ModelA.root");
+  //makePlots("ModelA","0","./root_files/Mena1/output_ModelA.root");
+
+  //makePlots("EarthB","0","output_0_.root");
+
+  //makePlots("ModelA","0","./root_files/Consistency/output_ModelA_OLDPAR_SetA_Avg.root");
+
+  //makePlots("ModelA","0","./root_files/Consistency/output_ModelA_OLDPAR_SetB_Avg.root");
+  
+  //makePlots("ModelA","0","output_ModelA_SetI.root");
+
+  makePlots("ModelA","0","output_ModelA_SetII.root");
+
   
 }
 
@@ -163,6 +174,9 @@ void makePlots( const char * model, const char * src, const char * infile )
     g1->GetYaxis()->SetTitleFont(42);
     g1->GetYaxis()->SetNdivisions(505);
 
+    if ( std::string(model).compare("EarthB") == 0 ) 
+      g1->GetXaxis()->SetLimits(0.98e9, 1.0e10);
+
     gPad->SetGridx();
     gPad->SetGridy();
     gPad->SetLogx();
@@ -176,8 +190,11 @@ void makePlots( const char * model, const char * src, const char * infile )
     g2->SetLineColor(2);
     g2->SetFillColor(10);
     g2->SetMaximum(1.0);
-
-    g2->Draw("P");
+    
+    if ( std::string(model).compare("EarthB") == 0 ) 
+      g2->Draw("PL");
+    else
+      g2->Draw("P");
 
     if( k < 1) 
     {
@@ -194,15 +211,15 @@ void makePlots( const char * model, const char * src, const char * infile )
   std::stringstream saveAs;
   
   saveAs.str("");
-  saveAs << path << model << "/pdf/" << "nueosc_probs_" << model << "_4x" << ".pdf";
+  saveAs << path << model << "/pdf/" << "nueosc_probs_" << model << "_4x_SetII" << ".pdf";
   c1->SaveAs( saveAs.str().c_str() );
   
   saveAs.str("");
-  saveAs << path << model << "/png/" << "nueosc_probs_" << model << "_4x" << ".png";
+  saveAs << path << model << "/png/" << "nueosc_probs_" << model << "_4x_SetII" << ".png";
   c1->SaveAs( saveAs.str().c_str() );
 
   saveAs.str("");
-  saveAs << path << model << "/eps/" << "nueosc_probs_" << model << "_4x" << ".eps";
+  saveAs << path << model << "/eps/" << "nueosc_probs_" << model << "_4x_SetII" << ".eps";
   c1->SaveAs( saveAs.str().c_str() );
   
     
