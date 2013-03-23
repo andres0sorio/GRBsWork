@@ -40,42 +40,43 @@ public:
   
   void GenerateDatapoints(const char *, const char * , ModelParameters *);
   
-    
+  
 protected:
   
 private:
-
+  
   bool Init( const char *,  const char *, const char * );
-
+  
   bool m_debug;
-
+  
   std::map<std::string, std::pair<int,int> > m_ProbIndex;
   
   TFile * m_file;
   
   TTree * m_tree;
-
+  
   TTree * m_input_tree;
   
   std::map<std::string, DensityModels*> m_Models;
-
-  double m_Ex_in;
-  double m_Pb_in;
   
-  double m_Phi_e_in;
-  double m_Phi_m_in;
-  double m_Phi_t_in;
-
+  //Output branches
+  
   double m_Ex;
   double m_Pb;
-
   double m_Phi_e;
   double m_Phi_m;
   double m_Phi_t;
-
+  
+  //Input branches
+  
+  double m_Ex_in;
+  double m_Pb_in;
+  double m_Phi_e_in;
+  double m_Phi_m_in;
+  double m_Phi_t_in;
+  
   TBranch * b_Ex_in;
   TBranch * b_Pb_in;
-
   TBranch * b_Phi_e_in;
   TBranch * b_Phi_m_in;
   TBranch * b_Phi_t_in;

@@ -30,7 +30,6 @@ Graphics::Graphics(  ) {
   g10 = new TGraph();
   g11 = new TGraph();
   g12 = new TGraph();
-    
   
   tleg_1 = new TLegend(0.51, 0.80, 0.85, 0.89, NULL, "brNDC");
 

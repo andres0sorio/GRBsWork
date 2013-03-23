@@ -45,7 +45,7 @@ void makePlots()
 
   //makePlots("EarthB","0","./root_files/EarthB/output_EarthB_SetI_Fine.root","SetI");
 
-  //makePlots("EarthB","0","./root_files/EarthB/output_EarthB_SetII_Fine.root","SetII");
+  makePlots("EarthB","0","./root_files/EarthB/output_EarthB_SetII_Fine.root","SetII");
 
   
   
@@ -274,6 +274,8 @@ void makePlots( const char * model, const char * src, const char * infile , cons
   saveAs << path << model << "/eps/" << "nueosc_probs_" << model << "_" << option << ".eps";
   c1->SaveAs( saveAs.str().c_str() );
 
+  TH1D * h_Psum = new TH1D("Psum.Histo","",100, 0.99999, 1.0001);
+  TH1D * h_aPsum = h_Psum->Clone("aPsum.Histo");
 
   for (Long64_t i=0;i<nentries;i++) {
     
@@ -289,8 +291,11 @@ void makePlots( const char * model, const char * src, const char * infile , cons
     
     yy = p1 + p2 + p3;
     
-    if ( xx < 1.0e14 )
+    if ( xx < 1.0e14 ) 
+    {
       Psum->SetPoint( i, xx, yy);
+      h_Psum->Fill( yy );
+    }
     else 
       break;
     
@@ -310,8 +315,12 @@ void makePlots( const char * model, const char * src, const char * infile , cons
     
     yy = p1 + p2 + p3;
     
-    if ( xx < 1.0e14 )
+    if ( xx < 1.0e14 ) 
+    {
       aPsum->SetPoint( i, xx, yy);
+      h_aPsum->Fill( yy );
+    }
+    
     else 
       break;
     
@@ -319,7 +328,7 @@ void makePlots( const char * model, const char * src, const char * infile , cons
   
   TCanvas * c2 = new TCanvas("Sums", "Oscillation probabilities - SUMS", 184,112,394,472);
   
-  c2->Divide(1,2);
+  c2->Divide(2,2);
   
   c2->cd(1);
   
@@ -342,7 +351,25 @@ void makePlots( const char * model, const char * src, const char * infile , cons
   c2->Modified();
   c2->cd();
   
+  //Now the histogram
+  
   c2->cd(2);
+  // h_Psum->GetXaxis()->SetRange(6,14);
+  h_Psum->GetXaxis()->SetNdivisions(501);
+  h_Psum->GetXaxis()->SetLabelFont(42);
+  h_Psum->GetXaxis()->SetLabelOffset(0.007);
+  h_Psum->GetXaxis()->SetLabelSize(0.05);
+  h_Psum->GetXaxis()->SetTitleSize(0.06);
+  h_Psum->GetXaxis()->SetTitleOffset(0.9);
+  h_Psum->GetXaxis()->SetTitleFont(42);
+  h_Psum->Draw("");
+
+
+  h_Psum->Draw();
+  
+  /////
+
+  c2->cd(3);
   
   gPad->SetLogx();
   aPsum->SetMaximum(1.1);
@@ -357,7 +384,7 @@ void makePlots( const char * model, const char * src, const char * infile , cons
   aPsum->GetXaxis()->SetLabelSize(0.05);
   aPsum->GetXaxis()->SetTitleSize(0.06);
   aPsum->GetXaxis()->SetTitleOffset(1.06);
-
+  
   if ( std::string(model).compare("EarthB") == 0 ) 
     aPsum->GetXaxis()->SetLimits(0.98e9, 1.0e10);
   
@@ -366,9 +393,20 @@ void makePlots( const char * model, const char * src, const char * infile , cons
   tex->SetLineWidth(2);
   tex->Draw();
   
+  //Now the histogram
+  
+  c2->cd(4);
+  h_aPsum->Draw();
+  
+  /////
+
   c2->Modified();
   c2->cd();
 
+  
+
+
+  
   saveAs.str("");
   saveAs << path << model << "/png/" << "nueosc_sum_of_probs_" << model << "_" << option << ".png";
   c2->SaveAs( saveAs.str().c_str() );

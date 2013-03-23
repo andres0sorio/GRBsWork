@@ -106,7 +106,7 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
   
   bool  anti_nu   = false;
   bool  eval_flux = false;
-  
+
   m_file->mkdir(TString(out_model) + TString("_0_") + TString(probability))->cd(); // 0 = no model
   
   // Argument "probability" tells if we are working with neutrinos (default) or anti-neutrinos ("a" in front)
@@ -132,6 +132,12 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
     m_tree->Branch("Phi_t", &m_Phi_t, "Phi_t/d");
   }
   
+  // Add some control histogram
+  TString histo1 = TString("Sum_of_Probs_Row1_") + TString(Pxx);
+  TString histo2 = TString("Sum_of_Probs_Col1_") + TString(Pxx);
+  h_paper01[histo1.Data()] = new TH1D(histo1.Data(),"Psum_Row1",100,0.99999, 1.0001);
+  h_paper01[histo2.Data()] = new TH1D(histo2.Data(),"Psum_Col1",100,0.99999, 1.0001);
+  
   DensityModels * density_Mod = m_Models[out_model];
   
   if ( anti_nu ) 
@@ -139,7 +145,7 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
   else 
     density_Mod->treat_as_Nu();
   
-  if( m_debug ) std::cout << " checking sign in front of the out_model: " << density_Mod->m_sign << std::endl;
+  if( m_debug ) std::cout << "GenerateDatapoints> checking sign in front of the out_model: " << density_Mod->m_sign << std::endl;
   
   double LMIN      = modelpars->GetPar("LMIN");
   double LMAX      = modelpars->GetPar("LMAX");
@@ -159,14 +165,13 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
                          << "DM2 (32) " <<  m_Physics->m_input->GetPar4() << '\t'
                          << "Dm2 (21) " <<  m_Physics->m_input->GetPar8() << '\n';
   
-
   int maxpars = (int)modelpars->GetPar(0);
   
   TF1 * profA = new TF1("profA", density_Mod, LMIN, LMAX, maxpars);
   
   for( int i=1; i <= maxpars; ++i) {
     profA->SetParameter( ( i-1 ), (modelpars->GetPar(i))  );
-    std::cout << " * par: " << (modelpars->GetPar(i)) << std::endl;
+    std::cout << "GenerateDatapoints> * par: " << (modelpars->GetPar(i)) << std::endl;
   }
   
   m_Physics->initializeAngles();
@@ -228,7 +233,13 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
       }
       
       m_tree->Fill();
-      
+    
+      double SumProbs = 0.0;
+      SumProbs = (*m_Physics->m_Prob_AtoB)( 0 , 0 ) + (*m_Physics->m_Prob_AtoB)( 0 , 1 ) + (*m_Physics->m_Prob_AtoB)( 0 , 2 );
+      h_paper01[histo1.Data()]->Fill( SumProbs );
+      SumProbs = (*m_Physics->m_Prob_AtoB)( 0 , 0 ) + (*m_Physics->m_Prob_AtoB)( 1 , 0 ) + (*m_Physics->m_Prob_AtoB)( 2 , 0 );
+      h_paper01[histo2.Data()]->Fill( SumProbs );
+            
     }     
     
     k += 1; 
@@ -249,7 +260,10 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
   std::cout << "GenerateDatapoints> max pts: " << k << std::endl;
   
   m_tree->Write();
-
+  
+  h_paper01[histo1.Data()]->Write();
+  h_paper01[histo2.Data()]->Write();
+  
   m_file->cd("../");
 
   delete profA;
@@ -274,13 +288,13 @@ void NeutrinosInMediumPaper::Propagate(const char * out_model, const char * in_m
   
   int maxpars = (int)modelpars->GetPar(0);
   
-  std::cout << " checking sign in front of the model: " << density_Mod->m_sign <<  " " << maxpars << std::endl;
+  std::cout << "Propagate> checking sign in front of the model: " << density_Mod->m_sign <<  " " << maxpars << std::endl;
   
   TF1 * profA = new TF1("profA", density_Mod, LMIN, LMAX, maxpars);
   
   for( int i=1; i <= maxpars; ++i) {
     profA->SetParameter( ( i-1 ), (modelpars->GetPar(i))  );
-    std::cout << " * par: " << (modelpars->GetPar(i)) << std::endl;
+    std::cout << "Propagate> * par: " << (modelpars->GetPar(i)) << std::endl;
   }
   
   m_Phi_e = 0.0;
@@ -423,7 +437,7 @@ void NeutrinosInMediumPaper::PropagateVacuum( const char * in_model, const char 
     
     Long64_t nentries = m_input_tree->GetEntries();
     
-    std::cout << " n points: " << nentries << std::endl;
+    std::cout << "PropagateVacuum> n points: " << nentries << std::endl;
     
     m_Physics_Vacuum->initializeAngles();
     
