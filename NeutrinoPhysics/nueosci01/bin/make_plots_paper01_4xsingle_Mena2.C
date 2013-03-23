@@ -41,9 +41,9 @@ void makePlots()
   tdrStyle->cd();
 
   makePlots("EarthB","EarthB", "Vacuum", 
-            "./root_files/Mena3/output_EarthB_ModelA.root", 
-            "./root_files/Mena3/output_EarthB_ModelB.root", 
-            "./root_files/Mena3/output_EarthB_ZeroPt.root");
+            "./root_files/Mena/output_EarthB_ModelA.root", 
+            "./root_files/Mena/output_EarthB_ModelB.root", 
+            "./root_files/Mena/output_EarthB_ZeroPt.root");
   
 }
 

@@ -37,22 +37,35 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  //makePlots("ModelA","0","./root_files/Mena1/output_ModelA.root");
-
-  //makePlots("EarthB","0","output_0_.root");
-
-  //makePlots("ModelA","0","./root_files/Consistency/output_ModelA_OLDPAR_SetA_Avg.root");
-
-  //makePlots("ModelA","0","./root_files/Consistency/output_ModelA_OLDPAR_SetB_Avg.root");
+  //Model A - Set I
+  //makePlots("ModelA","0","./root_files/ModelA/output_ModelA_SetI.root","SetI");
   
-  //makePlots("ModelA","0","output_ModelA_SetI.root");
+  //Model A - Set II
+  //makePlots("ModelA","0","./root_files/ModelA/output_ModelA_SetII.root", "SetII");
+  
+  //Model A - Mena
+  //makePlots("ModelA","0","./root_files/Mena/output_EarthB_ModelA.root","Mena");
 
-  makePlots("ModelA","0","output_ModelA_SetII.root");
+  //Model B - Mena
+  //makePlots("ModelB","0","./root_files/Mena/output_EarthB_ModelB.root","Mena");
+
+  //Model C - Mena
+  //makePlots("ModelC","0","./root_files/Mena/output_EarthB_ModelC.root","Mena");
+  
+  //ZeroPt - Mena
+  //makePlots("ZeroPt","0","./root_files/Mena/output_EarthB_ZeroPt.root","Mena");
+
+  //Earth B - Set I
+  //makePlots("EarthB","0","./root_files/EarthB/output_EarthB_SetI_Fine.root","SetI");
+  
+  //Earth B - Set II
+  //makePlots("EarthB","0","./root_files/EarthB/output_EarthB_SetII_Fine.root","SetII");
+  
 
   
 }
 
-void makePlots( const char * model, const char * src, const char * infile )
+void makePlots( const char * model, const char * src, const char * infile , const char * option)
 {
   
   TFile * f1 = new TFile(infile);
@@ -194,7 +207,7 @@ void makePlots( const char * model, const char * src, const char * infile )
     if ( std::string(model).compare("EarthB") == 0 ) 
       g2->Draw("PL");
     else
-      g2->Draw("P");
+      g2->Draw("PL");
 
     if( k < 1) 
     {
@@ -211,15 +224,15 @@ void makePlots( const char * model, const char * src, const char * infile )
   std::stringstream saveAs;
   
   saveAs.str("");
-  saveAs << path << model << "/pdf/" << "nueosc_probs_" << model << "_4x_SetII" << ".pdf";
+  saveAs << path << model << "/pdf/" << "nueosc_probs_" << model << "_4x_" << option << ".pdf";
   c1->SaveAs( saveAs.str().c_str() );
   
   saveAs.str("");
-  saveAs << path << model << "/png/" << "nueosc_probs_" << model << "_4x_SetII" << ".png";
+  saveAs << path << model << "/png/" << "nueosc_probs_" << model << "_4x_" << option << ".png";
   c1->SaveAs( saveAs.str().c_str() );
-
+  
   saveAs.str("");
-  saveAs << path << model << "/eps/" << "nueosc_probs_" << model << "_4x_SetII" << ".eps";
+  saveAs << path << model << "/eps/" << "nueosc_probs_" << model << "_4x_" << option << ".eps";
   c1->SaveAs( saveAs.str().c_str() );
   
     

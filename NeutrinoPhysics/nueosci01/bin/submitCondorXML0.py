@@ -4,12 +4,20 @@ import sys, os, stat, shutil
 
 arguments = []
 
-#xmlfi = 'model_config_OLD.xml' #march 21
-#xmlfi = 'model_config_SetI.xml' #march 21 - Sarira SetI parameters
-
-xmlfi = 'model_config_SetII.xml' #march 21 - Sarira SetII parameters
-
+use_file = 2
 model = 'ModelA'
+
+xmlfi = ''
+
+if   use_file == 1:
+    xmlfi = 'model_config_SetI.xml'  #march 21 - Sarira SetI parameters
+elif use_file == 2:
+    xmlfi = 'model_config_SetII.xml' #march 21 - Sarira SetII parameters
+elif use_file == 3:
+    xmlfi = 'model_config_Earth.xml'
+else:
+    print 'No configuration available'
+    sys.exit()
 
 xmax  = 1.0e14
 x0    = 1.0e11
@@ -17,22 +25,25 @@ dx    = 10.0
 
 steps = '1'
 
-#ONLY OLD Parameters - march 21
-#angles = '33.8,8.0,45.0'
-#dmasses = '0.0032,0.00008'
-
 #Set I - march 21
-#angles = '33.8,8.8,45.0'
-#dmasses = '0.0032,0.00008'
+if xmlfi == 'model_config_SetI.xml':
+    angles = '33.8,8.8,45.0'
+    dmasses = '0.0032,0.00008'
+    steps = '1,2,3'
 
 #Set II - march 21
-angles = '33.8,12.0,45.0'
-dmasses = '0.0032,0.00008'
+if xmlfi == 'model_config_SetII.xml':
+    angles = '33.8,12.0,45.0'
+    dmasses = '0.0032,0.00008'
+    steps = '1,2,3'
 
 if model == 'EarthB':
     xmax  = 1.0e10
     x0    = 1.0e9
     dx    = 1.0e9
+    angles = '33.8,8.8,45.0'
+    #angles = '33.8,12.0,45.0'
+    dmasses = '0.0032,0.00008'
 
 while x0 < xmax:
 

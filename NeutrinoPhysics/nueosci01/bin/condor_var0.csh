@@ -1,6 +1,6 @@
 #! /bin/tcsh -f
 
-setenv MYDIR /uscms_data/d2/aosorio/scratch0/CMSSW_5_3_5/run
+setenv MYDIR /uscms_data/d2/aosorio/scratch2/CMSSW_5_3_5/run
 unsetenv CMS_PATH
 source /uscmst1/prod/sw/cms/cshrc prod
 pushd $MYDIR

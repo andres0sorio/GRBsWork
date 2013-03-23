@@ -4,6 +4,11 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : make_plots_paper01
 // 
+// This is example No 1 - See the Twiki page for instructions
+//
+// https://twiki.cern.ch/twiki/bin/view/Main/NeuOscillationCode#An_example
+//
+//
 // 2013-03-02 : Andres Osorio
 //-----------------------------------------------------------------------------
 
@@ -47,9 +52,9 @@ void makePlots( const char * model )
   //Output path
   TString path("./results");
   
-  TString dataPee = TString( model ) + TString("_Pee/data");
-  TString dataPem = TString( model ) + TString("_Pem/data");
-  TString dataPet = TString( model ) + TString("_Pet/data");
+  TString dataPee = TString( model ) + TString("_") + TString( "_0" ) + TString("_Pee/data");
+  TString dataPem = TString( model ) + TString("_") + TString( "_0" ) + TString("_Pem/data");
+  TString dataPet = TString( model ) + TString("_") + TString( "_0" ) + TString("_Pet/data");
     
   TList * v_Labels = new TList();
   TObjString *label;
@@ -60,24 +65,14 @@ void makePlots( const char * model )
   label = new TObjString( "Pe#tau" );
   v_Labels->Add( label ); 
   
-  //TFile * f1 = new TFile("results/output-nu-C.root");
-  //TFile * f2 = new TFile("results/output-antinu-C.root");
-
-  TFile * f1 = new TFile("results/output-nu-C-f2.root");
-  TFile * f2 = new TFile("results/output-antinu-C-f2.root");
-  
+  TFile * f1 = new TFile("output.root");
+    
   f1->cd();
   
   TTree * PeeTreeNu = (TTree*)gDirectory->Get( dataPee.Data() );
   TTree * PemTreeNu = (TTree*)gDirectory->Get( dataPem.Data() );
   TTree * PetTreeNu = (TTree*)gDirectory->Get( dataPet.Data() );
   
-  f2->cd();
-
-  TTree * PeeTreeANu = (TTree*)gDirectory->Get( dataPee.Data() );
-  TTree * PemTreeANu = (TTree*)gDirectory->Get( dataPem.Data() );
-  TTree * PetTreeANu = (TTree*)gDirectory->Get( dataPem.Data() );
-
   //Branches
   double xx = 0.0;
   double yy = 0.0;
@@ -90,11 +85,6 @@ void makePlots( const char * model )
   ProbNu[1] = new TGraph();
   ProbNu[2] = new TGraph();
   
-  TGraph * ProbANu[3];
-  ProbANu[0] = new TGraph();
-  ProbANu[1] = new TGraph();
-  ProbANu[2] = new TGraph();
-  
   TLegend * leg = new TLegend(0.14,0.69,0.24,0.85);
     
   PeeTreeNu->SetBranchAddress("Ex",&xx);
@@ -106,17 +96,10 @@ void makePlots( const char * model )
     PeeTreeNu->GetEntry(i);
     ProbNu[0]->SetPoint( i, xx, yy);
   }
-
+  
   PeeTreeANu->SetBranchAddress("Ex",&xx);
   PeeTreeANu->SetBranchAddress("Pb",&yy);
   
-  nentries = PeeTreeANu->GetEntries();
-  
-  for (Long64_t i=0;i<nentries;i++) {
-    PeeTreeANu->GetEntry(i);
-    ProbANu[0]->SetPoint( i, xx, yy);
-  }
-
   ///Pem
   
   PemTreeNu->SetBranchAddress("Ex",&xx);
@@ -129,16 +112,6 @@ void makePlots( const char * model )
     ProbNu[1]->SetPoint( i, xx, yy);
   }
   
-  PemTreeANu->SetBranchAddress("Ex",&xx);
-  PemTreeANu->SetBranchAddress("Pb",&yy);
-  
-  nentries = PeeTreeANu->GetEntries();
-  
-  for (Long64_t i=0;i<nentries;i++) {
-    PemTreeANu->GetEntry(i);
-    ProbANu[1]->SetPoint( i, xx, yy);
-  }
-
   ///Pet
 
   PetTreeNu->SetBranchAddress("Ex",&xx);
@@ -151,27 +124,12 @@ void makePlots( const char * model )
     ProbNu[2]->SetPoint( i, xx, yy);
   }
   
-  PetTreeANu->SetBranchAddress("Ex",&xx);
-  PetTreeANu->SetBranchAddress("Pb",&yy);
-  
-  nentries = PetTreeANu->GetEntries();
-  
-  for (Long64_t i=0;i<nentries;i++) {
-    PetTreeANu->GetEntry(i);
-    ProbANu[2]->SetPoint( i, xx, yy);
-  }
 
   for( int k=0; k < 3; ++k) 
   {
     ProbNu[k]->SetMarkerStyle(1);
     ProbNu[k]->SetFillColor(10);
     ProbNu[k]->SetMaximum(1.3);
-    ProbANu[k]->SetMarkerStyle(1);
-    ProbANu[k]->SetMarkerColor(2);
-    ProbANu[k]->SetLineColor(2);
-    ProbANu[k]->SetFillColor(10);
-    ProbANu[k]->SetMaximum(1.3);
-    
     TString yaxis = ((TObjString*)v_Labels->At(k))->GetString();
     ProbNu[k]->GetYaxis()->SetTitle( yaxis.Data() );
     ProbNu[k]->GetXaxis()->SetTitle("E [eV]");
@@ -180,7 +138,6 @@ void makePlots( const char * model )
   }
   
   leg->AddEntry( ProbNu[0], "#nu");
-  leg->AddEntry( ProbANu[0], "#bar{#nu}");
   leg->SetBorderSize(0);
   leg->SetTextSize(0.1);
   leg->SetLineColor(1);
@@ -189,13 +146,11 @@ void makePlots( const char * model )
   leg->SetFillColor(0);
   leg->SetFillStyle(1001);
 
-
   c1->cd(1);
   gPad->SetGridx();
   gPad->SetGridy();
   gPad->SetLogx();
   ProbNu[0]->Draw("APL");
-  ProbANu[0]->Draw("PL");
   topTitle(model);
   leg->DrawClone();
   
@@ -204,7 +159,6 @@ void makePlots( const char * model )
   gPad->SetGridy();
   gPad->SetLogx();
   ProbNu[1]->Draw("APL");
-  ProbANu[1]->Draw("PL");
   leg->DrawClone();
     
   c1->cd(3);
@@ -212,7 +166,6 @@ void makePlots( const char * model )
   gPad->SetGridy();
   gPad->SetLogx();
   ProbNu[2]->Draw("APL");
-  ProbANu[2]->Draw("PL");
   leg->DrawClone();
 
   c1->cd();
@@ -220,17 +173,17 @@ void makePlots( const char * model )
   std::stringstream saveAs;
     
   saveAs.str("");
-  saveAs << path << "/nueosc_" << model << "_f2" << ".pdf";
+  saveAs << path << "/nueosc_" << model << "_example1" << ".pdf";
   c1->SaveAs( saveAs.str().c_str() );
     
   saveAs.str("");
-  saveAs << path << "/nueosc_" << model << "_f2" << ".png";
+  saveAs << path << "/nueosc_" << model << "_example1" << ".png";
   c1->SaveAs( saveAs.str().c_str() );
-
+  
   saveAs.str("");
-  saveAs << path << "/nueosc_" << model << "_f2" << ".eps";
+  saveAs << path << "/nueosc_" << model << "_example1" << ".eps";
   c1->SaveAs( saveAs.str().c_str() );
-    
+  
     
 }
 

@@ -27,16 +27,16 @@
       7.0780e13
     </Par>
     <Par Id="8" Name="Emin">
-      1.0e11
+      1.0e9
     </Par>
     <Par Id="9" Name="Emax">
-      1.0e14
+      1.0e10
     </Par>
     <Par Id="10" Name="Dx">
       1.0e10
     </Par>
     <Par Id="11" Name="De">
-      1.0e9
+      1.0e8
     </Par>
   </ModelParameters>
   <ModelParameters Id="EarthB">
@@ -59,16 +59,16 @@
       7.0780e13
     </Par>
     <Par Id="6" Name="Emin">
-      1.0e11
+      1.0e9
     </Par>
     <Par Id="7" Name="Emax">
-      1.0e14
+      1.0e10
     </Par>
     <Par Id="8" Name="Dx">
       1.0e10
     </Par>
     <Par Id="9" Name="De">
-      1.0e9
+      1.0e8
     </Par>
   </ModelParameters>
   <ModelParameters Id="ZeroPt">

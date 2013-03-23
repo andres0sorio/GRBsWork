@@ -18,13 +18,45 @@
       1.0e11
     </Par>
     <Par Id="5" Name="Emax">
-      1.0e12
+      1.0e14
     </Par>
     <Par Id="6" Name="Dx">
       0.5e14
     </Par>
     <Par Id="7" Name="De">
+      1.0e9
+    </Par>
+  </ModelParameters>
+  <ModelParameters Id="EarthB">
+    <Par Id="0" Name="MaxPars">
+      3.0
+    </Par>
+    <Par Id="1" Name="Diameter">
+      7.0780e13
+    </Par>
+    <Par Id="2" Name="cFact1">
+      4.2951e+18
+    </Par>
+    <Par Id="3" Name="cFact2">
+      1.76e-32
+    </Par>
+    <Par Id="4" Name="LMIN">
+      0.0
+    </Par>
+    <Par Id="5" Name="LMAX">
+      7.0780e13
+    </Par>
+    <Par Id="6" Name="Emin">
+      1.0e9
+    </Par>
+    <Par Id="7" Name="Emax">
       1.0e10
+    </Par>
+    <Par Id="8" Name="Dx">
+      1.0e10
+    </Par>
+    <Par Id="9" Name="De">
+      0.1e8
     </Par>
   </ModelParameters>
  </ModelParameterList>

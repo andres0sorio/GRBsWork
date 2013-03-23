@@ -38,21 +38,20 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  //makePlots("EarthB","0","./root_files/output_0_.root");
 
-  //makePlots("ModelA","0","./root_files/Mena1/output_ModelA.root");
+  //makePlots("ModelA","0","./root_files/ModelA/output_ModelA_SetI.root", "SetI");
 
-  //makePlots("ModelA","0","./root_files/Consistency/output_ModelA_OLDPAR_SetA_NOAvg_OldK0.root");
+  //makePlots("ModelA","0","./root_files/ModelA/output_ModelA_SetII.root", "SetII");
 
-  //makePlots("ModelA","0","./root_files/Consistency/output_ModelA_SetI.root");
+  //makePlots("EarthB","0","./root_files/EarthB/output_EarthB_SetI_Fine.root","SetI");
+
+  //makePlots("EarthB","0","./root_files/EarthB/output_EarthB_SetII_Fine.root","SetII");
+
   
-  //makePlots("ModelA","0","output.root");
   
-  makePlots("ModelA","0","./root_files/Consistency/output_ModelA_SetII.root");
-    
 }
 
-void makePlots( const char * model, const char * src, const char * infile )
+void makePlots( const char * model, const char * src, const char * infile , const char * option )
 {
   
   //Output path
@@ -226,6 +225,10 @@ void makePlots( const char * model, const char * src, const char * infile )
   gPad->SetGridx();
   gPad->SetGridy();
   gPad->SetLogx();
+
+  if ( std::string(model).compare("EarthB") == 0 ) 
+    ProbNu[0]->GetXaxis()->SetLimits(0.98e9, 1.0e10);
+
   ProbNu[0]->Draw("APL");
   ProbANu[0]->Draw("PL");
   topTitle(model);
@@ -235,6 +238,10 @@ void makePlots( const char * model, const char * src, const char * infile )
   gPad->SetGridx();
   gPad->SetGridy();
   gPad->SetLogx();
+  
+  if ( std::string(model).compare("EarthB") == 0 ) 
+    ProbNu[1]->GetXaxis()->SetLimits(0.98e9, 1.0e10);
+  
   ProbNu[1]->Draw("APL");
   ProbANu[1]->Draw("PL");
   leg->DrawClone();
@@ -243,6 +250,10 @@ void makePlots( const char * model, const char * src, const char * infile )
   gPad->SetGridx();
   gPad->SetGridy();
   gPad->SetLogx();
+  
+  if ( std::string(model).compare("EarthB") == 0 ) 
+    ProbNu[2]->GetXaxis()->SetLimits(0.98e9, 1.0e10);
+  
   ProbNu[2]->Draw("APL");
   ProbANu[2]->Draw("PL");
   leg->DrawClone();
@@ -252,15 +263,15 @@ void makePlots( const char * model, const char * src, const char * infile )
   std::stringstream saveAs;
     
   saveAs.str("");
-  saveAs << path << model << "/pdf/" << "nueosc_probs_" << model << "_f2" << ".pdf";
+  saveAs << path << model << "/pdf/" << "nueosc_probs_" << model << "_" << option << ".pdf";
   c1->SaveAs( saveAs.str().c_str() );
   
   saveAs.str("");
-  saveAs << path << model << "/png/" << "nueosc_probs_" << model << "_f2" << ".png";
+  saveAs << path << model << "/png/" << "nueosc_probs_" << model << "_" << option << ".png";
   c1->SaveAs( saveAs.str().c_str() );
 
   saveAs.str("");
-  saveAs << path << model << "/eps/" << "nueosc_probs_" << model << "_f2" << ".eps";
+  saveAs << path << model << "/eps/" << "nueosc_probs_" << model << "_" << option << ".eps";
   c1->SaveAs( saveAs.str().c_str() );
 
 
@@ -306,7 +317,8 @@ void makePlots( const char * model, const char * src, const char * infile )
     
   }
   
-  TCanvas * c2 = new TCanvas("Sums", "Oscillation probabilities - SUMS", 184, 60, 861, 470);
+  TCanvas * c2 = new TCanvas("Sums", "Oscillation probabilities - SUMS", 184,112,394,472);
+  
   c2->Divide(1,2);
   
   c2->cd(1);
@@ -314,6 +326,13 @@ void makePlots( const char * model, const char * src, const char * infile )
   gPad->SetLogx();
   Psum->SetMaximum(1.1);
   Psum->SetMinimum(0.0);
+  Psum->SetMarkerStyle(21);
+  Psum->SetMarkerSize(0.2); 
+  
+  if ( std::string(model).compare("EarthB") == 0 ) 
+    Psum->GetXaxis()->SetLimits(0.98e9, 1.0e10);
+  
+   
   Psum->Draw("APL");
 
   TLatex *   tex = new TLatex(1.823945e+11,0.8753448,"Nu");
@@ -325,19 +344,34 @@ void makePlots( const char * model, const char * src, const char * infile )
   
   c2->cd(2);
   
-  
   gPad->SetLogx();
   aPsum->SetMaximum(1.1);
   aPsum->SetMinimum(0.0);
+  aPsum->SetMarkerStyle(21);
+  aPsum->SetMarkerSize(0.2);
+  aPsum->SetMarkerColor(2);
+  aPsum->GetXaxis()->SetTitle("E [eV]");
+  aPsum->GetXaxis()->CenterTitle(true);
+  aPsum->GetXaxis()->SetLabelFont(42);
+  aPsum->GetXaxis()->SetLabelOffset(0.007);
+  aPsum->GetXaxis()->SetLabelSize(0.05);
+  aPsum->GetXaxis()->SetTitleSize(0.06);
+  aPsum->GetXaxis()->SetTitleOffset(1.06);
+
+  if ( std::string(model).compare("EarthB") == 0 ) 
+    aPsum->GetXaxis()->SetLimits(0.98e9, 1.0e10);
+  
   aPsum->Draw("APL");
   tex = new TLatex(1.56236e+11,0.8214771,"anti-Nu");
   tex->SetLineWidth(2);
   tex->Draw();
+  
   c2->Modified();
   c2->cd();
-  
-  c2->Print("sum-of-probabilities.png" );
-  
+
+  saveAs.str("");
+  saveAs << path << model << "/png/" << "nueosc_sum_of_probs_" << model << "_" << option << ".png";
+  c2->SaveAs( saveAs.str().c_str() );
 
 }
 

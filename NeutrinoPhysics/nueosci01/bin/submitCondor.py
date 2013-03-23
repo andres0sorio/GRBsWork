@@ -10,6 +10,9 @@ x0    = 1.0e11
 dx    = 10.0
 steps = '1,2,3'
 
+if model == 'EarthB':
+    steps = '1'
+
 while x0 < xmax:
     x1 = x0*dx
     erange = str(x0)+','+str(x1)

@@ -12,7 +12,7 @@
       1.6040160e17
     </Par>
     <Par Id="3" Name="LMIN">
-      3.20e+15
+      3.202e+15
     </Par>
     <Par Id="4" Name="Emin">
       1.0e11
@@ -190,10 +190,10 @@
       0.0
     </Par>
     <Par Id="2" Name="LMAX">
-      1.61e+17
+      1.6040160e17
     </Par>
     <Par Id="3" Name="LMIN">
-      3.20e+15
+      3.202e+15
     </Par>
     <Par Id="4" Name="Emin">
       1.0e11

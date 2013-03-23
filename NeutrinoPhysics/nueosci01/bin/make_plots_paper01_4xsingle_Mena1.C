@@ -40,10 +40,11 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
+  //Figure 3
   makePlots("ModelA","ModelB", "0", 
-            "./root_files/Mena1/output_ModelA.root", 
-            "./root_files/Mena1/output_ModelB.root", 
-            "./root_files/Mena1/output_ZeroPt.root");
+            "./root_files/Mena/output_EarthB_ModelA.root", 
+            "./root_files/Mena/output_EarthB_ModelB.root", 
+            "./root_files/Mena/output_EarthB_ZeroPt.root");
   
 }
 
