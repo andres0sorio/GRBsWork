@@ -9,7 +9,7 @@
       3.02e-19
     </Par>
     <Par Id="2" Name="LMAX">
-      1.3705E+017
+      1.3385E+017
     </Par>
     <Par Id="3" Name="LMIN">
       3.2027E+015
@@ -27,12 +27,100 @@
       1.0e9
     </Par>
   </ModelParameters>
+  <ModelParameters Id="ModelB">
+    <Par Id="0" Name="MaxPars">
+      5.0
+    </Par>
+    <Par Id="1" Name="KB">
+      2.57e-18
+    </Par>
+    <Par Id="2" Name="RstarCM">
+      2.70e12
+    </Par>
+    <Par Id="3" Name="RbCM">
+      1.0e12
+    </Par>
+    <Par Id="4" Name="Rmin">
+      3.202e+15
+    </Par>
+    <Par Id="5" Name="CM.to.invEV">
+      5.076e+4
+    </Par>
+    <Par Id="6" Name="LMAX">
+      1.3385E+017
+    </Par>
+    <Par Id="7" Name="LMIN">
+      3.202e+15
+    </Par>
+    <Par Id="8" Name="Emin">
+      1.0E11
+    </Par>
+    <Par Id="9" Name="Emax">
+      1.0E14
+    </Par>
+    <Par Id="10" Name="Dx">
+      0.5E14
+    </Par>
+    <Par Id="11" Name="De">
+      1.0E9
+    </Par>
+  </ModelParameters>
+  <ModelParameters Id="ModelC">
+    <Par Id="0" Name="MaxPars">
+      9.0
+    </Par>
+    <Par Id="1" Name="KC">
+      4.76e-19
+    </Par>
+    <Par Id="2" Name="RstarCM">
+      2.70e12
+    </Par>
+    <Par Id="3" Name="RbCM">
+      1.0e11
+    </Par>
+    <Par Id="4" Name="Rmin">
+      3.202e+15
+    </Par>
+    <Par Id="5" Name="A1">
+      20.0
+    </Par>
+    <Par Id="6" Name="neff1">
+      2.1
+    </Par>
+    <Par Id="7" Name="A2">
+      1.0
+    </Par>
+    <Par Id="8" Name="neff2">
+      2.5
+    </Par>
+    <Par Id="9" Name="CM.to.invEV">
+      5.076e+4
+    </Par>
+    <Par Id="10" Name="LMAX">
+      1.3385E+017
+    </Par>
+    <Par Id="11" Name="LMIN">
+      3.202e+15
+    </Par>
+    <Par Id="12" Name="Emin">
+      1.0e11
+    </Par>
+    <Par Id="13" Name="Emax">
+      1.0e14
+    </Par>
+    <Par Id="14" Name="Dx">
+      0.5e14
+    </Par>
+    <Par Id="15" Name="De">
+      1.0e9
+    </Par>
+  </ModelParameters>
   <ModelParameters Id="EarthB">
     <Par Id="0" Name="MaxPars">
       3.0
     </Par>
     <Par Id="1" Name="Diameter">
-      7.0780e13
+      6.4750e+13
     </Par>
     <Par Id="2" Name="cFact1">
       4.2951e+18
@@ -44,7 +132,7 @@
       0.0
     </Par>
     <Par Id="5" Name="LMAX">
-      7.0780e13
+      6.4750e+13
     </Par>
     <Par Id="6" Name="Emin">
       1.0e9

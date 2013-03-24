@@ -68,13 +68,17 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
+  //makePlots("./root_files/Earth/output-earthA.root",
+  //          "./root_files/Earth/output-earthB.root",
+  //          "./root_files/Earth/earthA-Olshon-ref.csv","X");
+  
   makePlots("./root_files/Earth/output-earthA-x2.root",
             "./root_files/Earth/output-earthB-x2.root",
-            "./root_files/Earth/earthA-Olshon-ref.csv");
+            "./root_files/Earth/earthA-Olshon-ref.csv","x2");
   
 }
 
-void makePlots( const char * inputA, const char * inputB, const char * olson) 
+void makePlots( const char * inputA, const char * inputB, const char * olson, const char * option) 
 {
   
   //Output path
@@ -249,22 +253,22 @@ void makePlots( const char * inputA, const char * inputB, const char * olson)
     
   }
   
-  topTitle("Earth");
+  topTitle("Earth (corrected)");
   
   /// All done!
   leg->Draw();
   std::stringstream saveAs;
     
   saveAs.str("");
-  saveAs << path << "EarthA" << "/pdf/" << "nueosc_earth_AB_ohlsson_x2" << ".pdf";
+  saveAs << path << "EarthA" << "/pdf/" << "nueosc_earth_AB_ohlsson_" << option << ".pdf";
   c1->SaveAs( saveAs.str().c_str() );
   
   saveAs.str("");
-  saveAs << path << "EarthA" << "/png/" << "nueosc_earth_AB_ohlsson_x2" << ".png";
+  saveAs << path << "EarthA" << "/png/" << "nueosc_earth_AB_ohlsson_" << option << ".png";
   c1->SaveAs( saveAs.str().c_str() );
   
   saveAs.str("");
-  saveAs << path << "EarthA" << "/eps/" << "nueosc_earth_AB_ohlsson_x2" << ".eps";
+  saveAs << path << "EarthA" << "/eps/" << "nueosc_earth_AB_ohlsson_" << option << ".eps";
   c1->SaveAs( saveAs.str().c_str() );
     
   

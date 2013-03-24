@@ -15,7 +15,7 @@
       2.885e6
     </Par>
     <Par Id="4" Name="L2.m">
-      8.17e6
+      6.972e6
     </Par>
     <Par Id="5" Name="M.to.invEV">
       5.076e+6
@@ -24,7 +24,7 @@
       0.0
     </Par>
     <Par Id="7" Name="LMAX">
-      7.0780e13
+      6.4750e+13
     </Par>
     <Par Id="8" Name="Emin">
       1.0e9
@@ -44,7 +44,7 @@
       3.0
     </Par>
     <Par Id="1" Name="Diameter">
-      7.0780e13
+      6.4750e+13
     </Par>
     <Par Id="2" Name="cFact1">
       4.2951e+18
@@ -56,7 +56,7 @@
       0.0
     </Par>
     <Par Id="5" Name="LMAX">
-      7.0780e13
+      6.4750e+13
     </Par>
     <Par Id="6" Name="Emin">
       1.0e9
