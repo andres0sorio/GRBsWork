@@ -14,6 +14,11 @@ if options.range is None:
         parser.error("please give 5 cents, try -h")
 #--------------------------------------------------------
 
+prefix = './root_files/'
+
+if not os.path.isdir(prefix):
+	os.makedirs( prefix )
+
 job_range  = options.range.split(',')
 
 first_job = int(job_range[0])
@@ -28,7 +33,7 @@ for job in jobs.select( first_job, last_job ):
 	path = job.outputdir
 	output = job.outputsandbox[0]
 	source = path + output
-	target = './root_files/' + outfile[0] + '_' + str(k) + '_' + outfile[1]
+	target = prefix + outfile[0] + '_' + str(k) + '_' + outfile[1]
 	cmd = 'cp -v ' + source + ' ' + target
 	os.system(cmd)
 	k+=1

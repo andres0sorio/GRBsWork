@@ -50,7 +50,7 @@ IProbabilityMatrix::~IProbabilityMatrix() {
   
   if( m_Prob_AtoB ) delete m_Prob_AtoB;
 
-  std::cout << "destroying base clase components" << std::endl;
+  std::cout << "IProbabilityMatrix> destroyed base clase components. Success" << std::endl;
     
 } 
 

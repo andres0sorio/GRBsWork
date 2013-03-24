@@ -4,7 +4,7 @@ import sys, os, stat, shutil
 
 arguments = []
 
-model = 'ModelC'
+model = 'ZeroPt'
 xmax  = 1.0e14
 x0    = 1.0e11
 dx    = 10.0

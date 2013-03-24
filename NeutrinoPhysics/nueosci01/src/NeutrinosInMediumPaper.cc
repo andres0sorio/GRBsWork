@@ -19,7 +19,9 @@ NeutrinosInMediumPaper::NeutrinosInMediumPaper( MixingParameters * mixpars ) {
 
   m_Physics = new NeutrinoOscInVarDensity( mixpars );
   m_Physics->use_default_pars = false;
-  
+
+  m_Physics_Vacuum = 0x0;
+
   //
   m_ProbIndex["Pee"] = std::make_pair( 0, 0);
   m_ProbIndex["Pem"] = std::make_pair( 0, 1);
@@ -97,6 +99,8 @@ NeutrinosInMediumPaper::~NeutrinosInMediumPaper() {
   
   m_Models.clear();
   
+  std::cout << "NeutrinosInMediumPaper> cleanly destroyed" << std::endl;
+
 } 
 
 void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model, 

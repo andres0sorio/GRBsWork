@@ -4,17 +4,19 @@ import sys, os, stat, shutil
 
 arguments = []
 
-use_file = 2
-model = 'ModelA'
+use_file = 3
+model = 'EarthB'
+use_setI = True
 
 xmlfi = ''
 
 if   use_file == 1:
-    xmlfi = 'model_config_SetI.xml'  #march 21 - Sarira SetI parameters
+    xmlfi = 'model_config_SetI.xml'  #march 21 - Sarira Set I parameters
 elif use_file == 2:
-    xmlfi = 'model_config_SetII.xml' #march 21 - Sarira SetII parameters
+    xmlfi = 'model_config_SetII.xml' #march 21 - Sarira Set II parameters
 elif use_file == 3:
     xmlfi = 'model_config_Earth.xml'
+    model = 'EarthB'
 else:
     print 'No configuration available'
     sys.exit()
@@ -41,9 +43,12 @@ if model == 'EarthB':
     xmax  = 1.0e10
     x0    = 1.0e9
     dx    = 1.0e9
-    angles = '33.8,8.8,45.0'
-    #angles = '33.8,12.0,45.0'
+    if use_setI:
+        angles = '33.8,8.8,45.0' #Set I
+    else:
+        angles = '33.8,12.0,45.0' #Set II
     dmasses = '0.0032,0.00008'
+    steps = '1'
 
 while x0 < xmax:
 
