@@ -9,7 +9,7 @@
       3.02e-19
     </Par>
     <Par Id="2" Name="LMAX">
-      1.5736E+017
+      1.52280e+17
     </Par>
     <Par Id="3" Name="LMIN">
       3.2027E+015
@@ -47,7 +47,7 @@
       5.076e+4
     </Par>
     <Par Id="6" Name="LMAX">
-      1.5736E+017
+      1.52280e+17
     </Par>
     <Par Id="7" Name="LMIN">
       3.202e+15
@@ -97,7 +97,7 @@
       5.076e+4
     </Par>
     <Par Id="10" Name="LMAX">
-      1.5736E+017
+      1.52280e+17
     </Par>
     <Par Id="11" Name="LMIN">
       3.202e+15
