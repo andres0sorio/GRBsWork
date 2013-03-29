@@ -42,27 +42,50 @@ void makePlots()
   
   //Model A - Set II
   //makePlots("ModelA","0","./root_files/ModelA/output_ModelA_SetII.root", "SetII");
+
+  //Model B - Set I
+  //makePlots("ModelB","0","./root_files/ModelB/output_ModelB_SetI.root","SetI");
   
+  //Model B - Set II
+  //makePlots("ModelB","0","./root_files/ModelB/output_ModelB_SetII.root", "SetII");
+  
+  //Model C - Set I
+  //makePlots("ModelC","0","./root_files/ModelC/output_ModelC_SetI.root","SetI");
+  
+  //Model C - Set II
+  //makePlots("ModelC","0","./root_files/ModelC/output_ModelC_SetII.root", "SetII");
+
   //Model A - Mena
   //makePlots("ModelA","0","./root_files/Mena/output_EarthB_ModelA.root","Mena");
-
+  
   //Model B - Mena
   //makePlots("ModelB","0","./root_files/Mena/output_EarthB_ModelB.root","Mena");
-
+  
   //Model C - Mena
   //makePlots("ModelC","0","./root_files/Mena/output_EarthB_ModelC.root","Mena");
   
   //ZeroPt - Mena
   //makePlots("ZeroPt","0","./root_files/Mena/output_EarthB_ZeroPt.root","Mena");
-
+  
   //Earth B - Set I
   //makePlots("EarthB","0","./root_files/EarthB/output_EarthB_SetI_Fine.root","SetI");
   
   //Earth B - Set II
   //makePlots("EarthB","0","./root_files/EarthB/output_EarthB_SetII_Fine.root","SetII");
   
-
+  //Earth B - Ohlsson
+  //makePlots("EarthB","0","./root_files/EarthB/output_EarthB_Ohlsson.root","Ohl");
   
+  //Earth B - Ohlsson - with correction
+  //makePlots("EarthB","0","./root_files/EarthB/output_EarthB_Ohlsson-x2.root","OhlX2");
+ 
+  //Fine detail studies 1.e11 to 1.e13
+  //makePlots("ModelA","0","./root_files/Mena/output_ModelA_Fine1e13.root","Fine1e13");
+  
+  //makePlots("ModelB","0","./root_files/Mena/output_ModelB_Fine1e13.root","Fine1e13");
+  
+
+   
 }
 
 void makePlots( const char * model, const char * src, const char * infile , const char * option)
@@ -125,7 +148,7 @@ void makePlots( const char * model, const char * src, const char * infile , cons
     TTree * t1 = (TTree*)f1->Get( name.Data() );
     
     //2.Generate the Graph
-     //Branches
+    //Branches
     double xx = 0.0;
     double yy = 0.0;
     t1->SetBranchAddress("Ex",&xx);
@@ -206,9 +229,11 @@ void makePlots( const char * model, const char * src, const char * infile , cons
     
     if ( std::string(model).compare("EarthB") == 0 ) 
       g2->Draw("PL");
+    else if ( std::string(model).compare("ZeroPt") == 0 ) 
+      g2->Draw("P");
     else
       g2->Draw("PL");
-
+        
     if( k < 1) 
     {
       leg->AddEntry( g1, "#nu");

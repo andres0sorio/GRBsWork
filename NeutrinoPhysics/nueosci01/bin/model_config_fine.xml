@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE ModelParameterList PUBLIC "" "model_config.dtd" []>
+<ModelParameterList>
+  <ModelParameters Id="ModelA">
+    <Par Id="0" Name="MaxPars">
+      2.0
+    </Par>
+    <Par Id="1" Name="K0">
+      3.02e-19
+    </Par>
+    <Par Id="2" Name="LMAX">
+      1.6040160e17
+    </Par>
+    <Par Id="3" Name="LMIN">
+      3.202e+15
+    </Par>
+    <Par Id="4" Name="Emin">
+      1.0e11
+    </Par>
+    <Par Id="5" Name="Emax">
+      1.0e13
+    </Par>
+    <Par Id="6" Name="Dx">
+      0.2e14
+    </Par>
+    <Par Id="7" Name="De">
+      1.0e8
+    </Par>
+  </ModelParameters>
+  <ModelParameters Id="ModelB">
+    <Par Id="0" Name="MaxPars">
+      5.0
+    </Par>
+    <Par Id="1" Name="KB">
+      2.57e-18
+    </Par>
+    <Par Id="2" Name="RstarCM">
+      3.16e12
+    </Par>
+    <Par Id="3" Name="RbCM">
+      1.0e12
+    </Par>
+    <Par Id="4" Name="Rmin">
+      3.202e+15
+    </Par>
+    <Par Id="5" Name="CM.to.invEV">
+      5.076e+4
+    </Par>
+    <Par Id="6" Name="LMAX">
+      1.6040160e17
+    </Par>
+    <Par Id="7" Name="LMIN">
+      3.202e+15
+    </Par>
+    <Par Id="8" Name="Emin">
+      1.0E11
+    </Par>
+    <Par Id="9" Name="Emax">
+      1.0E13
+    </Par>
+    <Par Id="10" Name="Dx">
+      0.2E14
+    </Par>
+    <Par Id="11" Name="De">
+      1.0E8
+    </Par>
+  </ModelParameters>
+  <ModelParameters Id="ModelC">
+    <Par Id="0" Name="MaxPars">
+      9.0
+    </Par>
+    <Par Id="1" Name="KC">
+      4.76e-19
+    </Par>
+    <Par Id="2" Name="RstarCM">
+      3.16e12
+    </Par>
+    <Par Id="3" Name="RbCM">
+      1.0e11
+    </Par>
+    <Par Id="4" Name="Rmin">
+      3.202e+15
+    </Par>
+    <Par Id="5" Name="A1">
+      20.0
+    </Par>
+    <Par Id="6" Name="neff1">
+      2.1
+    </Par>
+    <Par Id="7" Name="A2">
+      1.0
+    </Par>
+    <Par Id="8" Name="neff2">
+      2.5
+    </Par>
+    <Par Id="9" Name="CM.to.invEV">
+      5.076e+4
+    </Par>
+    <Par Id="10" Name="LMAX">
+      1.6040160e17
+    </Par>
+    <Par Id="11" Name="LMIN">
+      3.202e+15
+    </Par>
+    <Par Id="12" Name="Emin">
+      1.0e11
+    </Par>
+    <Par Id="13" Name="Emax">
+      1.0e14
+    </Par>
+    <Par Id="14" Name="Dx">
+      0.5e14
+    </Par>
+    <Par Id="15" Name="De">
+      1.0e9
+    </Par>
+  </ModelParameters>
+  <ModelParameters Id="EarthA">
+    <Par Id="0" Name="MaxPars">
+      5.0
+    </Par>
+    <Par Id="1" Name="H1">
+      3.40e-13
+    </Par>
+    <Par Id="2" Name="H2">
+      8.69e-13
+    </Par>
+    <Par Id="3" Name="L1.m">
+      2.885e6
+    </Par>
+    <Par Id="4" Name="L2.m">
+      6.972e6
+    </Par>
+    <Par Id="5" Name="M.to.invEV">
+      5.076e+6
+    </Par>
+    <Par Id="6" Name="LMIN">
+      0.0
+    </Par>
+    <Par Id="7" Name="LMAX">
+      6.4750e+13
+    </Par>
+    <Par Id="8" Name="Emin">
+      1.0e9
+    </Par>
+    <Par Id="9" Name="Emax">
+      1.0e10
+    </Par>
+    <Par Id="10" Name="Dx">
+      1.0e10
+    </Par>
+    <Par Id="11" Name="De">
+      0.1e8
+    </Par>
+  </ModelParameters>
+  <ModelParameters Id="EarthB">
+    <Par Id="0" Name="MaxPars">
+      3.0
+    </Par>
+    <Par Id="1" Name="Diameter">
+      6.4750e+13
+    </Par>
+    <Par Id="2" Name="cFact1">
+      4.2951e+18
+    </Par>
+    <Par Id="3" Name="cFact2">
+      1.76e-32
+    </Par>
+    <Par Id="4" Name="LMIN">
+      0.0
+    </Par>
+    <Par Id="5" Name="LMAX">
+      6.4750e+13
+    </Par>
+    <Par Id="6" Name="Emin">
+      1.0e9
+    </Par>
+    <Par Id="7" Name="Emax">
+      1.0e10
+    </Par>
+    <Par Id="8" Name="Dx">
+      1.0e10
+    </Par>
+    <Par Id="9" Name="De">
+      0.1e8
+    </Par>
+  </ModelParameters>
+  <ModelParameters Id="ZeroPt">
+    <Par Id="0" Name="MaxPars">
+      0.0
+    </Par>
+    <Par Id="2" Name="LMAX">
+      1.6040160e17
+    </Par>
+    <Par Id="3" Name="LMIN">
+      3.202e+15
+    </Par>
+    <Par Id="4" Name="Emin">
+      1.0e11
+    </Par>
+    <Par Id="5" Name="Emax">
+      1.0e13
+    </Par>
+    <Par Id="6" Name="Dx">
+      0.5e14
+    </Par>
+    <Par Id="7" Name="De">
+      1.0e8
+    </Par>
+  </ModelParameters>
+ </ModelParameterList>

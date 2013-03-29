@@ -6,7 +6,7 @@ arguments = []
 
 use_file = 3
 model = 'EarthB'
-use_setI = True
+use_setI = 3
 
 xmlfi = ''
 
@@ -17,6 +17,9 @@ elif use_file == 2:
 elif use_file == 3:
     xmlfi = 'model_config_Earth.xml'
     model = 'EarthB'
+elif use_file == 4:
+    xmlfi = 'model_config_Ohlsson.xml'
+    model = 'EarthB'    
 else:
     print 'No configuration available'
     sys.exit()
@@ -43,11 +46,19 @@ if model == 'EarthB':
     xmax  = 1.0e10
     x0    = 1.0e9
     dx    = 1.0e9
-    if use_setI:
-        angles = '33.8,8.8,45.0' #Set I
-    else:
-        angles = '33.8,12.0,45.0' #Set II
+
     dmasses = '0.0032,0.00008'
+    
+    if use_setI   == 1:
+        angles = '33.8,8.8,45.0'  #Set I
+    elif use_setI == 2:
+        angles = '33.8,12.0,45.0' #Set II
+    elif use_setI == 3:
+        angles = '45.0,5.0,45.0' #Ohlsson
+        dmasses = '0.0032,0.0'
+    else:
+        print 'No configuration available'
+    
     steps = '1'
 
 while x0 < xmax:

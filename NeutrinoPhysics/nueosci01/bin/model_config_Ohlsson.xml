@@ -36,7 +36,7 @@
       1.0e10
     </Par>
     <Par Id="11" Name="De">
-      1.0e8
+      0.1e8
     </Par>
   </ModelParameters>
   <ModelParameters Id="EarthB">
@@ -68,7 +68,7 @@
       1.0e10
     </Par>
     <Par Id="9" Name="De">
-      1.0e8
+      0.1e8
     </Par>
   </ModelParameters>
  </ModelParameterList>

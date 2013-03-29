@@ -169,6 +169,8 @@ void makePlots( const char * modelA, const char * modelB, const char * src,
      
     TGraph * g1 = (TGraph*)PhiGraphs->At(k);
     
+    g1->SetLineWidth(2);
+    
     std::cout << " g1 " << g1 << std::endl;
       
     if ( idx == 1 ) 

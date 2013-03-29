@@ -40,16 +40,16 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  // Start -> Vacuum -> Surface of Earth
-
-  makePlots("Vacuum",
-            "./root_files/Mena/output_EarthB_ModelA.root", 
-            "./root_files/Mena/output_EarthB_ModelB.root", 
-            "./root_files/Mena/output_EarthB_ZeroPt.root");
+  //Figure 3
+  makePlots("ModelA","ModelB", "0", 
+            "./root_files/Mena/output_ModelA_Fine1e13.root", 
+            "./root_files/Mena/output_ModelB_Fine1e13.root", 
+            "./root_files/Mena/output_ZeroPt_Fine1e13.root");
+  
   
 }
 
-void makePlots( const char * modelA, 
+void makePlots( const char * modelA, const char * modelB, const char * src, 
                 const char * infileA ,  const char * infileB,  const char * infileC)
 {
   
@@ -64,16 +64,16 @@ void makePlots( const char * modelA,
   TObjString *data;
 
   //Vaccum
-  data = new TObjString( TString( modelA )  + TString("_") + TString( "ZeroPt" ) + TString("_Pee/data") );
+  data = new TObjString( TString( "ZeroPt" ) + TString("_") + TString( src )  + TString("_Pee/data") );
   v_Data->Add( data );
   //A
-  data = new TObjString( TString( modelA )  + TString("_") + TString( "ModelA" ) + TString("_Pee/data") );
+  data = new TObjString( TString( modelA )    + TString("_") + TString( src ) + TString("_Pee/data") );
   v_Data->Add( data );
   //B
-  data = new TObjString( TString( modelA )  + TString("_") + TString( "ModelB" ) + TString("_Pee/data") );
+  data = new TObjString( TString( modelB )    + TString("_") + TString( src ) + TString("_Pee/data") );
   v_Data->Add( data );
   //anti A
-  data = new TObjString( TString( modelA )  + TString("_") + TString( "ModelA" ) + TString("_aPee/data") );
+  data = new TObjString( TString( modelA )    + TString("_") + TString( src ) + TString("_aPee/data") );
   v_Data->Add( data );
   
   TList * v_Labels = new TList();
@@ -170,10 +170,10 @@ void makePlots( const char * modelA,
      
     TGraph * g1 = (TGraph*)PhiGraphs->At(k);
     
-    std::cout << " g1 " << g1 << std::endl;
-  
     g1->SetLineWidth(2);
     
+    std::cout << " g1 " << g1 << std::endl;
+      
     if ( idx == 1 ) 
     {
       
@@ -187,8 +187,8 @@ void makePlots( const char * modelA,
       
       g1->SetMarkerStyle(1);
       g1->SetFillColor(10);
-      g1->SetMinimum(0.2);
-      g1->SetMaximum(0.5);
+      g1->SetMinimum(0.0);
+      g1->SetMaximum(1.0);
       g1->GetYaxis()->SetNdivisions(504);
       TString yaxis = ((TObjString*)v_Labels->At( idxc-1))->GetString();
       g1->GetYaxis()->SetTitle( yaxis.Data() );
@@ -251,20 +251,20 @@ void makePlots( const char * modelA,
   
   c1->cd();
   
-  topTitle("Fig 4");
+  topTitle("Fig 3");
   
   std::stringstream saveAs;
     
   saveAs.str("");
-  saveAs << path << modelA << "/pdf/" << "nueosc_flux" << "_Mena_Fig4" << ".pdf";
+  saveAs << path << modelA << "/pdf/" << "nueosc_flux" << "_Mena_Fig3_1e13" << ".pdf";
   c1->SaveAs( saveAs.str().c_str() );
   
   saveAs.str("");
-  saveAs << path << modelA << "/png/" << "nueosc_flux" << "_Mena_Fig4" << ".png";
+  saveAs << path << modelA << "/png/" << "nueosc_flux" << "_Mena_Fig3_1e13" << ".png";
   c1->SaveAs( saveAs.str().c_str() );
 
   saveAs.str("");
-  saveAs << path << modelA << "/eps/" << "nueosc_flux" << "_Mena_Fig4" << ".eps";
+  saveAs << path << modelA << "/eps/" << "nueosc_flux" << "_Mena_Fig3_1e13" << ".eps";
   c1->SaveAs( saveAs.str().c_str() );
   
 }
