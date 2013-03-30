@@ -11,9 +11,11 @@ void topTitle(const char *title)
 {
   TLatex latex;
   latex.SetNDC();
-  latex.SetTextSize(0.1);
+  latex.SetTextSize(0.032);
   latex.SetTextAlign(31); // align right
-  latex.DrawLatex(0.90,0.92, title);
+  latex.DrawLatex(0.90,0.96, title);
+  latex.SetTextAlign(11); // align left
+  latex.DrawLatex(0.18,0.96,"Preliminary");
 }
 
 void makePlots() 
@@ -36,13 +38,17 @@ void makePlots()
   tdrStyle->SetOptFit(0);
   tdrStyle->SetTitleFontSize(0.08);
   tdrStyle->SetStatStyle(0);
+
+  tdrStyle->SetPadBorderMode(0);
+  tdrStyle->SetFrameBorderMode(0);
+
   tdrStyle->cd();
 
-  //Figure 3 --- Fine detail -- with modified Rstar as in Mena's paper
+  //Figure 3 --- Fine detail
 
   makePlots("ModelA","ModelB", "0", 
-            "./root_files/Mena/output_ModelA_Fine1e13_Rs.root", 
-            "./root_files/Mena/output_ModelB_Fine1e13_Rs.root", 
+            "./root_files/Mena/output_ModelA_Fine1e13.root", 
+            "./root_files/Mena/output_ModelB_Fine1e13.root", 
             "./root_files/Mena/output_ZeroPt_Fine1e13.root");
   
   
@@ -77,24 +83,14 @@ void makePlots( const char * modelA, const char * modelB, const char * src,
   
   TList * v_Labels = new TList();
   TObjString *label;
-  label = new TObjString( "#phi(#nu)" );
+  label = new TObjString( "#phi" );
   v_Labels->Add( label ); 
-  label = new TObjString( "#phi(#nu)" );
+  label = new TObjString( "#phi" );
   v_Labels->Add( label ); 
-  label = new TObjString( "#phi(#nu)" );
+  label = new TObjString( "#phi" );
   v_Labels->Add( label ); 
-  label = new TObjString( "#phi(#bar{#nu})" );
+  label = new TObjString( "#phi" );
   v_Labels->Add( label ); 
-
-  TList * v_Title = new TList();
-  label = new TObjString( "Vacuum (inside star)" );
-  v_Title->Add( label ); 
-  label = new TObjString( "Model A" );
-  v_Title->Add( label ); 
-  label = new TObjString( "Model B" );
-  v_Title->Add( label ); 
-  label = new TObjString( "Model A" );
-  v_Title->Add( label ); 
   
   TList * PeeTree = new TList();
   TList * PhiGraphs = new TList();
@@ -166,10 +162,10 @@ void makePlots( const char * modelA, const char * modelB, const char * src,
   
   std::cout << " " << nGraphs << std::endl;
 
+  Float_t small = 1e-3;
+  
   TCanvas * c1 = new TCanvas(modelA, "Oscillation probabilities", 184, 60, 861, 670);
-  c1->Divide(1,4);
-  c1->SetTopMargin(0.18);
-  c1->SetBottomMargin(0.18);
+  c1->Divide(1,4,small,small);
   c1->Draw();
   
   for( int k=0; k < nGraphs; ++k) 
@@ -192,6 +188,13 @@ void makePlots( const char * modelA, const char * modelB, const char * src,
       gPad->SetGridx();
       gPad->SetGridy();
       gPad->SetLogx();
+
+      if ( idxc == 1 || idxc == 3)
+        gPad->SetBottomMargin(small);
+      else if ( idxc == 2 || idxc == 4)
+        gPad->SetTopMargin(small);
+      else { }
+
       //gPad->SetFillColor(2);
       
       g1->SetMarkerStyle(1);
@@ -217,9 +220,6 @@ void makePlots( const char * modelA, const char * modelB, const char * src,
       g1->GetYaxis()->SetTitleFont(42);
     
       g1->Draw("AL");
-      
-      TString title = ((TObjString*)v_Title->At(idxc-1))->GetString();
-      topTitle(title.Data());
       
     } 
     
@@ -263,18 +263,20 @@ void makePlots( const char * modelA, const char * modelB, const char * src,
   
   c1->cd();
   
+  topTitle("Fig 3");
+  
   std::stringstream saveAs;
     
   saveAs.str("");
-  saveAs << path << modelA << "/pdf/" << "nueosc_flux" << "_Mena_Fig3_1e13" << ".pdf";
+  saveAs << path << modelA << "/pdf/" << "nueosc_flux" << "_Mena_Fig3_1e13_X" << ".pdf";
   c1->SaveAs( saveAs.str().c_str() );
   
   saveAs.str("");
-  saveAs << path << modelA << "/png/" << "nueosc_flux" << "_Mena_Fig3_1e13" << ".png";
+  saveAs << path << modelA << "/png/" << "nueosc_flux" << "_Mena_Fig3_1e13_X" << ".png";
   c1->SaveAs( saveAs.str().c_str() );
 
   saveAs.str("");
-  saveAs << path << modelA << "/eps/" << "nueosc_flux" << "_Mena_Fig3_1e13" << ".eps";
+  saveAs << path << modelA << "/eps/" << "nueosc_flux" << "_Mena_Fig3_1e13_X" << ".eps";
   c1->SaveAs( saveAs.str().c_str() );
   
 }
