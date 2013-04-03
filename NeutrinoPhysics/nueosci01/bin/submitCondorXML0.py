@@ -4,9 +4,11 @@ import sys, os, stat, shutil
 
 arguments = []
 
-use_file = 3
-model = 'EarthB'
-use_setI = 3
+use_file = 2
+
+use_setI = 1
+
+model = 'ZeroPt'
 
 xmlfi = ''
 
@@ -43,6 +45,7 @@ if xmlfi == 'model_config_SetII.xml':
     steps = '1,2,3'
 
 if model == 'EarthB':
+    
     xmax  = 1.0e10
     x0    = 1.0e9
     dx    = 1.0e9
@@ -54,7 +57,7 @@ if model == 'EarthB':
     elif use_setI == 2:
         angles = '33.8,12.0,45.0' #Set II
     elif use_setI == 3:
-        angles = '45.0,5.0,45.0' #Ohlsson
+        angles = '45.0,5.0,45.0'  #Ohlsson
         dmasses = '0.0032,0.0'
     else:
         print 'No configuration available'

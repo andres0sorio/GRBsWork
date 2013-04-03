@@ -147,4 +147,27 @@
       0.1e8
     </Par>
   </ModelParameters>
+  <ModelParameters Id="ZeroPt">
+    <Par Id="0" Name="MaxPars">
+      0.0
+    </Par>
+    <Par Id="2" Name="LMAX">
+      1.52280e+17
+    </Par>
+    <Par Id="3" Name="LMIN">
+      3.202e+15
+    </Par>
+    <Par Id="4" Name="Emin">
+      1.0e11
+    </Par>
+    <Par Id="5" Name="Emax">
+      1.0e14
+    </Par>
+    <Par Id="6" Name="Dx">
+      0.5e14
+    </Par>
+    <Par Id="7" Name="De">
+      1.0e9
+    </Par>
+  </ModelParameters>
  </ModelParameterList>

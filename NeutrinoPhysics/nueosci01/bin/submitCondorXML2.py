@@ -4,7 +4,7 @@ import sys, os, stat, shutil
 
 arguments = []
 
-use_setI = 1
+use_setI = 3
 
 model = 'EarthB'
 
@@ -14,21 +14,28 @@ xmax  = 1.0e14
 x0    = 1.0e11
 dx    = 10.0
 
-steps = '3'
+steps = '1'
 
+angles = '33.83,11.39,45.0'
+dmasses = '0.0032,0.00008'
+    
 if model == 'EarthB':
     
     dmasses = '0.0032,0.00008'
     
     if use_setI   == 1:
-        angles = '33.8,8.8,45.0'  #Set I
+        angles = '33.8,8.8,45.0'      # Set I
     elif use_setI == 2:
-        angles = '33.8,12.0,45.0' #Set II
+        angles = '33.8,12.0,45.0'     # Set II
     elif use_setI == 3:
-        angles = '45.0,5.0,45.0'  #Ohlsson
+        angles = '45.0,5.0,45.0'      # Ohlsson
         dmasses = '0.0032,0.0'
+    elif use_setI == 4:
+        angles = '33.83,11.39,45.0'   # Mena
+        dmasses = '0.0024,0.00008'
     else:
         print 'No configuration available'
+        sys.exit(0)
     
 while x0 < xmax:
 

@@ -84,7 +84,9 @@ void makePlots()
   
   //makePlots("ModelB","0","./root_files/Mena/output_ModelB_Fine1e13.root","Fine1e13");
   
-  // Earth full range [1.e11,1.e14]
+  
+  
+  // Earth full range [1.e11,1.e14] - Only Step 1 
 
   //Earth B - Set I
   makePlots("EarthB","0","./root_files/EarthB/output_EarthB_SetI_1e14.root","SetI");
@@ -94,7 +96,10 @@ void makePlots()
   
   //Earth B - Ohlsson
   makePlots("EarthB","0","./root_files/EarthB/output_EarthB_Ohlsson_1e14.root","Ohl");
-   
+
+  //Earth B - Mena
+  makePlots("EarthB","0","./root_files/EarthB/output_EarthB_Mena_1e14.root","Mena");
+  
 }
 
 void makePlots( const char * model, const char * src, const char * infile , const char * option)
