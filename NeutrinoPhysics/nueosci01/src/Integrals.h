@@ -66,12 +66,11 @@ public:
   static const double AbsError;
   static const double RelError;
   static const int SubIntervals;
-  
+
  protected:
   
  private:
-  
-  
+    
   bool m_debug;
   bool m_destroy_interp;
   
@@ -91,10 +90,10 @@ public:
   
   ROOT::Math::IBaseFunctionOneDim* Clone() const;
   
-private:
-  
   double DoEval(double x) const;
-  
+
+private:
+    
 };
 
 class m_Numu_integral_dxdy : public ROOT::Math::IBaseFunctionOneDim, public Integrals {
@@ -133,10 +132,10 @@ public:
   
   ROOT::Math::IBaseFunctionOneDim* Clone() const;
   
-private:
-  
   double DoEval(double x) const;
-  
+
+private:
+    
 };
 
 class m_Nutau_integral_dxdy : public ROOT::Math::IBaseFunctionOneDim, public Integrals {
@@ -198,10 +197,12 @@ public:
   virtual ~m_NC_showers_integral_dx() {};
   
   ROOT::Math::IBaseFunctionOneDim* Clone() const;
+
+  double DoEval(double z) const;
   
 private:
   
-  double DoEval(double z) const;
+
   
 };
 
@@ -219,9 +220,11 @@ public:
   
   ROOT::Math::IBaseFunctionOneDim* Clone() const;
   
+  double DoEval(double z) const;
+
 private:
   
-  double DoEval(double z) const;
+  
   
 };
 
@@ -238,10 +241,12 @@ public:
   virtual ~m_CCnutau_showers_integral_dx() {};
   
   ROOT::Math::IBaseFunctionOneDim* Clone() const;
-    
-private:
   
   double DoEval(double z) const;
+  
+private:
+  
+  
   
 };
 

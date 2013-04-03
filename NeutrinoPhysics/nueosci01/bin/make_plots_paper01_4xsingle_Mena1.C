@@ -11,11 +11,10 @@ void topTitle(const char *title)
 {
   TLatex latex;
   latex.SetNDC();
-  latex.SetTextSize(0.032);
+  latex.SetTextSize(0.10);
   latex.SetTextAlign(31); // align right
-  latex.DrawLatex(0.90,0.96, title);
-  latex.SetTextAlign(11); // align left
-  latex.DrawLatex(0.18,0.96,"Preliminary");
+  latex.DrawLatex(0.90,0.92, title);
+
 }
 
 void makePlots() 
@@ -41,11 +40,11 @@ void makePlots()
   tdrStyle->cd();
 
   //Figure 3
-  makePlots("ModelA","ModelB", "0", 
-            "./root_files/Mena/output_EarthB_ModelA.root", 
-            "./root_files/Mena/output_EarthB_ModelB.root", 
-            "./root_files/Mena/output_EarthB_ZeroPt.root");
-  
+  makePlots("ModelA","ModelB", "0",
+            "./root_files/Mena/output_EarthB_ModelA_Rs.root", 
+            "./root_files/Mena/output_EarthB_ModelB_Rs.root", 
+            "./root_files/Mena/output_EarthB_ZeroPt_Rs.root");
+
 }
 
 void makePlots( const char * modelA, const char * modelB, const char * src, 
@@ -86,9 +85,18 @@ void makePlots( const char * modelA, const char * modelB, const char * src,
   label = new TObjString( "#phi" );
   v_Labels->Add( label ); 
   
+  TList * v_Title = new TList();
+  label = new TObjString( "Vacuum (inside star)" );
+  v_Title->Add( label ); 
+  label = new TObjString( "Model A" );
+  v_Title->Add( label ); 
+  label = new TObjString( "Model B" );
+  v_Title->Add( label ); 
+  label = new TObjString( "Model A" );
+  v_Title->Add( label ); 
+  
   TList * PeeTree = new TList();
   TList * PhiGraphs = new TList();
-
 
   TLegend * leg = new TLegend(0.14,0.69,0.24,0.85);
 
@@ -169,7 +177,7 @@ void makePlots( const char * modelA, const char * modelB, const char * src,
      
     TGraph * g1 = (TGraph*)PhiGraphs->At(k);
     
-    g1->SetLineWidth(2);
+    g1->SetLineWidth(1);
     
     std::cout << " g1 " << g1 << std::endl;
       
@@ -207,7 +215,10 @@ void makePlots( const char * modelA, const char * modelB, const char * src,
       g1->GetYaxis()->SetTitleFont(42);
     
       g1->Draw("AL");
-      
+
+      TString title = ((TObjString*)v_Title->At(idxc-1))->GetString();
+      topTitle(title.Data());
+
     } 
     
     else if ( idx == 2 ) {

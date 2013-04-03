@@ -83,8 +83,8 @@ int main(int iargv, char **argv) {
     std::stringstream ss_png;
     std::stringstream ss_eps;
     
-    ss_png << "results/ratio.vs.phi_new.pars_" << parset << ".png";
-    ss_eps << "results/ratio.vs.phi_new.pars_" << parset << ".eps";
+    ss_png << "./paper01-plots/ratio/ratio.vs.phi_new.pars_" << parset << ".png";
+    ss_eps << "./paper01-plots/ratio/ratio.vs.phi_new.pars_" << parset << ".eps";
 
     while (1) 
     {
@@ -118,17 +118,18 @@ int main(int iargv, char **argv) {
       graphs->g2->SetPoint(k, (phi_neu / sum), ratio_notau);
       
       if ( ! debug ) 
-	{
-	  std::cout << "-------------------------------------------------------" << '\n';
-	  std::cout << mu1->EvaluateNuMuContribution() << '\n';
-	  std::cout << mu1->EvaluateNuTauContribution() << '\n';
-	  std::cout << sh1->EvaluateNCContribution() << '\n';
-	  std::cout << sh1->EvaluateCCNueContribution() << '\n';
-	  std::cout << sh1->EvaluateCCNutauContribution() << '\n';
-	}
+      {
+        std::cout << "-------------------------------------------------------" << '\n';
+        std::cout << mu1->EvaluateNuMuContribution() << '\n';
+        std::cout << mu1->EvaluateNuTauContribution() << '\n';
+        std::cout << sh1->EvaluateNCContribution() << '\n';
+        std::cout << sh1->EvaluateCCNueContribution() << '\n';
+        std::cout << sh1->EvaluateCCNutauContribution() << '\n';
+      }
       
       std::cout << "-------------------------------------------------------" << '\n';
       std::cout << "Ratio Ntracks/Nshower like events: " <<  ratio << std::endl;
+      std::cout << phi_ne_fr << " " << phi_nmu_fr << " " << phi_ntau_fr << std::endl;
       std::cout << "-------------------------------------------------------" << '\n';
       
       k = k + 1;
@@ -163,20 +164,36 @@ int main(int iargv, char **argv) {
   
   Graphics * graphs = new Graphics();
   
-  double alpha = 1.8;
+  double alpha = 2.0;
   
   int k = 0;
   std::stringstream ss_png;
   std::stringstream ss_eps;
   
-  ss_png << "results/ratio.vs.alpha.pars_" << parset << ".png";
-  ss_eps << "results/ratio.vs.alpha.pars_" << parset << ".eps";
+  ss_png << "./paper01-plots/ratio/ratio.vs.alpha.pars_" << parset << ".png";
+  ss_eps << "./paper01-plots/ratio/ratio.vs.alpha.pars_" << parset << ".eps";
   
   pars = parlist.GetParameters(0);
   
-  pars->SetPar11( 1.0 );
-  pars->SetPar12( 1.0 );
-  pars->SetPar13( 1.0 );
+  pars->SetPar11( 0.33 );
+  pars->SetPar12( 0.33 );
+  pars->SetPar13( 0.33 );
+  
+  MuTrackEvents * mu1 = new MuTrackEvents("XSec_neut.dat", "XSec_anti.dat", pars );
+  double N_mu_racks = mu1->Evaluate();
+  
+  ShowerEvents * sh1 =  new ShowerEvents("XSec_neut.dat", "XSec_anti.dat", pars );
+  double N_shower_racks = sh1->Evaluate();
+  
+  double ratio = N_mu_racks / N_shower_racks;
+  
+  std::cout << "-------------------------------------------------------" << '\n';
+  std::cout << "Ratio Ntracks/Nshower like events: " <<  ratio << std::endl;
+  std::cout << "-------------------------------------------------------" << '\n';
+  
+  pars->SetPar11( 1.00 );
+  pars->SetPar12( 1.00 );
+  pars->SetPar13( 1.00 );
   
   while (1) 
   {
@@ -216,6 +233,8 @@ int main(int iargv, char **argv) {
   
   graphs->SetOptions();
   graphs->g3->SetMinimum(1.4);
+  graphs->g3->SetMarkerStyle(22);
+  graphs->g3->SetMarkerColor(2);
   graphs->g3->Draw("ACP");
   graphs->tleg_2->Draw();
   

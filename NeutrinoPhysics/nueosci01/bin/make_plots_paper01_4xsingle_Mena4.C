@@ -11,9 +11,10 @@ void topTitle(const char *title)
 {
   TLatex latex;
   latex.SetNDC();
-  latex.SetTextSize(0.1);
+  latex.SetTextSize(0.10);
   latex.SetTextAlign(31); // align right
   latex.DrawLatex(0.90,0.92, title);
+
 }
 
 void makePlots() 
@@ -43,7 +44,7 @@ void makePlots()
   makePlots("ModelA","ModelB", "0", 
             "./root_files/Mena/output_ModelA_Fine1e13_Rs.root", 
             "./root_files/Mena/output_ModelB_Fine1e13_Rs.root", 
-            "./root_files/Mena/output_ZeroPt_Fine1e13.root");
+            "./root_files/Mena/output_ZeroPt_Fine1e13_Rs.root");
   
   
 }
@@ -98,7 +99,6 @@ void makePlots( const char * modelA, const char * modelB, const char * src,
   
   TList * PeeTree = new TList();
   TList * PhiGraphs = new TList();
-
 
   TLegend * leg = new TLegend(0.14,0.69,0.24,0.85);
 
@@ -179,7 +179,7 @@ void makePlots( const char * modelA, const char * modelB, const char * src,
      
     TGraph * g1 = (TGraph*)PhiGraphs->At(k);
     
-    g1->SetLineWidth(2);
+    g1->SetLineWidth(1);
     
     std::cout << " g1 " << g1 << std::endl;
       

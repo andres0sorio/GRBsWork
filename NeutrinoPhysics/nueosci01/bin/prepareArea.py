@@ -21,8 +21,8 @@ for tg in target:
 
 path =options.path
 
-types = ['probs','flux']
-objects = ['ModelA','ModelB','ModelC','Vacuum','ZeroPt','EarthA','EarthB']
+types = ['probs','flux','ratio']
+objects = ['ModelA','ModelB','ModelC','Vacuum','ZeroPt','EarthA','EarthB','Lambdas']
 file_ext = ['eps','png','pdf']
 
 for type in types:

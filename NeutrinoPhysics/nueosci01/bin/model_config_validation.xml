@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE ModelParameterList PUBLIC "" "model_config.dtd" []>
+<ModelParameterList>
+<ModelParameters Id="LinearFig1">
+    <Par Id="0" Name="MaxPars">
+      0.0
+    </Par>
+    <Par Id="1" Name="LMIN">
+      1.0e-14
+    </Par>
+    <Par Id="2" Name="LMAX">
+      1.0e-13
+    </Par>
+    <Par Id="3" Name="Dx">
+      0.02e-13
+    </Par>
+    <Par Id="4" Name="Ev">
+      10.0e9
+    </Par>
+  </ModelParameters>
+  <ModelParameters Id="LinearFig3">
+    <Par Id="0" Name="MaxPars">
+      0.0
+    </Par>
+    <Par Id="1" Name="LMIN">
+      1.0e-22
+    </Par>
+    <Par Id="2" Name="LMAX">
+      1.0e-12
+    </Par>
+    <Par Id="3" Name="Dx">
+      1.0e-23
+    </Par>
+    <Par Id="4" Name="Ev">
+      10.0e9
+    </Par>
+  </ModelParameters>
+  <ModelParameters Id="Linear1TeV">
+    <Par Id="0" Name="MaxPars">
+      0.0
+    </Par>
+    <Par Id="1" Name="LMIN">
+      1.0e-22
+    </Par>
+    <Par Id="2" Name="LMAX">
+      1.0e-12
+    </Par>
+    <Par Id="3" Name="Dx">
+      1.0e-23
+    </Par>
+    <Par Id="4" Name="Ev">
+      1.0e12
+    </Par>
+  </ModelParameters>
+ <ModelParameters Id="Linear10TeV">
+    <Par Id="0" Name="MaxPars">
+      0.0
+    </Par>
+    <Par Id="1" Name="LMIN">
+      1.0e-22
+    </Par>
+    <Par Id="2" Name="LMAX">
+      1.0e-12
+    </Par>
+    <Par Id="3" Name="Dx">
+      1.0e-23
+    </Par>
+    <Par Id="4" Name="Ev">
+      1.0e13
+    </Par>
+  </ModelParameters>
+</ModelParameterList>

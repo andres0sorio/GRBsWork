@@ -39,16 +39,22 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  // Star -> Vaccum -> Earth in -> Earth out (EarthB) - there should not be any difference
+  //Figure 3
+  //Star
 
-  makePlots("EarthB","EarthB", "Vacuum", 
-            "./root_files/Mena/output_EarthB_ModelA_Rs.root", 
-            "./root_files/Mena/output_EarthB_ModelB_Rs.root", 
-            "./root_files/Mena/output_EarthB_ZeroPt_Rs.root");
-  
+  makePlots("ModelA","ModelB", "0", "SetI",
+            "./root_files/ModelA/output_ModelA_SetI.root", 
+            "./root_files/ModelB/output_ModelB_SetI.root", 
+            "./root_files/ZeroPt/output_ZeroPt_SetI.root");
+
+  makePlots("ModelA","ModelB", "0", "SetII",
+            "./root_files/ModelA/output_ModelA_SetII.root", 
+            "./root_files/ModelB/output_ModelB_SetII.root", 
+            "./root_files/ZeroPt/output_ZeroPt_SetII.root");
+
 }
 
-void makePlots( const char * modelA, const char * modelB, const char * src, 
+void makePlots( const char * modelA, const char * modelB, const char * src, const char * config,
                 const char * infileA ,  const char * infileB,  const char * infileC)
 {
   
@@ -63,29 +69,29 @@ void makePlots( const char * modelA, const char * modelB, const char * src,
   TObjString *data;
 
   //Vaccum
-  data = new TObjString( TString( modelA ) + TString("_") + TString( src ) + TString("_Pee/data") );
+  data = new TObjString( TString( "ZeroPt" ) + TString("_") + TString( src )  + TString("_Pee/data") );
   v_Data->Add( data );
   //A
-  data = new TObjString( TString( modelA ) + TString("_") + TString( src ) + TString("_Pee/data") );
+  data = new TObjString( TString( modelA )    + TString("_") + TString( src ) + TString("_Pee/data") );
   v_Data->Add( data );
   //B
-  data = new TObjString( TString( modelA ) + TString("_") + TString( src ) + TString("_Pee/data") );
+  data = new TObjString( TString( modelB )    + TString("_") + TString( src ) + TString("_Pee/data") );
   v_Data->Add( data );
   //anti A
-  data = new TObjString( TString( modelA ) + TString("_") + TString( src ) + TString("_aPee/data") );
+  data = new TObjString( TString( modelA )    + TString("_") + TString( src ) + TString("_aPee/data") );
   v_Data->Add( data );
   
   TList * v_Labels = new TList();
   TObjString *label;
-  label = new TObjString( "#phi" );
+  label = new TObjString( "#phi ( E_{#nu} )" );
   v_Labels->Add( label ); 
-  label = new TObjString( "#phi" );
+  label = new TObjString( "#phi ( E_{#nu} )" );
   v_Labels->Add( label ); 
-  label = new TObjString( "#phi" );
+  label = new TObjString( "#phi ( E_{#nu} ) " );
   v_Labels->Add( label ); 
-  label = new TObjString( "#phi" );
+  label = new TObjString( "#phi ( E_{#bar{#nu}} )" );
   v_Labels->Add( label ); 
-
+  
   TList * v_Title = new TList();
   label = new TObjString( "Vacuum (inside star)" );
   v_Title->Add( label ); 
@@ -95,10 +101,9 @@ void makePlots( const char * modelA, const char * modelB, const char * src,
   v_Title->Add( label ); 
   label = new TObjString( "Model A" );
   v_Title->Add( label ); 
-
+  
   TList * PeeTree = new TList();
   TList * PhiGraphs = new TList();
-
 
   TLegend * leg = new TLegend(0.14,0.69,0.24,0.85);
 
@@ -179,10 +184,10 @@ void makePlots( const char * modelA, const char * modelB, const char * src,
      
     TGraph * g1 = (TGraph*)PhiGraphs->At(k);
     
+    g1->SetLineWidth(1);
+    
     std::cout << " g1 " << g1 << std::endl;
-
-    g1->SetLineWidth(1x);
-
+      
     if ( idx == 1 ) 
     {
       
@@ -196,8 +201,8 @@ void makePlots( const char * modelA, const char * modelB, const char * src,
       
       g1->SetMarkerStyle(1);
       g1->SetFillColor(10);
-      g1->SetMinimum(0.2);
-      g1->SetMaximum(0.5);
+      g1->SetMinimum(0.0);
+      g1->SetMaximum(1.0);
       g1->GetYaxis()->SetNdivisions(504);
       TString yaxis = ((TObjString*)v_Labels->At( idxc-1))->GetString();
       g1->GetYaxis()->SetTitle( yaxis.Data() );
@@ -263,20 +268,18 @@ void makePlots( const char * modelA, const char * modelB, const char * src,
   
   c1->cd();
   
-  topTitle("Fig 4");
-  
   std::stringstream saveAs;
     
   saveAs.str("");
-  saveAs << path << modelA << "/pdf/" << "nueosc_flux" << "_Mena_Fig4_Earth_Inc" << ".pdf";
+  saveAs << path << modelA << "/pdf/" << "nueosc_flux_" << config << "_4x_MenaFormat_F3" << ".pdf";
   c1->SaveAs( saveAs.str().c_str() );
   
   saveAs.str("");
-  saveAs << path << modelA << "/png/" << "nueosc_flux" << "_Mena_Fig4_Earth_Inc" << ".png";
+  saveAs << path << modelA << "/png/" << "nueosc_flux_" << config << "_4x_MenaFormat_F3" << ".png";
   c1->SaveAs( saveAs.str().c_str() );
 
   saveAs.str("");
-  saveAs << path << modelA << "/eps/" << "nueosc_flux" << "_Mena_Fig4_Earth_Inc" << ".eps";
+  saveAs << path << modelA << "/eps/" << "nueosc_flux_" << config << "_4x_MenaFormat_F3" << ".eps";
   c1->SaveAs( saveAs.str().c_str() );
   
 }

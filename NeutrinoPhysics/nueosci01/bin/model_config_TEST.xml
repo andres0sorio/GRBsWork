@@ -9,7 +9,7 @@
       3.02e-19
     </Par>
     <Par Id="2" Name="LMAX">
-      1.52280e+17
+      1.6040160e17
     </Par>
     <Par Id="3" Name="LMIN">
       3.202e+15
@@ -24,7 +24,7 @@
       0.5e14
     </Par>
     <Par Id="7" Name="De">
-      1.0e9
+      1.0e11
     </Par>
   </ModelParameters>
   <ModelParameters Id="ModelB">
@@ -35,7 +35,7 @@
       2.57e-18
     </Par>
     <Par Id="2" Name="RstarCM">
-      3.00e12
+      3.16e12
     </Par>
     <Par Id="3" Name="RbCM">
       1.0e12
@@ -47,7 +47,7 @@
       5.076e+4
     </Par>
     <Par Id="6" Name="LMAX">
-      1.52280e+17
+      1.6040160e17
     </Par>
     <Par Id="7" Name="LMIN">
       3.202e+15
@@ -73,7 +73,7 @@
       4.76e-19
     </Par>
     <Par Id="2" Name="RstarCM">
-      3.00e12
+      3.16e12
     </Par>
     <Par Id="3" Name="RbCM">
       1.0e11
@@ -97,7 +97,7 @@
       5.076e+4
     </Par>
     <Par Id="10" Name="LMAX">
-      1.52280e+17
+      1.6040160e17
     </Par>
     <Par Id="11" Name="LMIN">
       3.202e+15
@@ -190,7 +190,7 @@
       0.0
     </Par>
     <Par Id="2" Name="LMAX">
-      1.52280e+17
+      1.6040160e17
     </Par>
     <Par Id="3" Name="LMIN">
       3.202e+15

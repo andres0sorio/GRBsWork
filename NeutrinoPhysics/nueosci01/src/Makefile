@@ -26,7 +26,7 @@ SRCDIR       = .
 LIBDIR       = .
 EXEDIR       = ../bin
 
-GARBAGE      = *.o $(EXEDIR)/*.so $(EXEDIR)/*.d $(EXEDIR)/evalxsec.exe $(EXEDIR)/validate.exe $(EXEDIR)/paper01.exe $(EXEDIR)/earthval.exe
+GARBAGE      = *.o $(EXEDIR)/*.so $(EXEDIR)/*.d $(EXEDIR)/getratio.exe $(EXEDIR)/validate.exe $(EXEDIR)/paper01.exe $(EXEDIR)/earthval.exe
 
 SOGARBAGE    = *.so 
 
@@ -37,25 +37,64 @@ LINKFLAGS    =
 LIBS       += $(ROOTLIBS) -lMinuit -lMathCore -lMathMore -lXMLParser $(GSLLIB) \
 	-L$(BOOSTPATH)/lib -lboost_program_options
 
-OBJS   = Graphics.o Integrals.o DOMParameters.o nuN_interpxsec.o PShadow.o \
-	ShowerEvents.o MuTrackEvents.o IProbabilityMatrix.o \
-	MixingParameters.o NeutrinoOscInVacuum.o NeutrinoOscInMatter.o main.o
+OBJS   = Graphics.o \
+	Integrals.o \
+	DOMParameters.o \
+	nuN_interpxsec.o \
+	PShadow.o \
+	ShowerEvents.o \
+	MuTrackEvents.o \
+	IProbabilityMatrix.o \
+	MixingParameters.o \
+	NeutrinoOscInVacuum.o \
+	NeutrinoOscInMatter.o \
+	main.o
 
-VALOBJS = DOMParameters.o MixingParameters.o IProbabilityMatrix.o \
-	DensityModels.o NeutrinoOscInVarDensity.o validate.o
+VALOBJS = DOMParameters.o \
+	MixingParameters.o \
+	IProbabilityMatrix.o \
+	DensityModels.o \
+	NeutrinoOscInVarDensity.o \
+	validate.o
 
-PAP01OBJS = Graphics.o DOMParameters.o ModelParameters.o MixingParameters.o IProbabilityMatrix.o DensityModels.o \
-	NeutrinoOscInVacuum.o NeutrinoOscInVarDensity.o NeutrinosInMediumPaper.o paper01.o
+PAP01OBJS = Graphics.o \
+	DOMParameters.o \
+	ModelParameters.o \
+	MixingParameters.o \
+	IProbabilityMatrix.o \
+	DensityModels.o \
+	NeutrinoOscInVacuum.o \
+	NeutrinoOscInVarDensity.o \
+	NeutrinosInMediumPaper.o \
+	paper01.o
 
-EARTHOBJS = Graphics.o DOMParameters.o ModelParameters.o MixingParameters.o IProbabilityMatrix.o DensityModels.o \
-	NeutrinoOscInVacuum.o NeutrinoOscInVarDensity.o NeutrinosInMediumPaper.o earthval.o
+EARTHOBJS = Graphics.o \
+	DOMParameters.o \
+	ModelParameters.o \
+	MixingParameters.o \
+	IProbabilityMatrix.o \
+	DensityModels.o \
+	NeutrinoOscInVacuum.o \
+	NeutrinoOscInVarDensity.o \
+	NeutrinosInMediumPaper.o \
+	earthval.o
 
-all : evalxsec.exe validate.exe paper01.exe earthval.exe
+PAP02OBJS =  Graphics.o \
+	Integrals.o \
+	DOMParameters.o \
+	nuN_interpxsec.o \
+	PShadow.o \
+	ShowerEvents.o \
+	MuTrackEvents.o \
+	NeutrinosDetectionPaper.o \
+	paper02.o
+
+all : getratio.exe validate.exe earthval.exe paper01.exe paper02.exe 
 
 %.o : %.cc
 	$(CXX) $(CXXFLAGS) -c $< 	
 
-evalxsec.exe: $(OBJS)
+getratio.exe: $(OBJS)
 	 $(CXX) -o $(EXEDIR)/$@ $(OBJS) $(LINKFLAGS) $(LIBS)
 
 validate.exe: $(VALOBJS)
@@ -63,6 +102,9 @@ validate.exe: $(VALOBJS)
 
 paper01.exe: $(PAP01OBJS)
 	 $(CXX) -o $(EXEDIR)/$@ $(PAP01OBJS) $(LINKFLAGS) $(LIBS)
+
+paper02.exe: $(PAP02OBJS)
+	 $(CXX) -o $(EXEDIR)/$@ $(PAP02OBJS) $(LINKFLAGS) $(LIBS)
 
 earthval.exe: $(EARTHOBJS)
 	 $(CXX) -o $(EXEDIR)/$@ $(EARTHOBJS) $(LINKFLAGS) $(LIBS)

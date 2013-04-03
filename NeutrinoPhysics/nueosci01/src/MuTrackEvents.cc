@@ -19,7 +19,7 @@ MuTrackEvents::MuTrackEvents(const char * nuxsec, const char * antinuxsec, Param
   m_phi_nu[1] = m_input->GetPar12(); //phi_mu
   m_phi_nu[2] = m_input->GetPar13(); //phi_tau
   
-  //std::cout << m_phi_nu[0] << " " << m_phi_nu[1] << " " << m_phi_nu[2] << '\n';
+  //std::cout << "MuTrackEvents> " << m_phi_nu[0] << " " << m_phi_nu[1] << " " << m_phi_nu[2] << '\n';
 
   m_NuMuTracks = 0.0;
   
@@ -48,7 +48,7 @@ float MuTrackEvents::Evaluate() {
 
 float MuTrackEvents::EvaluateNuMuContribution() {
   
-  double m_sfactor = 1.e5;
+  double m_sfactor = 1.e5; //
 
   double rho  = m_input->GetPar5();
   double Area = m_input->GetPar6();
@@ -65,13 +65,18 @@ float MuTrackEvents::EvaluateNuMuContribution() {
   ff->SetData(nu_xsec_data, antinu_xsec_data);
   ff->SetParameters( m_input );
   
-  ROOT::Math::GSLIntegrator * nminteg = 
+  ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( Integrals::AbsError,
+                                                                        Integrals::RelError,
+                                                                        Integrals::SubIntervals);
+
+  /* AO - march 30
     new ROOT::Math::GSLIntegrator( ROOT::Math::IntegrationOneDim::kADAPTIVE, 
                                    ROOT::Math::Integration::kGAUSS31,
                                    Integrals::AbsError, 
                                    Integrals::RelError, 
                                    Integrals::SubIntervals );
-  
+  */
+
   nminteg->SetFunction( *(ROOT::Math::IGenFunction*)ff );
   
   float m_mu_Th = m_input->GetPar1();
@@ -108,13 +113,18 @@ float MuTrackEvents::EvaluateNuTauContribution() {
   ff->SetData(nu_xsec_data, antinu_xsec_data);
   ff->SetParameters( m_input );
   
-  ROOT::Math::GSLIntegrator * nminteg = 
+  ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( Integrals::AbsError,
+                                                                        Integrals::RelError,
+                                                                        Integrals::SubIntervals);
+
+  /* AO - march 30
     new ROOT::Math::GSLIntegrator(  ROOT::Math::IntegrationOneDim::kADAPTIVE,
                                     ROOT::Math::Integration::kGAUSS31,
                                     Integrals::AbsError, 
                                     Integrals::RelError, 
                                     Integrals::SubIntervals );
-  
+  */
+
   nminteg->SetFunction( *(ROOT::Math::IGenFunction*)ff );
   
   float m_mu_Th = m_input->GetPar1();
@@ -127,6 +137,89 @@ float MuTrackEvents::EvaluateNuTauContribution() {
   delete ff;
   delete nminteg;
   
+  return (result/m_sfactor);
+  
+}
+
+//...
+
+float MuTrackEvents::Evaluate( double Enu ) {
+
+  //... get Nu_mu / Anti-Nu_mu contribution
+
+  float v1 = EvaluateNuMuContribution( Enu );
+
+  m_NuMuTracks = v1;
+    
+  //... get Nu_tau / Anti-Nu_tau contribution
+
+  float v2 = EvaluateNuTauContribution( Enu );
+  
+  m_NuTauTracks = v2;
+
+  return (v1 + v2);
+
+}
+
+float MuTrackEvents::EvaluateNuMuContribution( double Enu ) {
+  
+  double m_sfactor = 1.e5;
+  
+  double rho  = m_input->GetPar5();
+  double Area = m_input->GetPar6();
+  double Na   = m_input->GetPar7();
+  double kk   = rho * Area * Na;
+
+  //... This is formula 5 from Ref[1]
+  
+  m_Numu_integral_dx * ff = new m_Numu_integral_dx();
+  
+  m_input->SetPar4( m_phi_nu[1] ); // N_beta = phi_mu
+  m_input->SetKonst1( kk * m_sfactor );
+  
+  ff->SetData(nu_xsec_data, antinu_xsec_data);
+  ff->SetParameters( m_input );
+  
+  double result = ff->DoEval( Enu );
+  
+  ff->DestroyInterpolator();
+
+  delete ff;
+
+  //m_sfactor = 1.0;
+
+  return (result/m_sfactor);
+
+}
+
+float MuTrackEvents::EvaluateNuTauContribution( double Enu ) {
+
+  double m_sfactor = 1.e5;
+
+  double rho  = m_input->GetPar5();
+  double Area = m_input->GetPar6();
+  double Na   = m_input->GetPar7();
+  double Br   = m_input->GetPar8();
+  double kk   = Br * rho * Area * Na;
+  
+  //... This is formula 7 from Ref[1]
+  
+  m_Nutau_integral_dx * ff = new m_Nutau_integral_dx();
+  
+  m_input->SetPar4( m_phi_nu[2] ); // N_beta = phi_tau
+  m_input->SetKonst1( kk * m_sfactor );
+  
+  ff->SetData(nu_xsec_data, antinu_xsec_data);
+  ff->SetParameters( m_input );
+
+  double result = ff->DoEval( Enu );
+  
+  ff->DestroyInterpolator();
+  
+  delete ff;
+
+  //m_sfactor = 1.0;
+
   return (result/m_sfactor);
   
 }

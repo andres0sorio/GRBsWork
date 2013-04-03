@@ -105,9 +105,10 @@ void Graphics::SetOptions() {
   h1->SetTitle("");
 
   g3->SetLineColor(1);
+  g3->SetFillColor(10);
   g3->SetLineStyle(1);
   g3->SetLineWidth(1);
-  
+
   g4->SetLineColor(2);
   g4->SetLineStyle(2);
   g4->SetLineWidth(1);
@@ -156,8 +157,19 @@ void Graphics::SetOptions() {
   tleg_1->SetFillStyle(1001);
   tleg_1->SetTextColor(txtci);
   
-  tleg_1->AddEntry(g5,"#delta=0.0");
-  tleg_1->AddEntry(g6,"#delta=#pi");
-  
+  tleg_1->AddEntry(g5,"all tracks");
+  tleg_1->AddEntry(g6,"no taus tracks");
+
+  tleg_2->SetBorderSize(0);
+  tleg_2->SetTextFont(22);
+  tleg_2->SetTextSize(0.04);
+  tleg_2->SetLineColor(1);
+  tleg_2->SetLineStyle(1);
+  tleg_2->SetLineWidth(1);
+  tleg_2->SetFillColor(0);
+  tleg_2->SetFillStyle(1001);
+  tleg_2->SetTextColor(txtci);
+
+  tleg_2->AddEntry(g3,"1:1:1");
   
 }

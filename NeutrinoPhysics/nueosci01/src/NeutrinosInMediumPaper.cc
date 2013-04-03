@@ -38,7 +38,13 @@ NeutrinosInMediumPaper::NeutrinosInMediumPaper( MixingParameters * mixpars ) {
   m_Models["ModelC"] = (DensityModels*) new rhoModelC();
   m_Models["EarthA"] = (DensityModels*) new rhoEarthA();
   m_Models["EarthB"] = (DensityModels*) new rhoEarthB();
-  m_Models["ZeroPt"] = (DensityModels*) new zeroPotencial(); // 
+  m_Models["ZeroPt"] = (DensityModels*) new zeroPotencial(); //
+
+  //
+  m_Models["LinearFig1"]  = (DensityModels*) new linearPotencial(); // 
+  m_Models["LinearFig3"]  = (DensityModels*) new linearPotencial(); // 
+  m_Models["Linear1TeV"]  = (DensityModels*) new linearPotencial(); // 
+  m_Models["Linear10TeV"] = (DensityModels*) new linearPotencial(); // 
 
   m_file = new TFile("output.root","RECREATE");
   m_file->cd();
@@ -508,5 +514,118 @@ bool NeutrinosInMediumPaper::Init( const char * in_model , const char * src_step
 
   return true;
  
+}
+
+void NeutrinosInMediumPaper::StudyResonances( const char * out_model, const char * model_options, ModelParameters * modelpars ) 
+{
+  
+  double Ax   = 1.E-14;
+  double Ld1  = 0.0;
+  double Ld2  = 0.0;
+  double Ld3  = 0.0;
+  
+  //.....................................................................................
+
+  m_file->mkdir(TString(out_model) + TString("_0_") + TString( model_options ))->cd(); 
+  
+  m_tree = new TTree("data","Data points");
+  m_tree->Branch("Ex", &m_Ex,  "Ex/d");
+  m_tree->Branch("Ax",   &Ax,  "Ax/d");
+  m_tree->Branch("Ld1", &Ld1, "Ld1/d");
+  m_tree->Branch("Ld2", &Ld2, "Ld2/d");
+  m_tree->Branch("Ld3", &Ld3, "Ld3/d");
+  
+  DensityModels * density_Mod = m_Models[out_model];
+  
+  double XMIN      = modelpars->GetPar("LMIN");
+  double XMAX      = modelpars->GetPar("LMAX");
+  long double Dx   = (long double) modelpars->GetPar("Dx");  
+
+  bool use_special_step = false;
+  
+  if ( (XMAX/XMIN) > 100.0 ) use_special_step = true;
+  else use_special_step = false;
+
+  if ( use_special_step ) std::cout << "GenerateDatapoints> I will use the special step " << std::endl;
+  
+  m_Ex = (long double) modelpars->GetPar("Ev");  // The energy is fixed
+
+  if (m_debug) std::cout << "GenerateDatapoints> Mixing parameters: " 
+                         << "theta1 "   <<  m_Physics->m_input->GetPar1() << '\t'
+                         << "theta2 "   <<  m_Physics->m_input->GetPar2() << '\t'
+                         << "theta3 "   <<  m_Physics->m_input->GetPar3() << '\t'
+                         << "DM2 (32) " <<  m_Physics->m_input->GetPar4() << '\t'
+                         << "Dm2 (21) " <<  m_Physics->m_input->GetPar8() << '\n';
+  
+  int maxpars = (int)modelpars->GetPar(0);
+  
+  TF1 * profA = new TF1("profA", density_Mod, XMIN, XMAX, maxpars);
+  
+  for( int i=1; i <= maxpars; ++i) {
+    profA->SetParameter( ( i-1 ), (modelpars->GetPar(i))  );
+    std::cout << "GenerateDatapoints> * par: " << (modelpars->GetPar(i)) << std::endl;
+  }
+  
+  m_Physics->initializeAngles();
+  
+  m_Physics->updateMixingMatrix();
+  
+  m_Physics->setPotential( profA );
+  
+  m_Physics->m_Ev = m_Ex;
+
+  m_Physics->updateEab();
+
+  int k = 0;
+  
+  Ax = XMIN;
+  
+  while ( Ax < XMAX ) {
+
+    m_Physics->Eval_TnuT( Ax );
+    m_Physics->updateCoefficients();
+    m_Physics->updateLambdas();
+    
+    Ld1 = abs( (*m_Physics->v_Lambda)(0,0) - (*m_Physics->v_Lambda)(0,1) ); 
+    Ld2 = abs( (*m_Physics->v_Lambda)(0,1) - (*m_Physics->v_Lambda)(0,2) ); 
+    Ld3 = abs( (*m_Physics->v_Lambda)(0,0) - (*m_Physics->v_Lambda)(0,2) ); 
+    
+    if ( ! (boost::math::isnan)(Ld1) ) {
+      
+      m_tree->Fill();
+      
+    }
+    
+    k += 1;
+
+    if ( ! use_special_step) 
+      Ax += Dx;
+    else 
+    {
+      
+      if ( Ax < 1.0E-19 )
+        Ax += Dx*1.0e2; 
+      else if ( Ax >=1.0E-19 && Ax < 1.0E-15 )
+        Ax += (Dx*1.0e4); 
+      else
+        Ax += (Dx*1.0e8);
+      
+    }
+    
+    
+  }
+  
+  std::cout << "StudyResonance> max pts: " << k << std::endl;
+  
+  m_tree->Write();
+  
+  m_file->cd("../");
+  
+  delete profA;
+  
+  std::cout << "StudyResonance> all done " << std::endl;  
+  
+
+
 }
 

@@ -11,11 +11,11 @@ void topTitle(const char *title)
 {
   TLatex latex;
   latex.SetNDC();
-  latex.SetTextSize(0.06);
+  latex.SetTextSize(0.08);
   latex.SetTextAlign(31); // align right
   latex.DrawLatex(0.90,0.92, title);
-  latex.SetTextAlign(11); // align left
-  latex.DrawLatex(0.18,0.92,"Preliminary");
+  //latex.SetTextAlign(11); // align left
+  //latex.DrawLatex(0.18,0.92,"Preliminary");
 }
 
 void makePlots() 
@@ -38,7 +38,7 @@ void makePlots()
   tdrStyle->cd();
 
   //Model A - Set I
-  //makePlots("ModelA","0","./root_files/ModelA/output_ModelA_SetI.root","SetI");
+  makePlots("ModelA","0","./root_files/ModelA/output_ModelA_SetI.root","SetI");
   
   //Model A - Set II
   //makePlots("ModelA","0","./root_files/ModelA/output_ModelA_SetII.root", "SetII");
@@ -84,16 +84,6 @@ void makePlots()
   
   //makePlots("ModelB","0","./root_files/Mena/output_ModelB_Fine1e13.root","Fine1e13");
   
-  // Earth full range [1.e11,1.e14]
-
-  //Earth B - Set I
-  makePlots("EarthB","0","./root_files/EarthB/output_EarthB_SetI_1e14.root","SetI");
-  
-  //Earth B - Set II
-  makePlots("EarthB","0","./root_files/EarthB/output_EarthB_SetII_1e14.root","SetII");
-  
-  //Earth B - Ohlsson
-  makePlots("EarthB","0","./root_files/EarthB/output_EarthB_Ohlsson_1e14.root","Ohl");
    
 }
 
@@ -105,43 +95,27 @@ void makePlots( const char * model, const char * src, const char * infile , cons
   //Output path
   TString path("./paper01-plots/probs/");
   
-  TString dataPee  = TString( model ) + TString("_") + TString( src ) + TString("_Pee/data");
   TString dataPem  = TString( model ) + TString("_") + TString( src ) + TString("_Pem/data");
   TString dataPet  = TString( model ) + TString("_") + TString( src ) + TString("_Pet/data");
-  TString dataPmt  = TString( model ) + TString("_") + TString( src ) + TString("_Pmt/data");
-  TString dataAPee = TString( model ) + TString("_") + TString( src ) + TString("_aPee/data");
   TString dataAPem = TString( model ) + TString("_") + TString( src ) + TString("_aPem/data");
   TString dataAPet = TString( model ) + TString("_") + TString( src ) + TString("_aPet/data");
-  TString dataAPmt = TString( model ) + TString("_") + TString( src ) + TString("_aPmt/data");
   
   TList * v_Probs = new TList();
   TObjString *prob;
-  prob =  new TObjString( dataPee );
-  v_Probs->Add( prob );
   prob =  new TObjString( dataPem );
   v_Probs->Add( prob );
   prob =  new TObjString( dataPet );
-  v_Probs->Add( prob );
-  prob =  new TObjString( dataPmt );
-  v_Probs->Add( prob );
-  prob =  new TObjString( dataAPee );
   v_Probs->Add( prob );
   prob =  new TObjString( dataAPem );
   v_Probs->Add( prob );
   prob =  new TObjString( dataAPet );
   v_Probs->Add( prob );
-  prob =  new TObjString( dataAPmt );
-  v_Probs->Add( prob );
   
   TList * v_Labels = new TList();
   TObjString *label;
-  label = new TObjString( "Pee" );
-  v_Labels->Add( label ); 
   label = new TObjString( "Pe#mu" );
   v_Labels->Add( label ); 
   label = new TObjString( "Pe#tau" );
-  v_Labels->Add( label ); 
-  label = new TObjString( "P#mu#tau" );
   v_Labels->Add( label ); 
   
   TList * v_Trees = new TList();
@@ -177,8 +151,8 @@ void makePlots( const char * model, const char * src, const char * infile , cons
   }
   
 
-  TCanvas * c1 = new TCanvas(model, "Oscillation probabilities", 184, 60, 861, 670);
-  c1->Divide(1,4);
+  TCanvas * c1 = new TCanvas(model, "Oscillation probabilities", 184, 60, 861, 305);
+  c1->Divide(1,2);
     
   TLegend * leg = new TLegend(0.14,0.69,0.24,0.85);
   
@@ -219,17 +193,8 @@ void makePlots( const char * model, const char * src, const char * infile , cons
     g1->GetYaxis()->SetTitleFont(42);
     g1->GetYaxis()->SetNdivisions(505);
 
-    //if ( std::string(model).compare("EarthB") == 0 ) 
-    //  g1->GetXaxis()->SetLimits(0.98e9, 1.0e10);
-    
     if ( std::string(model).compare("EarthB") == 0 ) 
-    {
-      g1->SetMarkerStyle(22);
-      g1->SetFillColor(10);
-      g1->SetMarkerColor(1);
-      g1->SetMarkerSize(0.2);
-    }
-    
+      g1->GetXaxis()->SetLimits(0.98e9, 1.0e10);
 
     gPad->SetGridx();
     gPad->SetGridy();
@@ -237,7 +202,7 @@ void makePlots( const char * model, const char * src, const char * infile , cons
     g1->Draw("APL");
     topTitle(model);
 
-    TGraph * g2 = (TGraph*)v_Graphs->At(k+4);
+    TGraph * g2 = (TGraph*)v_Graphs->At(k+2);
     
     g2->SetMarkerStyle(1);
     g2->SetMarkerColor(2);
@@ -246,16 +211,7 @@ void makePlots( const char * model, const char * src, const char * infile , cons
     g2->SetMaximum(1.0);
     
     if ( std::string(model).compare("EarthB") == 0 ) 
-    {
-      g2->SetMarkerStyle(25);
-      g2->SetFillColor(10);
-      g2->SetMarkerColor(2);
-      g2->SetMarkerSize(0.3);
-    }
-
-
-    if ( std::string(model).compare("EarthB") == 0 ) 
-      g2->Draw("P");
+      g2->Draw("PL");
     else if ( std::string(model).compare("ZeroPt") == 0 ) 
       g2->Draw("P");
     else
@@ -276,15 +232,15 @@ void makePlots( const char * model, const char * src, const char * infile , cons
   std::stringstream saveAs;
   
   saveAs.str("");
-  saveAs << path << model << "/pdf/" << "nueosc_probs_" << model << "_4x_" << option << ".pdf";
+  saveAs << path << model << "/pdf/" << "nueosc_probs_" << model << "_2x_" << option << ".pdf";
   c1->SaveAs( saveAs.str().c_str() );
   
   saveAs.str("");
-  saveAs << path << model << "/png/" << "nueosc_probs_" << model << "_4x_" << option << ".png";
+  saveAs << path << model << "/png/" << "nueosc_probs_" << model << "_2x_" << option << ".png";
   c1->SaveAs( saveAs.str().c_str() );
   
   saveAs.str("");
-  saveAs << path << model << "/eps/" << "nueosc_probs_" << model << "_4x_" << option << ".eps";
+  saveAs << path << model << "/eps/" << "nueosc_probs_" << model << "_2x_" << option << ".eps";
   c1->SaveAs( saveAs.str().c_str() );
   
     

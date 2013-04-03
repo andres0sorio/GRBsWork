@@ -23,6 +23,8 @@ public:
 
   virtual ~ShowerEvents() {};
   
+  //............................................
+
   float Evaluate();
   
   float EvaluateNCContribution();
@@ -30,6 +32,24 @@ public:
   float EvaluateCCNueContribution();
   
   float EvaluateCCNutauContribution();
+
+  //............................................
+
+  float Evaluate(double );
+  
+  float EvaluateNCContribution(double );
+  
+  float EvaluateCCNueContribution(double );
+  
+  float EvaluateCCNutauContribution(double );
+  
+  //............................................
+
+  double m_NCShower;
+
+  double m_CCNuShower;
+
+  double m_CCNutauShower;
   
 protected:
 
@@ -41,6 +61,6 @@ private:
   std::string antinu_xsec_data;
 
   float m_phi_nu[3];
-  
+    
 };
 #endif // SHOWEREVENTS_H

@@ -40,6 +40,7 @@ public:
   
   void GenerateDatapoints(const char *, const char * , ModelParameters *);
   
+  void StudyResonances( const char *, const char *, ModelParameters *);
   
 protected:
   

@@ -23,12 +23,24 @@ public:
   
   virtual ~MuTrackEvents() {};
   
+  //............................................
+  
   float Evaluate();
   
   float EvaluateNuMuContribution();
   
   float EvaluateNuTauContribution();
+
+  //............................................
+
+  float Evaluate(double);
   
+  float EvaluateNuMuContribution(double);
+  
+  float EvaluateNuTauContribution(double);
+
+  //............................................
+
   float m_NuMuTracks;
   
   float m_NuTauTracks;

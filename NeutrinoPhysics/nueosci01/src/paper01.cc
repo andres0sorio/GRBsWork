@@ -213,7 +213,7 @@ int main(int iargv, char **argv) {
   execSteps["2"] = false;
   execSteps["3"] = false;
   execSteps["4"] = false;
-
+  
   if( steps.size() != 0 )
   {
     std::vector<std::string> stepstr;
@@ -224,6 +224,8 @@ int main(int iargv, char **argv) {
       std::cout << (*itr) << " turns true" << std::endl;
     }
     
+    if( execSteps["4"] ) execSteps["1"] = false; 
+  
   }
 
   //............................................................................................
@@ -279,7 +281,6 @@ int main(int iargv, char **argv) {
   
   if( execSteps["3"] ) {
     
-    
     infile = new TFile("output.root","UPDATE");
     
     modpars =  modparlist.GetParameters( earth.c_str() );
@@ -292,6 +293,20 @@ int main(int iargv, char **argv) {
     
   }
 
+  //............................................................................................
+  
+  //Step 4 (Resonance studies)
+  
+  if( execSteps["4"] ) {
+    
+    neuOsc = new NeutrinosInMediumPaper( mixpars );
+    
+    neuOsc->StudyResonances( model.c_str(), prob.c_str(), modpars );
+	  
+    delete neuOsc;
+    
+  }
+  
   //............................................................................................
 
   return 0;

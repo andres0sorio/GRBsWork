@@ -268,6 +268,23 @@ public:
   
 };
 
+class linearPotencial : public DensityModels {
+public: 
+  
+  /// Standard constructor
+  linearPotencial( ) : DensityModels() { m_sign = 1.0; }; 
+  
+  virtual ~linearPotencial( ){}; ///< Destructor
+  
+  virtual double operator() (double *x, double *p) {
+    
+    double xx = x[0];
+    
+    return m_sign * xx;
+    
+  };
+  
+};
 
 
 class nvEnergy {

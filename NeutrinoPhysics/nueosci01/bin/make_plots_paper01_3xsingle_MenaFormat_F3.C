@@ -14,7 +14,7 @@ void topTitle(const char *title)
   latex.SetTextSize(0.10);
   latex.SetTextAlign(31); // align right
   latex.DrawLatex(0.90,0.92, title);
-
+ 
 }
 
 void makePlots() 
@@ -39,17 +39,24 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  // Star -> Vaccum -> Earth in -> Earth out (EarthB) - there should not be any difference
-
-  makePlots("EarthB","EarthB", "Vacuum", 
-            "./root_files/Mena/output_EarthB_ModelA_Rs.root", 
-            "./root_files/Mena/output_EarthB_ModelB_Rs.root", 
-            "./root_files/Mena/output_EarthB_ZeroPt_Rs.root");
+  // Star
   
+  makePlots("ModelA","ModelB", "0",
+            "SetupI",
+            "./root_files/ModelA/output_ModelA_SetI.root", 
+            "./root_files/ModelB/output_ModelB_SetI.root");
+  
+  makePlots("ModelA","ModelB", "0",
+            "SetupII",
+            "./root_files/ModelA/output_ModelA_SetII.root", 
+            "./root_files/ModelB/output_ModelB_SetII.root");
+
 }
 
-void makePlots( const char * modelA, const char * modelB, const char * src, 
-                const char * infileA ,  const char * infileB,  const char * infileC)
+void makePlots( const char * modelA, const char * modelB, const char * src,
+                const char * config,
+                const char * infileA , 
+                const char * infileB)
 {
   
   //Output path
@@ -57,72 +64,58 @@ void makePlots( const char * modelA, const char * modelB, const char * src,
 
   TFile * f1 = new TFile(infileA);
   TFile * f2 = new TFile(infileB);
-  TFile * f3 = new TFile(infileC);
 
   TList * v_Data = new TList();
   TObjString *data;
 
-  //Vaccum
-  data = new TObjString( TString( modelA ) + TString("_") + TString( src ) + TString("_Pee/data") );
-  v_Data->Add( data );
   //A
-  data = new TObjString( TString( modelA ) + TString("_") + TString( src ) + TString("_Pee/data") );
+  data = new TObjString( TString( modelA )    + TString("_") + TString( src ) + TString("_Pee/data") );
   v_Data->Add( data );
   //B
-  data = new TObjString( TString( modelA ) + TString("_") + TString( src ) + TString("_Pee/data") );
+  data = new TObjString( TString( modelB )    + TString("_") + TString( src ) + TString("_Pee/data") );
   v_Data->Add( data );
   //anti A
-  data = new TObjString( TString( modelA ) + TString("_") + TString( src ) + TString("_aPee/data") );
+  data = new TObjString( TString( modelA )    + TString("_") + TString( src ) + TString("_aPee/data") );
   v_Data->Add( data );
   
   TList * v_Labels = new TList();
   TObjString *label;
-  label = new TObjString( "#phi" );
+  label = new TObjString( "#phi( E_{#nu} )" );
   v_Labels->Add( label ); 
-  label = new TObjString( "#phi" );
+  label = new TObjString( "#phi( E_{#nu} )" );
   v_Labels->Add( label ); 
-  label = new TObjString( "#phi" );
-  v_Labels->Add( label ); 
-  label = new TObjString( "#phi" );
+  label = new TObjString( "#phi( E_{#bar{#nu}} )" );
   v_Labels->Add( label ); 
 
   TList * v_Title = new TList();
-  label = new TObjString( "Vacuum (inside star)" );
-  v_Title->Add( label ); 
   label = new TObjString( "Model A" );
   v_Title->Add( label ); 
   label = new TObjString( "Model B" );
   v_Title->Add( label ); 
   label = new TObjString( "Model A" );
   v_Title->Add( label ); 
-
+  
   TList * PeeTree = new TList();
   TList * PhiGraphs = new TList();
-
 
   TLegend * leg = new TLegend(0.14,0.69,0.24,0.85);
 
   TString treeName = ((TObjString*)v_Data->At(0))->GetString();
-  f3->cd();
+  f1->cd();
   PeeTree->Add( (TTree*)gDirectory->Get( treeName.Data() ) );
   std::cout << treeName << " " << (TTree*)gDirectory->Get( treeName.Data() ) << std::endl;
   
   treeName = ((TObjString*)v_Data->At(1))->GetString();
-  f1->cd();
-  PeeTree->Add( (TTree*)gDirectory->Get( treeName.Data() ) );
-  std::cout << treeName << " " << (TTree*)gDirectory->Get( treeName.Data() ) << std::endl;
-  
-  treeName = ((TObjString*)v_Data->At(2))->GetString();
   f2->cd();
   PeeTree->Add( (TTree*)gDirectory->Get( treeName.Data() ) );
   std::cout << treeName << " " << (TTree*)gDirectory->Get( treeName.Data() ) << std::endl;
   
-  treeName = ((TObjString*)v_Data->At(3))->GetString();
+  treeName = ((TObjString*)v_Data->At(2))->GetString();
   f1->cd();
   PeeTree->Add( (TTree*)gDirectory->Get( treeName.Data() ) );
   std::cout << treeName << " " << (TTree*)gDirectory->Get( treeName.Data() ) << std::endl;
   
-  for( int k = 0; k < 4; ++k ) 
+  for( int k = 0; k < 3; ++k ) 
   {
     //Branches
     double xx = 0.0;
@@ -166,8 +159,8 @@ void makePlots( const char * modelA, const char * modelB, const char * src,
   
   std::cout << " " << nGraphs << std::endl;
 
-  TCanvas * c1 = new TCanvas(modelA, "Oscillation probabilities", 184, 60, 861, 670);
-  c1->Divide(1,4);
+  TCanvas * c1 = new TCanvas(modelA, "Oscillation probabilities", 184, 60, 861, 470);
+  c1->Divide(1,3);
   c1->SetTopMargin(0.18);
   c1->SetBottomMargin(0.18);
   c1->Draw();
@@ -180,9 +173,9 @@ void makePlots( const char * modelA, const char * modelB, const char * src,
     TGraph * g1 = (TGraph*)PhiGraphs->At(k);
     
     std::cout << " g1 " << g1 << std::endl;
-
-    g1->SetLineWidth(1x);
-
+  
+    g1->SetLineWidth(1);
+    
     if ( idx == 1 ) 
     {
       
@@ -192,12 +185,11 @@ void makePlots( const char * modelA, const char * modelB, const char * src,
       gPad->SetGridx();
       gPad->SetGridy();
       gPad->SetLogx();
-      //gPad->SetFillColor(2);
       
       g1->SetMarkerStyle(1);
       g1->SetFillColor(10);
-      g1->SetMinimum(0.2);
-      g1->SetMaximum(0.5);
+      g1->SetMinimum(0.0);
+      g1->SetMaximum(1.0);
       g1->GetYaxis()->SetNdivisions(504);
       TString yaxis = ((TObjString*)v_Labels->At( idxc-1))->GetString();
       g1->GetYaxis()->SetTitle( yaxis.Data() );
@@ -220,7 +212,7 @@ void makePlots( const char * modelA, const char * modelB, const char * src,
 
       TString title = ((TObjString*)v_Title->At(idxc-1))->GetString();
       topTitle(title.Data());
-
+      
     } 
     
     else if ( idx == 2 ) {
@@ -257,26 +249,21 @@ void makePlots( const char * modelA, const char * modelB, const char * src,
   c1->cd(3);
   g1 = (TGraph*)PhiGraphs->At(6);
   g1->Draw("L");
-  c1->cd(4);
-  g1 = (TGraph*)PhiGraphs->At(9);
-  g1->Draw("L");
-  
+    
   c1->cd();
-  
-  topTitle("Fig 4");
   
   std::stringstream saveAs;
     
   saveAs.str("");
-  saveAs << path << modelA << "/pdf/" << "nueosc_flux" << "_Mena_Fig4_Earth_Inc" << ".pdf";
+  saveAs << path << modelA << "/pdf/" << "nueosc_flux_" << config << "_3x_MenaFormat_F3" << ".pdf";
   c1->SaveAs( saveAs.str().c_str() );
   
   saveAs.str("");
-  saveAs << path << modelA << "/png/" << "nueosc_flux" << "_Mena_Fig4_Earth_Inc" << ".png";
+  saveAs << path << modelA << "/png/" << "nueosc_flux_" << config << "_3x_MenaFormat_F3" << ".png";
   c1->SaveAs( saveAs.str().c_str() );
 
   saveAs.str("");
-  saveAs << path << modelA << "/eps/" << "nueosc_flux" << "_Mena_Fig4_Earth_Inc" << ".eps";
+  saveAs << path << modelA << "/eps/" << "nueosc_flux_" << config << "_3x_MenaFormat_F3" << ".eps";
   c1->SaveAs( saveAs.str().c_str() );
   
 }
