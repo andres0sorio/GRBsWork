@@ -37,7 +37,7 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  //makePlots("LinearFig1","0", "Fig1","./root_files/Lambdas/output-Fig1.root");
+  makePlots("LinearFig1","0", "Fig1","./root_files/Lambdas/output-Fig1.root");
   
   //makePlots("LinearFig3","0", "Fig3","./root_files/Lambdas/output-Fig3.root");
 

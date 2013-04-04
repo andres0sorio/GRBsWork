@@ -519,10 +519,13 @@ bool NeutrinosInMediumPaper::Init( const char * in_model , const char * src_step
 void NeutrinosInMediumPaper::StudyResonances( const char * out_model, const char * model_options, ModelParameters * modelpars ) 
 {
   
-  double Ax   = 1.E-14;
-  double Ld1  = 0.0;
-  double Ld2  = 0.0;
-  double Ld3  = 0.0;
+  double Ax       = 1.E-14;
+  double Ld1      = 0.0;
+  double Ld2      = 0.0;
+  double Ld3      = 0.0;
+  double theta_1M = 0.0;
+  double theta_2M = 0.0;
+  double theta_3M = 0.0;
   
   //.....................................................................................
 
@@ -534,7 +537,11 @@ void NeutrinosInMediumPaper::StudyResonances( const char * out_model, const char
   m_tree->Branch("Ld1", &Ld1, "Ld1/d");
   m_tree->Branch("Ld2", &Ld2, "Ld2/d");
   m_tree->Branch("Ld3", &Ld3, "Ld3/d");
-  
+
+  m_tree->Branch("theta_1M", &theta_1M, "theta_1M/d");
+  m_tree->Branch("theta_2M", &theta_2M, "theta_2M/d");
+  m_tree->Branch("theta_3M", &theta_3M, "theta_3M/d");
+    
   DensityModels * density_Mod = m_Models[out_model];
   
   double XMIN      = modelpars->GetPar("LMIN");
@@ -589,7 +596,17 @@ void NeutrinosInMediumPaper::StudyResonances( const char * out_model, const char
     Ld1 = abs( (*m_Physics->v_Lambda)(0,0) - (*m_Physics->v_Lambda)(0,1) ); 
     Ld2 = abs( (*m_Physics->v_Lambda)(0,1) - (*m_Physics->v_Lambda)(0,2) ); 
     Ld3 = abs( (*m_Physics->v_Lambda)(0,0) - (*m_Physics->v_Lambda)(0,2) ); 
+  
+    theta_1M = 1.0;
+    theta_2M = 1.0;
+    theta_3M = 1.0;
     
+    /*
+
+      theta_1M = (*m_Physics->v_Lambda)(0,2) * 
+
+     */
+
     if ( ! (boost::math::isnan)(Ld1) ) {
       
       m_tree->Fill();

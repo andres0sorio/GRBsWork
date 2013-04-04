@@ -239,11 +239,8 @@ void NeutrinoOscInVarDensity::Eval_TnuT(  long double x1, long double x2  )
   long double Ve1 = f_Ve->Eval( x1 );
   long double Ve2 = f_Ve->Eval( x2 );
 
-  // There is a problem with the neutrino probabilities
-  
-  long double Ve  = ( Ve1 + Ve2 ) / 2.0L; //Take the average potential between the two points
-
-  /// std::cout << x2  << " v1 " << Ve1 << " v2 " << Ve2 << " average " << Ve << std::endl;
+  long double Ve  = ( Ve1 + Ve2 ) / 2.0L; 
+  //Take the average potential between the two points
   
   long double oneover3 = (1.0L/3.0L);
   
