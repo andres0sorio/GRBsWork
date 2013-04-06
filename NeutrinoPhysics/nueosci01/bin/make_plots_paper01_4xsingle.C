@@ -26,9 +26,12 @@ void makePlots()
   gROOT->ProcessLine(".L tdrStyle.C");
   setTDRStyle();
   tdrStyle->SetErrorX(0.5);
+
   tdrStyle->SetPadLeftMargin(0.10);
   tdrStyle->SetPadRightMargin(0.08);
   tdrStyle->SetPadTopMargin(0.10);
+  //tdrStyle->SetPadBottomMargin(0.0);
+
   tdrStyle->SetLegendBorderSize(0);
   tdrStyle->SetTitleYOffset(0.8);
   tdrStyle->SetOptStat(0);
@@ -37,20 +40,20 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  //Model A - Set I
-  //makePlots("ModelA","0","./root_files/ModelA/output_ModelA_SetI.root","SetI");
+  //Model A - Set I  - Goes into Paper as Fig 1
+  makePlots("ModelA","0","./root_files/ModelA/output_ModelA_SetI.root","SetI");
   
-  //Model A - Set II
-  //makePlots("ModelA","0","./root_files/ModelA/output_ModelA_SetII.root", "SetII");
+  //Model A - Set II - Goes into Paper as Fig 2
+  makePlots("ModelA","0","./root_files/ModelA/output_ModelA_SetII.root", "SetII");
 
-  //Model B - Set I
-  //makePlots("ModelB","0","./root_files/ModelB/output_ModelB_SetI.root","SetI");
+  //Model B - Set I  - Goes into Paper as Fig 3
+  makePlots("ModelB","0","./root_files/ModelB/output_ModelB_SetI.root","SetI");
   
-  //Model B - Set II
+  //Model B - Set II 
   //makePlots("ModelB","0","./root_files/ModelB/output_ModelB_SetII.root", "SetII");
   
-  //Model C - Set I
-  //makePlots("ModelC","0","./root_files/ModelC/output_ModelC_SetI.root","SetI");
+  //Model C - Set I  - Goes into Paper as Fig 4
+  makePlots("ModelC","0","./root_files/ModelC/output_ModelC_SetI.root","SetI");
   
   //Model C - Set II
   //makePlots("ModelC","0","./root_files/ModelC/output_ModelC_SetII.root", "SetII");
@@ -89,21 +92,23 @@ void makePlots()
   // Earth full range [1.e11,1.e14] - Only Step 1 
 
   //Earth B - Set I
-  makePlots("EarthB","0","./root_files/EarthB/output_EarthB_SetI_1e14.root","SetI");
+  //makePlots("EarthB","0","./root_files/EarthB/output_EarthB_SetI_1e14.root","SetI");
   
   //Earth B - Set II
-  makePlots("EarthB","0","./root_files/EarthB/output_EarthB_SetII_1e14.root","SetII");
+  //makePlots("EarthB","0","./root_files/EarthB/output_EarthB_SetII_1e14.root","SetII");
   
   //Earth B - Ohlsson
-  makePlots("EarthB","0","./root_files/EarthB/output_EarthB_Ohlsson_1e14.root","Ohl");
+  //makePlots("EarthB","0","./root_files/EarthB/output_EarthB_Ohlsson_1e14.root","Ohl");
 
   //Earth B - Mena
-  makePlots("EarthB","0","./root_files/EarthB/output_EarthB_Mena_1e14.root","Mena");
+  //makePlots("EarthB","0","./root_files/EarthB/output_EarthB_Mena_1e14.root","Mena");
   
 }
 
 void makePlots( const char * model, const char * src, const char * infile , const char * option)
 {
+  
+  bool is_final = true;
   
   TFile * f1 = new TFile(infile);
   
@@ -140,13 +145,13 @@ void makePlots( const char * model, const char * src, const char * infile , cons
   
   TList * v_Labels = new TList();
   TObjString *label;
-  label = new TObjString( "Pee" );
+  label = new TObjString( "P_{e e} , P_{#bar{e} #bar{e}}" );
   v_Labels->Add( label ); 
-  label = new TObjString( "Pe#mu" );
+  label = new TObjString( "P_{e #mu} , P_{#bar{e} #bar{#mu}}" );
   v_Labels->Add( label ); 
-  label = new TObjString( "Pe#tau" );
+  label = new TObjString( "P_{e #tau} , P_{#bar{e} #bar{#tau}}" );
   v_Labels->Add( label ); 
-  label = new TObjString( "P#mu#tau" );
+  label = new TObjString( "P_{#mu #tau} , P_{#bar{#mu} #bar{#tau}}" );
   v_Labels->Add( label ); 
   
   TList * v_Trees = new TList();
@@ -184,11 +189,12 @@ void makePlots( const char * model, const char * src, const char * infile , cons
 
   TCanvas * c1 = new TCanvas(model, "Oscillation probabilities", 184, 60, 861, 670);
   c1->Divide(1,4);
-    
-  TLegend * leg = new TLegend(0.14,0.69,0.24,0.85);
-  
-  leg->SetBorderSize(0);
-  leg->SetTextSize(0.1);
+  c1->Draw();
+
+  TLegend * leg = new TLegend(0.13,0.80,0.20,0.99);
+  leg->SetMargin(0.45);
+  leg->SetBorderSize(1);
+  leg->SetTextSize(0.11);
   leg->SetLineColor(1);
   leg->SetLineStyle(1);
   leg->SetLineWidth(1);
@@ -208,19 +214,19 @@ void makePlots( const char * model, const char * src, const char * infile , cons
     
     TString yaxis = ((TObjString*)v_Labels->At(k))->GetString();
     g1->GetYaxis()->SetTitle( yaxis.Data() );
-    g1->GetXaxis()->SetTitle("E [eV]");
+    g1->GetXaxis()->SetTitle("E_{#nu} (eV)");
     g1->GetYaxis()->CenterTitle(true); 
     g1->GetXaxis()->CenterTitle(true); 
     g1->GetXaxis()->SetLabelOffset(0.007);
-    g1->GetXaxis()->SetLabelSize(0.08);
-    g1->GetXaxis()->SetTitleSize(0.07);
-    g1->GetXaxis()->SetTitleOffset(0.9);
+    g1->GetXaxis()->SetLabelSize(0.09);
+    g1->GetXaxis()->SetTitleSize(0.11);
+    g1->GetXaxis()->SetTitleOffset(0.5);
     g1->GetXaxis()->SetLabelFont(42);
     g1->GetYaxis()->SetLabelOffset(0.007);
-    g1->GetYaxis()->SetLabelSize(0.08);
+    g1->GetYaxis()->SetLabelSize(0.09);
     g1->GetYaxis()->SetLabelFont(42);
-    g1->GetYaxis()->SetTitleSize(0.09);
-    g1->GetYaxis()->SetTitleOffset(0.45);
+    g1->GetYaxis()->SetTitleSize(0.12);
+    g1->GetYaxis()->SetTitleOffset(0.28);
     g1->GetYaxis()->SetTitleFont(42);
     g1->GetYaxis()->SetNdivisions(505);
 
@@ -239,14 +245,23 @@ void makePlots( const char * model, const char * src, const char * infile , cons
     gPad->SetGridx();
     gPad->SetGridy();
     gPad->SetLogx();
-    g1->Draw("APL");
-    topTitle(model);
+    g1->Draw("AL");
+
+    if( ! is_final ) topTitle(model);
 
     TGraph * g2 = (TGraph*)v_Graphs->At(k+4);
     
     g2->SetMarkerStyle(1);
-    g2->SetMarkerColor(2);
-    g2->SetLineColor(2);
+    
+    if ( !is_final) {
+      g2->SetLineColor(2);
+      g2->SetMarkerColor(2);
+    } else 
+    {
+      g2->SetLineStyle(2);
+      g2->SetLineColor(1);
+    }
+        
     g2->SetFillColor(10);
     g2->SetMaximum(1.0);
     
@@ -258,18 +273,17 @@ void makePlots( const char * model, const char * src, const char * infile , cons
       g2->SetMarkerSize(0.3);
     }
 
-
     if ( std::string(model).compare("EarthB") == 0 ) 
       g2->Draw("P");
     else if ( std::string(model).compare("ZeroPt") == 0 ) 
       g2->Draw("P");
     else
-      g2->Draw("PL");
+      g2->Draw("L");
         
     if( k < 1) 
     {
-      leg->AddEntry( g1, "#nu");
-      leg->AddEntry( g2, "#bar{#nu}");
+      leg->AddEntry( g1, "#nu","L");
+      leg->AddEntry( g2, "#bar{#nu}","L");
     }
     
     leg->DrawClone();

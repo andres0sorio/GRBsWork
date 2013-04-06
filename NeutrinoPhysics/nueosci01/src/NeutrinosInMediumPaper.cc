@@ -5,6 +5,7 @@
 
 // local
 #include "NeutrinosInMediumPaper.h"
+#include "TMath.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : NeutrinosInMediumPaper
@@ -42,10 +43,12 @@ NeutrinosInMediumPaper::NeutrinosInMediumPaper( MixingParameters * mixpars ) {
 
   //
   m_Models["LinearFig1"]  = (DensityModels*) new linearPotencial(); // 
+  m_Models["LinearFig2"]  = (DensityModels*) new linearPotencial(); // 
   m_Models["LinearFig3"]  = (DensityModels*) new linearPotencial(); // 
+  m_Models["LinearFig4"]  = (DensityModels*) new linearPotencial(); // 
   m_Models["Linear1TeV"]  = (DensityModels*) new linearPotencial(); // 
   m_Models["Linear10TeV"] = (DensityModels*) new linearPotencial(); // 
-
+  
   m_file = new TFile("output.root","RECREATE");
   m_file->cd();
   
@@ -592,21 +595,32 @@ void NeutrinosInMediumPaper::StudyResonances( const char * out_model, const char
     m_Physics->Eval_TnuT( Ax );
     m_Physics->updateCoefficients();
     m_Physics->updateLambdas();
-    
+            
     Ld1 = abs( (*m_Physics->v_Lambda)(0,0) - (*m_Physics->v_Lambda)(0,1) ); 
     Ld2 = abs( (*m_Physics->v_Lambda)(0,1) - (*m_Physics->v_Lambda)(0,2) ); 
     Ld3 = abs( (*m_Physics->v_Lambda)(0,0) - (*m_Physics->v_Lambda)(0,2) ); 
-  
-    theta_1M = 1.0;
-    theta_2M = 1.0;
-    theta_3M = 1.0;
     
-    /*
+    double lambda_1 = (*m_Physics->v_Lambda)(0,2);
+    double lambda_2 = (*m_Physics->v_Lambda)(0,1);
+    double lambda_3 = (*m_Physics->v_Lambda)(0,0);
+    
+    theta_1M = TMath::ATan2( ( lambda_3 * (*m_Physics->m_UTU)(0,1) ) + (*m_Physics->m_UTUSq)(0,1) ,
+                             ( lambda_3 * (*m_Physics->m_UTU)(0,2) ) + (*m_Physics->m_UTUSq)(0,2) );  //ok
+    
+    /////
+    
+    theta_2M = asin( sqrt ( ( ( (lambda_3*lambda_3) + m_Physics->m_c1 + lambda_3 * (*m_Physics->m_UTU)(0,0) 
+                                + (*m_Physics->m_UTUSq)(0,0) ) / ( 3.0*(lambda_3*lambda_3) + m_Physics->m_c1 ) ) ) ); //ok
+    
+    /////
 
-      theta_1M = (*m_Physics->v_Lambda)(0,2) * 
-
-     */
-
+    double f12 = (3.0*(lambda_1*lambda_1) + m_Physics->m_c1 ) / ( 3.0*(lambda_2*lambda_2) + m_Physics->m_c1 ); //ok
+    
+    theta_3M = TMath::ATan2 ( sqrt( f12 * ( (lambda_2 * lambda_2) + m_Physics->m_c1 + 
+                                            lambda_2 * (*m_Physics->m_UTU)(0,0) + (*m_Physics->m_UTUSq)(0,0) ) ) ,
+                              sqrt( (lambda_1*lambda_1) + m_Physics->m_c1 +   
+                                    lambda_1 * (*m_Physics->m_UTU)(0,0) + (*m_Physics->m_UTUSq)(0,0) ) ); //ok -> check elog
+    
     if ( ! (boost::math::isnan)(Ld1) ) {
       
       m_tree->Fill();
@@ -620,12 +634,25 @@ void NeutrinosInMediumPaper::StudyResonances( const char * out_model, const char
     else 
     {
       
+      ///Need Improve the step procedure otherwise it becomes trial/error
+
+      //Good for setup I and II - Mena
+      //if ( Ax < 1.0E-21 )
+      //  Ax += Dx*1.0e1; 
+      //else if ( Ax >=1.0E-21 && Ax < 1.0E-18 )
+      //  Ax += (Dx*1.0e6); 
+      //else
+      //  Ax += (Dx*1.0e12);
+
       if ( Ax < 1.0E-19 )
-        Ax += Dx*1.0e2; 
+        Ax += Dx*1.0e1; 
       else if ( Ax >=1.0E-19 && Ax < 1.0E-15 )
-        Ax += (Dx*1.0e4); 
-      else
-        Ax += (Dx*1.0e8);
+        Ax += (Dx*1.0e6); 
+      else if ( Ax >=1.0E-15 && Ax < 1.0E-14 )
+        Ax += (Dx*1.0e7);
+      else 
+        Ax += (Dx*1.0e15);
+
       
     }
     

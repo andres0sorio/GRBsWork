@@ -3,15 +3,11 @@
 #define NEUTRINOOSCINVARDENSITY_H 1
 
 // Include files
+
 #include <RootCommon.h>
 #include "IProbabilityMatrix.h"
 #include "uBlasExt.h"
-#include "TF1.h"
-#include "TGraph.h"
-#include "TCanvas.h"
-#include "TAxis.h"
-#include "TStyle.h"
-
+#include <TF1.h>
 #include <boost/math/special_functions/fpclassify.hpp>
 
 /** @class NeutrinoOscInVarDensity NeutrinoOscInVarDensity.h
@@ -52,11 +48,13 @@ public:
   void   Eval_UFlavour( long double );
   void   Eval_UFlavour( long double , long double );
   
+  //
   void   Validate( );
   void   ValidateInVarDensity( );
   void   ValidateSolarProfile( );
   void   TestProcedure( );
-  
+  //
+
   void   setPotential( TF1 * f1) { f_Ve = f1; } ;
   
   bool m_debug;
@@ -93,8 +91,6 @@ public:
   
   TF1 * f_Ve;
   
-  TStyle * tdrStyle;
-
 protected:
   
 private:

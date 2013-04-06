@@ -40,7 +40,7 @@ void makePlots()
   tdrStyle->cd();
 
   //Figure 3
-  //Star
+  //Star - These plots go into the paper01
 
   makePlots("ModelA","ModelB", "0", "SetI",
             "./root_files/ModelA/output_ModelA_SetI.root", 
@@ -58,6 +58,18 @@ void makePlots( const char * modelA, const char * modelB, const char * src, cons
                 const char * infileA ,  const char * infileB,  const char * infileC)
 {
   
+  bool with_color = false;
+
+  int lineColor[3];
+  lineColor[0] = 1;
+  lineColor[1] = 15;
+  lineColor[2] = TColor::GetColor("#333333");
+
+  int lineStyle[3];
+  lineStyle[0] = 1;
+  lineStyle[1] = 2;
+  lineStyle[2] = 4;
+      
   //Output path
   TString path("./paper01-plots/flux/");
 
@@ -184,7 +196,7 @@ void makePlots( const char * modelA, const char * modelB, const char * src, cons
      
     TGraph * g1 = (TGraph*)PhiGraphs->At(k);
     
-    g1->SetLineWidth(1);
+    g1->SetLineWidth(2); //update April 04 - for final version
     
     std::cout << " g1 " << g1 << std::endl;
       
@@ -197,8 +209,7 @@ void makePlots( const char * modelA, const char * modelB, const char * src, cons
       gPad->SetGridx();
       gPad->SetGridy();
       gPad->SetLogx();
-      //gPad->SetFillColor(2);
-      
+        
       g1->SetMarkerStyle(1);
       g1->SetFillColor(10);
       g1->SetMinimum(0.0);
@@ -206,21 +217,24 @@ void makePlots( const char * modelA, const char * modelB, const char * src, cons
       g1->GetYaxis()->SetNdivisions(504);
       TString yaxis = ((TObjString*)v_Labels->At( idxc-1))->GetString();
       g1->GetYaxis()->SetTitle( yaxis.Data() );
-      g1->GetXaxis()->SetTitle("E [eV]");
+      g1->GetXaxis()->SetTitle("E_{#nu} (eV)");
       g1->GetYaxis()->CenterTitle(true); 
       g1->GetXaxis()->CenterTitle(true); 
       g1->GetXaxis()->SetLabelOffset(0.007);
-      g1->GetXaxis()->SetLabelSize(0.13);
-      g1->GetXaxis()->SetTitleSize(0.07);
-      g1->GetXaxis()->SetTitleOffset(0.9);
+      g1->GetXaxis()->SetLabelSize(0.09);
+      g1->GetXaxis()->SetTitleSize(0.11);
+      g1->GetXaxis()->SetTitleOffset(0.5);
       g1->GetXaxis()->SetLabelFont(42);
       g1->GetYaxis()->SetLabelOffset(0.007);
-      g1->GetYaxis()->SetLabelSize(0.13);
+      g1->GetYaxis()->SetLabelSize(0.09);
       g1->GetYaxis()->SetLabelFont(42);
-      g1->GetYaxis()->SetTitleSize(0.09);
-      g1->GetYaxis()->SetTitleOffset(0.45);
+      g1->GetYaxis()->SetTitleSize(0.12);
+      g1->GetYaxis()->SetTitleOffset(0.25);
       g1->GetYaxis()->SetTitleFont(42);
-    
+      
+      g1->SetLineStyle( lineStyle[idx-1] );
+      g1->SetLineColor( lineColor[idx-1] );
+      
       g1->Draw("AL");
 
       TString title = ((TObjString*)v_Title->At(idxc-1))->GetString();
@@ -232,8 +246,11 @@ void makePlots( const char * modelA, const char * modelB, const char * src, cons
 
       std::cout << " - " << idxc << " " << idx << std::endl;
 
-      g1->SetLineColor(4);
-      g1->SetLineStyle(2);
+      g1->SetLineColor( lineColor[idx-1] );
+
+      if( with_color) g1->SetLineColor(4);
+      
+      g1->SetLineStyle( lineStyle[idx-1] );
       g1->Draw("L");
       
     }
@@ -241,10 +258,14 @@ void makePlots( const char * modelA, const char * modelB, const char * src, cons
     else if ( idx == 3 ) {
       
       std::cout << " -- "<< idxc << " " << idx << std::endl;
+
+      g1->SetLineColor( lineColor[idx-1] );
       
-      g1->SetLineColor(2);
-      g1->SetLineStyle(3);
+      if( with_color) g1->SetLineColor(2);
+      
+      g1->SetLineStyle( lineStyle[idx-1] );
       g1->Draw("L");
+      
       idxc += 1;
       
     } else { }

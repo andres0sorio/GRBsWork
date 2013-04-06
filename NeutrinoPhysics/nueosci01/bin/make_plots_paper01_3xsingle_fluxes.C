@@ -39,79 +39,63 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  //Figure 4 - these plots go into paper
-  //Star -> Vacuum -> Surface of Earth
-
-  makePlots("Vacuum", "SetI",
-            "./root_files/ModelA/output_ModelA_SetI.root", 
-            "./root_files/ModelB/output_ModelB_SetI.root", 
-            "./root_files/ZeroPt/output_ZeroPt_SetI.root");
-
-  //makePlots("Vacuum", "SetII",
-  //          "./root_files/ModelA/output_ModelA_SetII.root", 
-  //          "./root_files/ModelB/output_ModelB_SetII.root", 
-  //          "./root_files/ZeroPt/output_ZeroPt_SetII.root");
+  // Star
+  
+  makePlots("ModelA",
+            "0",
+            "SetupI",
+            "./root_files/ModelA/output_ModelA_SetI.root",
+            "Model A (at the surface)");
+  
+  makePlots("Vacuum",
+            "ModelA",
+            "ModelA_SetupI",
+            "./root_files/ModelA/output_ModelA_SetI.root",
+            "Model A (at the surface of Earth)");
   
 }
 
-void makePlots( const char * modelA, const char * config,
-                const char * infileA ,  const char * infileB,  const char * infileC)
+void makePlots( const char * modelA,
+                const char * src,
+                const char * config,
+                const char * infileA,
+                const char * option)
 {
   
-  bool with_color = false;
-
-  int lineColor[3];
-  lineColor[0] = 1;
-  lineColor[1] = 15;
-  lineColor[2] = TColor::GetColor("#333333");
-
-  int lineStyle[3];
-  lineStyle[0] = 1;
-  lineStyle[1] = 2;
-  lineStyle[2] = 4;
-
+  bool use_color = false;
+  
+  int lineColor[2] = {1,2};
+  
   //Output path
   TString path("./paper01-plots/flux/");
 
   TFile * f1 = new TFile(infileA);
-  TFile * f2 = new TFile(infileB);
-  TFile * f3 = new TFile(infileC);
-
+    
   TList * v_Data = new TList();
   TObjString *data;
 
-  //Vaccum
-  data = new TObjString( TString( modelA )  + TString("_") + TString( "ZeroPt" ) + TString("_Pee/data") );
-  v_Data->Add( data );
   //A
-  data = new TObjString( TString( modelA )  + TString("_") + TString( "ModelA" ) + TString("_Pee/data") );
-  v_Data->Add( data );
-  //B
-  data = new TObjString( TString( modelA )  + TString("_") + TString( "ModelB" ) + TString("_Pee/data") );
+  data = new TObjString( TString( modelA )    + TString("_") + TString( src ) + TString("_Pee/data") );
   v_Data->Add( data );
   //anti A
-  data = new TObjString( TString( modelA )  + TString("_") + TString( "ModelA" ) + TString("_aPee/data") );
+  data = new TObjString( TString( modelA )    + TString("_") + TString( src ) + TString("_aPee/data") );
   v_Data->Add( data );
   
   TList * v_Labels = new TList();
   TObjString *label;
-  label = new TObjString( "#phi ( E_{#nu} )" );
+  label = new TObjString( "#phi ( E_{#nu_{e}, #bar{#nu}_{e}} )" );
   v_Labels->Add( label ); 
-  label = new TObjString( "#phi ( E_{#nu} )" );
+  label = new TObjString( "#phi ( E_{#nu_{#mu}, #bar{#nu}_{#mu}} )" );
   v_Labels->Add( label ); 
-  label = new TObjString( "#phi ( E_{#nu} )" );
-  v_Labels->Add( label ); 
-  label = new TObjString( "#phi ( E_{#bar{#nu}} )" );
+  label = new TObjString( "#phi ( E_{#nu_{#tau}, #bar{#nu}_{#tau}} )" );
   v_Labels->Add( label ); 
 
   TList * v_Title = new TList();
-  label = new TObjString( "Vacuum (inside star)" );
+  label = new TObjString( option );
   v_Title->Add( label ); 
-  label = new TObjString( "Model A" );
+  label = new TObjString( "" );
   v_Title->Add( label ); 
-  label = new TObjString( "Model B" );
-  v_Title->Add( label ); 
-  label = new TObjString( "Model A" );
+  label = new TObjString( "" );
   v_Title->Add( label ); 
   
   TList * PeeTree = new TList();
@@ -120,7 +104,7 @@ void makePlots( const char * modelA, const char * config,
   TLegend * leg = new TLegend(0.14,0.69,0.24,0.85);
 
   TString treeName = ((TObjString*)v_Data->At(0))->GetString();
-  f3->cd();
+  f1->cd();
   PeeTree->Add( (TTree*)gDirectory->Get( treeName.Data() ) );
   std::cout << treeName << " " << (TTree*)gDirectory->Get( treeName.Data() ) << std::endl;
   
@@ -129,17 +113,9 @@ void makePlots( const char * modelA, const char * config,
   PeeTree->Add( (TTree*)gDirectory->Get( treeName.Data() ) );
   std::cout << treeName << " " << (TTree*)gDirectory->Get( treeName.Data() ) << std::endl;
   
-  treeName = ((TObjString*)v_Data->At(2))->GetString();
-  f2->cd();
-  PeeTree->Add( (TTree*)gDirectory->Get( treeName.Data() ) );
-  std::cout << treeName << " " << (TTree*)gDirectory->Get( treeName.Data() ) << std::endl;
+  int maxData = v_Data->GetSize();
   
-  treeName = ((TObjString*)v_Data->At(3))->GetString();
-  f1->cd();
-  PeeTree->Add( (TTree*)gDirectory->Get( treeName.Data() ) );
-  std::cout << treeName << " " << (TTree*)gDirectory->Get( treeName.Data() ) << std::endl;
-  
-  for( int k = 0; k < 4; ++k ) 
+  for( int k = 0; k < maxData; ++k ) 
   {
     //Branches
     double xx = 0.0;
@@ -153,7 +129,7 @@ void makePlots( const char * modelA, const char * config,
     currentTree->SetBranchAddress("Phi_e",&phi_e);
     currentTree->SetBranchAddress("Phi_m",&phi_m);
     currentTree->SetBranchAddress("Phi_t",&phi_t);
-  
+    
     Long64_t nentries = currentTree->GetEntries();
     
     TGraph * g1 = new TGraph();
@@ -176,34 +152,42 @@ void makePlots( const char * modelA, const char * config,
       
   }
   
-  int idx = 1;
   int idxc = 1;
   
   int nGraphs = PhiGraphs->GetSize();
   
   std::cout << " " << nGraphs << std::endl;
 
-  TCanvas * c1 = new TCanvas(modelA, "Oscillation probabilities", 184, 60, 861, 670);
-  c1->Divide(1,4);
+  TCanvas * c1 = new TCanvas(modelA, "Fluxes", 184, 60, 861, 470);
+  c1->Divide(1,3);
   c1->SetTopMargin(0.18);
   c1->SetBottomMargin(0.18);
   c1->Draw();
   
+  double ymin = 0.0;
+  double ymax = 1.0;
+  
+  if ( std::string(modelA).compare("Vacuum") == 0 ) {
+    ymin = 0.2;
+    ymax = 0.5;
+  }
+  
+
   for( int k=0; k < nGraphs; ++k) 
   {
     
-    if ( idx >= 4 ) idx = 1;
-     
+    if( k == 3 ) idxc = 1;
+
     TGraph * g1 = (TGraph*)PhiGraphs->At(k);
     
     std::cout << " g1 " << g1 << std::endl;
-  
-    g1->SetLineWidth(2); //update April 04 - for final version
     
-    if ( idx == 1 ) 
+    g1->SetLineWidth(1);
+    
+    if ( k < 3 ) 
     {
       
-      std::cout << idxc << " " << idx << std::endl;
+      std::cout << idxc << " " << std::endl;
       
       c1->cd( idxc );
       gPad->SetGridx();
@@ -212,12 +196,14 @@ void makePlots( const char * modelA, const char * config,
       
       g1->SetMarkerStyle(1);
       g1->SetFillColor(10);
-      g1->SetMinimum(0.2);
-      g1->SetMaximum(0.5);
+
+      g1->SetMaximum( ymax );
+      g1->SetMinimum( ymin );
+      
       g1->GetYaxis()->SetNdivisions(504);
       TString yaxis = ((TObjString*)v_Labels->At( idxc-1))->GetString();
       g1->GetYaxis()->SetTitle( yaxis.Data() );
-      g1->GetXaxis()->SetTitle("E_{#nu} (eV)");
+      g1->GetXaxis()->SetTitle("E [eV]");
       g1->GetYaxis()->CenterTitle(true); 
       g1->GetXaxis()->CenterTitle(true); 
       g1->GetXaxis()->SetLabelOffset(0.007);
@@ -231,77 +217,64 @@ void makePlots( const char * modelA, const char * config,
       g1->GetYaxis()->SetTitleSize(0.12);
       g1->GetYaxis()->SetTitleOffset(0.25);
       g1->GetYaxis()->SetTitleFont(42);
-
-      g1->SetLineStyle( lineStyle[idx-1] );
-      g1->SetLineColor( lineColor[idx-1] );
-    
+          
       g1->Draw("AL");
 
       TString title = ((TObjString*)v_Title->At(idxc-1))->GetString();
       topTitle(title.Data());
-      
+  
+      idxc+=1;
+          
     } 
     
-    else if ( idx == 2 ) {
+    else {
 
-      std::cout << " - " << idxc << " " << idx << std::endl;
+      std::cout << " - " << idxc << std::endl;
+      
+      c1->cd( idxc );
 
-      g1->SetLineStyle( lineStyle[idx-1] );
-      g1->SetLineColor( lineColor[idx-1] );
-
-      if( with_color ) g1->SetLineColor(4);
-
+      g1->SetLineColor( lineColor[1] );
+      
+      if( use_color ) g1->SetLineColor(4);
+      
       g1->SetLineStyle(2);
-      g1->Draw("L");
       
+      g1->Draw("L");
+
+      idxc+=1;
+
     }
- 
-    else if ( idx == 3 ) {
-      
-      std::cout << " -- "<< idxc << " " << idx << std::endl;
-
-      g1->SetLineStyle( lineStyle[idx-1] );
-      g1->SetLineColor( lineColor[idx-1] );
-      
-      if( with_color ) g1->SetLineColor(2);
-
-      g1->SetLineStyle(3);
-      g1->Draw("L");
-      idxc += 1;
-      
-    } else { }
     
-    idx += 1;
     
+    
+        
   }
   
   c1->cd(1);
-  TGraph * g1 = (TGraph*)PhiGraphs->At(0);
+  TGraph * g1;
+  g1 = (TGraph*)PhiGraphs->At(0);
   g1->Draw("L");
   c1->cd(2);
-  g1 = (TGraph*)PhiGraphs->At(3);
+  g1 = (TGraph*)PhiGraphs->At(1);
   g1->Draw("L");
   c1->cd(3);
-  g1 = (TGraph*)PhiGraphs->At(6);
+  g1 = (TGraph*)PhiGraphs->At(2);
   g1->Draw("L");
-  c1->cd(4);
-  g1 = (TGraph*)PhiGraphs->At(9);
-  g1->Draw("L");
-  
+    
   c1->cd();
   
   std::stringstream saveAs;
     
   saveAs.str("");
-  saveAs << path << modelA << "/pdf/" << "nueosc_flux_" << config << "_4x_MenaFormat_F4" << ".pdf";
+  saveAs << path << modelA << "/pdf/" << "nueosc_flux_" << config << "_3x_NuANu" << ".pdf";
   c1->SaveAs( saveAs.str().c_str() );
   
   saveAs.str("");
-  saveAs << path << modelA << "/png/" << "nueosc_flux_" << config << "_4x_MenaFormat_F4" << ".png";
+  saveAs << path << modelA << "/png/" << "nueosc_flux_" << config << "_3x_NuANu" << ".png";
   c1->SaveAs( saveAs.str().c_str() );
 
   saveAs.str("");
-  saveAs << path << modelA << "/eps/" << "nueosc_flux_" << config << "_4x_MenaFormat_F4" << ".eps";
+  saveAs << path << modelA << "/eps/" << "nueosc_flux_" << config << "_3x_NuANu" << ".eps";
   c1->SaveAs( saveAs.str().c_str() );
   
 }

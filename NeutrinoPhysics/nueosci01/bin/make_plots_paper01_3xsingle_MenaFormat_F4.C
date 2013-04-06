@@ -58,6 +58,8 @@ void makePlots( const char * modelA,
                 const char * infileA ,  const char * infileB)
 {
   
+  bool is_final = true;
+  
   //Output path
   TString path("./paper01-plots/flux/");
 

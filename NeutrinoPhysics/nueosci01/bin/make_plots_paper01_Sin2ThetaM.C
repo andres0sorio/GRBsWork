@@ -37,24 +37,14 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  //makePlots("LinearFig1","0", "Fig1","./root_files/Lambdas/output-Fig1.root");
   
-  //makePlots("LinearFig3","0", "Fig3","./root_files/Lambdas/output-Fig3.root");
+  //... 
 
-  //... This graphs goes into paper
+  makePlots("LinearFig2","0", "Fig2","root_files/Lambdas/output-Fig2.root");
 
-  makePlots("Linear1TeV","0", "SetI","./root_files/Lambdas/output-1TeV_SetI.root");
-  
-  //makePlots("Linear10TeV","0", "SetI","./root_files/Lambdas/output-10TeV_SetI.root");
+  makePlots("LinearFig4","0", "Fig4","root_files/Lambdas/output-Fig4.root");
 
-  //makePlots("Linear1TeV","0", "SetII","./root_files/Lambdas/output-1TeV_SetII.root");
   
-  //makePlots("Linear10TeV","0", "SetII","./root_files/Lambdas/output-10TeV_SetII.root");
-  
-  //makePlots("Linear1TeV","0", "Mena","./root_files/Lambdas/output-1TeV_Mena.root");
-  
-  //makePlots("Linear10TeV","0", "Mena","./root_files/Lambdas/output-10TeV_Mena.root");
-
 }
 
 void makePlots( const char * model, const char * src, const char * config, const char * infile) 
@@ -67,11 +57,11 @@ void makePlots( const char * model, const char * src, const char * config, const
   
   TList * v_Labels = new TList();
   TObjString *label;
-  label = new TObjString( "|#lambda_{1}-#lambda_{2}|" );
+  label = new TObjString( "sin^{2} 2#theta_{1}^{M}" );
   v_Labels->Add( label ); 
-  label = new TObjString( "|#lambda_{2}-#lambda_{3}|" );
+  label = new TObjString( "sin^{2} 2#theta_{2}^{M}" );
   v_Labels->Add( label ); 
-  label = new TObjString( "|#lambda_{1}-#lambda_{3}|" );
+  label = new TObjString( "sin^{2} 2#theta_{3}^{M}" );
   v_Labels->Add( label ); 
     
   TFile * f1 = new TFile(infile);
@@ -83,16 +73,24 @@ void makePlots( const char * model, const char * src, const char * config, const
   //Branches
   double Ex  = 0.0;
   double Ax  = 0.0;
-  double Ld1 = 0.0;
-  double Ld2 = 0.0;
-  double Ld3 = 0.0;
+  double theta_1M = 0.0;
+  double theta_2M = 0.0;
+  double theta_3M = 0.0;
   
   TString cname = TString(model) + TString("_") + TString(config);
   TCanvas * c1 = new TCanvas( cname.Data(), "Resonance studies", 101,127,676,562);
  
   
-  TLegend * leg = new TLegend(0.22,0.69,0.43,0.85);
-  leg->SetFillColor(10);
+  TLegend * leg = new TLegend(0.59,0.70,0.80,0.86);
+  leg->SetBorderSize(1);
+  leg->SetMargin(0.30);
+  leg->SetTextFont(42);
+  leg->SetTextSize(0.04);
+  leg->SetLineColor(1);
+  leg->SetLineStyle(1);
+  leg->SetLineWidth(1);
+  leg->SetFillColor(0);
+  leg->SetFillStyle(1001);
     
   TGraph * LambdaDiff[3];
   LambdaDiff[0] = new TGraph();
@@ -113,9 +111,9 @@ void makePlots( const char * model, const char * src, const char * config, const
   
   InputTree->SetBranchAddress("Ex", &Ex);
   InputTree->SetBranchAddress("Ax", &Ax);
-  InputTree->SetBranchAddress("Ld1",&Ld1);
-  InputTree->SetBranchAddress("Ld2",&Ld2);
-  InputTree->SetBranchAddress("Ld3",&Ld3);
+  InputTree->SetBranchAddress("theta_1M",&theta_1M);
+  InputTree->SetBranchAddress("theta_2M",&theta_2M);
+  InputTree->SetBranchAddress("theta_3M",&theta_3M);
   
   Long64_t nentries = InputTree->GetEntries();
   
@@ -128,56 +126,61 @@ void makePlots( const char * model, const char * src, const char * config, const
   TString xLabel;
   TString yLabel;
   
-  if ( std::string(config).compare("Fig1") == 0) 
-  {
-
-    factor =  1.0e14;
-    xmin   =  1.0e-14 * factor;
-    xmax   =  1.0e-13 * factor;
-    ymin   =  0.5e-14 * factor;
-    ymax   = 12.0e-14 * factor;
-    
-    xLabel = TString("A (10^{-14} eV)");
-    yLabel = TString("|#lambda_{a}-#lambda_{b}| (10^{-14} eV)");
-    
-    
-  } else if ( std::string(config).compare("Fig3") == 0) 
+  if ( std::string(config).compare("Fig2") == 0) 
   {
 
     factor =  1.0;
-    xmin   =  1.0e-22 * factor;
-    xmax   =  1.0e-12 * factor;
-    ymin   =  1.0e-23 * factor;
-    ymax   =  1.0e-11 * factor;
-
-    xLabel = TString("A (eV)");
-    yLabel = TString("|#lambda_{a}-#lambda_{b}| (eV)");
+    xmin   =  1.0e-16;
+    xmax   =  1.0e-10;
+    ymin   =  0.0;
+    ymax   =  1.0;
 
     c1->SetLogx();
-    c1->SetLogy();
+
+    xLabel = TString("A (eV)");
+    yLabel = TString("sin^{2}2#theta^{M}_{i}");
+    
+  } else if ( std::string(config).compare("Fig4") == 0) 
+  {
+
+    factor =  1.0;
+    xmin   =  1.0e-22;
+    xmax   =  1.0e-13;
+    ymin   =  0.0;
+    ymax   =  1.0;
+
+    xLabel = TString("A (eV)");
+    yLabel = TString("sin^{2}2#theta^{M}_{i}");
+
+    c1->SetLogx();
 
   } else {
     
     factor =  1.0;
     xmin   =  1.0e-24 * factor;
     xmax   =  1.0e-13 * factor;
-    ymin   =  1.0e-20 * factor;
-    ymax   =  1.0e-11 * factor;
-
+    ymin   =  0.0;
+    ymax   =  1.0;
+        
     xLabel = TString("A (eV)");
-    yLabel = TString("|#lambda_{a}-#lambda_{b}| (eV)");
-
+    yLabel = TString("sin^{2}2#theta^{M}_{i}");
+    
     c1->SetLogx();
-    c1->SetLogy();
 
   }
 
    
   for (Long64_t i=0;i<nentries;i++) {
     InputTree->GetEntry(i);
-    LambdaDiff[0]->SetPoint( i, Ax*factor, Ld2*factor);
-    LambdaDiff[1]->SetPoint( i, Ax*factor, Ld1*factor);
-    LambdaDiff[2]->SetPoint( i, Ax*factor, Ld3*factor);
+
+    double sintheta_1 = pow( sin(2.0*theta_1M), 2.0);
+    double sintheta_2 = pow( sin(2.0*theta_2M), 2.0);
+    double sintheta_3 = pow( sin(2.0*theta_3M), 2.0);
+    
+    LambdaDiff[0]->SetPoint( i, Ax*factor, sintheta_1);
+    LambdaDiff[1]->SetPoint( i, Ax*factor, sintheta_2);
+    LambdaDiff[2]->SetPoint( i, Ax*factor, sintheta_3);
+
   }
 
   //Datasets options (Markers: style, color, size) : You can also do it by hand using the interactive Editor
@@ -204,8 +207,6 @@ void makePlots( const char * model, const char * src, const char * config, const
   color[2] = 1;
   size[2]  = 0.8;
   line[2]  = 2;
-
-  
     
   ndataset = allgraphs->GetSize(); //Get the ndatasets from the size of the List
   
@@ -277,15 +278,15 @@ void makePlots( const char * model, const char * src, const char * config, const
   std::stringstream saveAs;
   
   saveAs.str("");
-  saveAs << path << "Lambdas" << "/pdf/" << "lambdadiff_" << model << "_" << config << "_A" << ".pdf";
+  saveAs << path << "Lambdas" << "/pdf/" << "sin2thetaM_" << model << "_" << config << "_A" << ".pdf";
   c1->SaveAs( saveAs.str().c_str() );
   
   saveAs.str("");
-  saveAs << path << "Lambdas" << "/png/" << "lambdadiff_" << model << "_" << config << "_A" << ".png";
+  saveAs << path << "Lambdas" << "/png/" << "sin2thetaM_" << model << "_" << config << "_A" << ".png";
   c1->SaveAs( saveAs.str().c_str() );
 
   saveAs.str("");
-  saveAs << path << "Lambdas" << "/eps/" << "lambdadiff_" << model << "_" << config << "_A" << ".eps";
+  saveAs << path << "Lambdas" << "/eps/" << "sin2thetaM_" << model << "_" << config << "_A" << ".eps";
   c1->SaveAs( saveAs.str().c_str() );
   
   
