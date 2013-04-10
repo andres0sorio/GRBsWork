@@ -1,55 +1,19 @@
 // $Id: 
 // Include files 
-#include <NeutrinoOscInVarDensity.h>
+#include <NeutrinosInMediumPaper.h>
 #include <iostream>
 #include <sstream>
 #include <boost/program_options.hpp>
+#include <boost/algorithm/string.hpp>
+
 namespace po = boost::program_options;
 
 ///////////////////////////////////////////////////////////////
 
 int main(int iargv, char **argv) {
 
-  int valOpt;
-  
-  try {
-    
-    po::options_description desc("Allowed options");
-    
-    desc.add_options()
-      ("help"     , "produce help message")
-      ("opt"      , po::value<int>(), "validation option")
-      ;
-    
-    po::variables_map vm;
-    po::store(po::parse_command_line(iargv, argv, desc), vm);
-    po::notify(vm);
-    
-    if (vm.count("help")) 
-      {
-        std::cout << desc << "\n";
-        return 0;
-      }
-    
-    if (vm.count("opt")) 
-      valOpt = vm["opt"].as<int>();
-    else {
-      std::cout << "please select wich validation set to run \n";
-      return 1; }
-    
-  }
-  catch(std::exception& e) 
-    {
-      std::cerr << "error: " << e.what() << "\n";
-      return 1;
-    }
-  catch(...)  {
-    std::cerr << "Exception of unknown type!\n";
-    return 1;
-  }
-  
   //............................................................................................
-
+  
   MixingParameterList mixparlist;
   
   if (mixparlist.ParseFile("matrix_config.xml") == 0)
@@ -57,24 +21,43 @@ int main(int iargv, char **argv) {
   std::cout << "MixingParameterList-------------------------------------------------" << '\n';
   
   MixingParameters *mixpars =  mixparlist.GetParameters(0);
-
+  
   //............................................................................................
 
-  NeutrinoOscInVarDensity * neuOsc = new NeutrinoOscInVarDensity( mixpars );
-
-  if( valOpt == 1 ) 
-    neuOsc->Validate();
-  else if ( valOpt == 2 ) 
-    neuOsc->ValidateInVarDensity();
-  else if ( valOpt == 3 ) 
-    neuOsc->ValidateSolarProfile();
-  else if ( valOpt == 4 ) 
-    neuOsc->TestProcedure();
-  else {
-    std::cout << "Not a valid option" << std::endl;
-  }
+  ModelParameterList modparlist;
   
+  if (modparlist.ParseFile("model_config_validation.xml") == 0) 
+    std::cout << modparlist;
+  std::cout << "ModelParameterList-------------------------------------------------" << '\n';
+  
+  //............................................................................................
+
+  std::string models("solar,linear");
+  
+  NeutrinosInMediumPaper * neuOsc = new NeutrinosInMediumPaper( mixpars );
+  
+  std::vector<std::string> strs;
+  
+  boost::split(strs, models, boost::is_any_of(","));
+
+  std::vector<std::string>::iterator itr;
+  
+  for( itr = strs.begin(); itr != strs.end(); ++itr ) 
+  {
+    
+    std::cout << (*itr) << std::endl;
+    
+    ModelParameters *modpars =  modparlist.GetParameters((*itr).c_str());
+    
+    neuOsc->GenerateDatapoints( (*itr).c_str(), "Pem", modpars );
+    
+  }
+
   delete neuOsc;
+  
+  strs.clear();
+
+
 
   return 0;
   

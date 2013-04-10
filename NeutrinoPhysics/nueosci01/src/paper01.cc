@@ -20,7 +20,8 @@ int main(int iargv, char **argv) {
   std::string modfile;
   std::string steps;
   std::string earth;
-  
+  std::string antinu;
+    
   try {
     
     po::options_description desc("Allowed options");
@@ -35,7 +36,8 @@ int main(int iargv, char **argv) {
       ("modfile"  , po::value<std::string>(), "use the specified model paramater file ( mymodelfile.xml )")
       ("steps"    , po::value<std::string>(), "excecute steps ( 1,2,3,... )")
       ("earth"    , po::value<std::string>(), "select earth model (EarthA, EarthB)")
-
+      ("antinu"   , po::value<std::string>(), "select if you want to study with antinu ( Ax = -1.0*Ax : step4)")
+      
       ;
     
     po::variables_map vm;
@@ -107,6 +109,14 @@ int main(int iargv, char **argv) {
     else {
       earth = std::string("EarthB");
       std::cout << "using the default EarthB model \n";
+    }
+
+    if (vm.count("antinu")) {
+      antinu = vm["antinu"].as<std::string>();
+      std::cout << "Will multiply potencial by -1.0 == antinu " << antinu << std::endl;
+    } 
+    else {
+      antinu = std::string("0");
     }
     
   }
@@ -301,7 +311,9 @@ int main(int iargv, char **argv) {
     
     neuOsc = new NeutrinosInMediumPaper( mixpars );
     
-    neuOsc->StudyResonances( model.c_str(), prob.c_str(), modpars );
+    bool use_antinu =  (bool) atoi( antinu.c_str() );
+    
+    neuOsc->StudyResonances( model.c_str(), prob.c_str(), modpars, use_antinu);
 	  
     delete neuOsc;
     

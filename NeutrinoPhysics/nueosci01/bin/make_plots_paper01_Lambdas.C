@@ -39,11 +39,19 @@ void makePlots()
 
   //makePlots("LinearFig1","0", "Fig1","./root_files/Lambdas/output-Fig1.root");
   
+  //makePlots("LinearFig1","0", "Fig1","output.root"); //Test 
+ 
   //makePlots("LinearFig3","0", "Fig3","./root_files/Lambdas/output-Fig3.root");
 
-  //... This graphs goes into paper
+  //makePlots("LinearFig3","0", "Fig3","output.root"); //Test 
 
+  //... This graphs goes into paper
+  
   makePlots("Linear1TeV","0", "SetI","./root_files/Lambdas/output-1TeV_SetI.root");
+
+  //... Testing this for anti-nuetrinos
+
+  makePlots("Linear1TeV","0", "SetIANu","./root_files/Lambdas/output-1TeV_SetI_AntiNu.root");
   
   //makePlots("Linear10TeV","0", "SetI","./root_files/Lambdas/output-10TeV_SetI.root");
 
@@ -171,13 +179,16 @@ void makePlots( const char * model, const char * src, const char * config, const
     c1->SetLogy();
 
   }
-
-   
+  int counter = 1;
+     
   for (Long64_t i=0;i<nentries;i++) {
     InputTree->GetEntry(i);
+    
     LambdaDiff[0]->SetPoint( i, Ax*factor, Ld2*factor);
     LambdaDiff[1]->SetPoint( i, Ax*factor, Ld1*factor);
     LambdaDiff[2]->SetPoint( i, Ax*factor, Ld3*factor);
+    
+    
   }
 
   //Datasets options (Markers: style, color, size) : You can also do it by hand using the interactive Editor
@@ -188,24 +199,22 @@ void makePlots( const char * model, const char * src, const char * config, const
   
   
   //For dataset No1
-  style[0] = 7;
+  style[0] = 7; //marker style
   color[0] = 1;
   size[0]  = 0.7;
   line[0]  = 1;
   
   //For dataset No2
-  style[1] = 7;
-  color[1] = 1;
+  style[1] = 7; //marker style
+  color[1] = 15;
   size[1]  = 0.8;
   line[1]  = 3;
   
   //For dataset No3
-  style[2] = 7;
+  style[2] = 7; //marker style
   color[2] = 1;
   size[2]  = 0.8;
-  line[2]  = 2;
-
-  
+  line[2]  = 2; 
     
   ndataset = allgraphs->GetSize(); //Get the ndatasets from the size of the List
   

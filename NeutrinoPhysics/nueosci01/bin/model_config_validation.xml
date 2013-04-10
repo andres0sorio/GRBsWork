@@ -3,103 +3,162 @@
 <ModelParameterList>
   <ModelParameters Id="LinearFig1">
     <Par Id="0" Name="MaxPars">
-      0.0
+      2.0
     </Par>
-    <Par Id="1" Name="LMIN">
+    <Par Id="1" Name="p0">
+      0.00
+    </Par>
+    <Par Id="2" Name="p1">
+      1.00
+    </Par>
+    <Par Id="3" Name="LMIN">
       1.0e-14
     </Par>
-    <Par Id="2" Name="LMAX">
+    <Par Id="4" Name="LMAX">
       1.0e-13
     </Par>
-    <Par Id="3" Name="Dx">
+    <Par Id="5" Name="Dx">
       0.02e-13
     </Par>
-    <Par Id="4" Name="Ev">
+    <Par Id="6" Name="Ev">
       10.0e9
     </Par>
   </ModelParameters>
   <ModelParameters Id="LinearFig2">
     <Par Id="0" Name="MaxPars">
-      0.0
+      2.0
     </Par>
-    <Par Id="1" Name="LMIN">
+    <Par Id="1" Name="p0">
+      0.00
+    </Par>
+    <Par Id="2" Name="p1">
+      1.00
+    </Par>
+    <Par Id="3" Name="LMIN">
       1.0e-16
     </Par>
-    <Par Id="2" Name="LMAX">
+    <Par Id="4" Name="LMAX">
       1.0e-10
     </Par>
-    <Par Id="3" Name="Dx">
+    <Par Id="5" Name="Dx">
       1.0e-21
     </Par>
-    <Par Id="4" Name="Ev">
+    <Par Id="6" Name="Ev">
       10.0e9
     </Par>
   </ModelParameters>
   <ModelParameters Id="LinearFig3">
     <Par Id="0" Name="MaxPars">
-      0.0
+      2.0
     </Par>
-    <Par Id="1" Name="LMIN">
+    <Par Id="1" Name="p0">
+      0.00
+    </Par>
+    <Par Id="2" Name="p1">
+      1.00
+    </Par>
+    <Par Id="3" Name="LMIN">
       1.0e-22
     </Par>
-    <Par Id="2" Name="LMAX">
+    <Par Id="4" Name="LMAX">
       1.0e-12
     </Par>
-    <Par Id="3" Name="Dx">
+    <Par Id="5" Name="Dx">
       1.0e-23
     </Par>
-    <Par Id="4" Name="Ev">
+    <Par Id="6" Name="Ev">
       10.0e9
     </Par>
   </ModelParameters>
     <ModelParameters Id="LinearFig4">
     <Par Id="0" Name="MaxPars">
-      0.0
+      2.0
     </Par>
-    <Par Id="1" Name="LMIN">
+    <Par Id="1" Name="p0">
+      0.00
+    </Par>
+    <Par Id="2" Name="p1">
+      1.00
+    </Par>
+    <Par Id="3" Name="LMIN">
       1.0e-22
     </Par>
-    <Par Id="2" Name="LMAX">
+    <Par Id="4" Name="LMAX">
       1.0e-13
     </Par>
-    <Par Id="3" Name="Dx">
+    <Par Id="5" Name="Dx">
       1.0e-23
     </Par>
-    <Par Id="4" Name="Ev">
+    <Par Id="6" Name="Ev">
       10.0e9
     </Par>
   </ModelParameters>
   <ModelParameters Id="Linear1TeV">
     <Par Id="0" Name="MaxPars">
-      0.0
+      2.0
     </Par>
-    <Par Id="1" Name="LMIN">
+    <Par Id="1" Name="p0">
+      0.00
+    </Par>
+    <Par Id="2" Name="p1">
+      1.00
+    </Par>
+    <Par Id="3" Name="LMIN">
       1.0e-24
     </Par>
-    <Par Id="2" Name="LMAX">
+    <Par Id="4" Name="LMAX">
       1.0e-13
     </Par>
-    <Par Id="3" Name="Dx">
+    <Par Id="5" Name="Dx">
       1.0e-24
     </Par>
-    <Par Id="4" Name="Ev">
+    <Par Id="6" Name="Ev">
       1.0e12
     </Par>
   </ModelParameters>
  <ModelParameters Id="Linear10TeV">
     <Par Id="0" Name="MaxPars">
-      0.0
+      2.0
     </Par>
-    <Par Id="1" Name="LMIN">
+    <Par Id="1" Name="p0">
+      0.00
+    </Par>
+    <Par Id="2" Name="p1">
+      1.00
+    </Par>
+    <Par Id="3" Name="LMIN">
       1.0e-24
     </Par>
-    <Par Id="2" Name="LMAX">
+    <Par Id="4" Name="LMAX">
       1.0e-13
     </Par>
-    <Par Id="3" Name="Dx">
+    <Par Id="5" Name="Dx">
       1.0e-24
     </Par>
-    <Par Id="4" Name="Ev">
+    <Par Id="6" Name="Ev">
+      1.0e13
+    </Par>
+  </ModelParameters>
+  <ModelParameters Id="Solar">
+    <Par Id="0" Name="MaxPars">
+      2.0
+    </Par>
+    <Par Id="1" Name="A0">
+      0.75E-11
+    </Par>
+    <Par Id="2" Name="r0">
+      6.60E7
+    </Par>
+    <Par Id="3" Name="LMIN">
+      0.0
+    </Par>
+    <Par Id="4" Name="LMAX">
+      6.60E7
+    </Par>
+    <Par Id="5" Name="Dx">
+      1.0e-24
+    </Par>
+    <Par Id="6" Name="Ev">
       1.0e13
     </Par>
   </ModelParameters>

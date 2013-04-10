@@ -9,21 +9,17 @@
 /** @class DensityModels DensityModels.h
  *  
  *  \brief Density models description file
- *  This file contains all the density models -- all derive from DensityModels class
+ *  This file contains all the density models --  derives from DensityModels class
  *  
  *  Ref: 
  *
  *  [1] Olga Mena Phys.Rev.D75:063003,2007 : Models rhoA, rhoB, rhoC
- *  [2] Julia Becker Phys. Reports 458 2008
- *  [3] T. Ohlsson, Eur. Phys. J. C 20, 507–515 2001
+ *  [2] Julia Becker Phys. Reports 458 2008 : 
+ *  [3] T. Ohlsson, Eur. Phys. J. C 20, 507–515 2001 :
  *
  *  @author Andres Osorio
  *  @date   2011-09-25
  */
-
-double mcProf(double *x, double *par);
-double stepProf(double *x, double *par);
-double densityModA(double *x, double *par);
 
 class DensityModels {
 public: 
@@ -277,15 +273,63 @@ public:
   virtual ~linearPotencial( ){}; ///< Destructor
   
   virtual double operator() (double *x, double *p) {
-    
+
+    double p0 = p[0];
+    double p1 = p[1];
     double xx = x[0];
     
-    return m_sign * xx;
+    return m_sign * ( p0 + p1 * xx );
     
   };
   
 };
 
+class stepPotencial : public DensityModels {
+public: 
+  
+  /// Standard constructor
+  stepPotencial( ) : DensityModels() { m_sign = 1.0; }; 
+  
+  virtual ~stepPotencial( ){}; ///< Destructor
+  
+  virtual double operator() (double *x, double *p) {
+
+    double xx = x[0]; // distance
+    double L1 = 2885.E3 * InveV;
+      
+    double A1 = p[0];
+    double A2 = p[1];
+    
+    if ( xx <= L1 ) return m_sign * A1;
+    else return m_sign * A2;
+    
+    return 0.0;
+    
+  };
+  
+};
+
+class solarPotencial : public DensityModels {
+public: 
+  
+  /// Standard constructor
+  solarPotencial( ) : DensityModels() { m_sign = 1.0; }; 
+  
+  virtual ~solarPotencial( ){}; ///< Destructor
+  
+  virtual double operator() (double *x, double *p) {
+    
+    double p0 = p[0]; // A0
+    double p1 = p[1]*InveV; //r0 1/eV units
+    double xx = x[0];
+    
+    return m_sign* ( p0*TMath::Exp(- xx / p1) );
+    
+  };
+    
+};
+
+//....................................................................................
 
 class nvEnergy {
 public: 
@@ -325,7 +369,7 @@ public:
   
 };  
 
-
+//....................................................................................
 
 
 #endif // DENSITYMODELS_H

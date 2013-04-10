@@ -117,11 +117,11 @@ void makePlots( const char * model, const char * src, const char * config, const
   
   Long64_t nentries = InputTree->GetEntries();
   
-  double factor =  1.0e14;
-  double xmin   =  1.0e-14 * factor;
-  double xmax   =  1.0e-13 * factor;
-  double ymin   =  0.5e-14 * factor;
-  double ymax   = 12.0e-14 * factor;
+  double factor;
+  double xmin;
+  double xmax;
+  double ymin;
+  double ymax;
   
   TString xLabel;
   TString yLabel;
@@ -157,8 +157,8 @@ void makePlots( const char * model, const char * src, const char * config, const
   } else {
     
     factor =  1.0;
-    xmin   =  1.0e-24 * factor;
-    xmax   =  1.0e-13 * factor;
+    xmin   =  1.0e-24;
+    xmax   =  1.0e-13;
     ymin   =  0.0;
     ymax   =  1.0;
         
@@ -188,8 +188,7 @@ void makePlots( const char * model, const char * src, const char * config, const
   int color[5];
   int line[5];
   float size[5];
-  
-  
+    
   //For dataset No1
   style[0] = 7;
   color[0] = 1;

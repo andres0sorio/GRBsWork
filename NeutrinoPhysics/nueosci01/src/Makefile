@@ -50,11 +50,15 @@ OBJS   = Graphics.o \
 	NeutrinoOscInMatter.o \
 	main.o
 
-VALOBJS = DOMParameters.o \
+VALOBJS =  Graphics.o \
+	DOMParameters.o \
+	ModelParameters.o \
 	MixingParameters.o \
 	IProbabilityMatrix.o \
 	DensityModels.o \
+	NeutrinoOscInVacuum.o \
 	NeutrinoOscInVarDensity.o \
+	NeutrinosInMediumPaper.o \
 	validate.o
 
 PAP01OBJS = Graphics.o \
@@ -79,17 +83,7 @@ EARTHOBJS = Graphics.o \
 	NeutrinosInMediumPaper.o \
 	earthval.o
 
-PAP02OBJS =  Graphics.o \
-	Integrals.o \
-	DOMParameters.o \
-	nuN_interpxsec.o \
-	PShadow.o \
-	ShowerEvents.o \
-	MuTrackEvents.o \
-	NeutrinosDetectionPaper.o \
-	paper02.o
-
-all : getratio.exe validate.exe earthval.exe paper01.exe paper02.exe 
+all : getratio.exe validate.exe earthval.exe paper01.exe
 
 %.o : %.cc
 	$(CXX) $(CXXFLAGS) -c $< 	
@@ -102,9 +96,6 @@ validate.exe: $(VALOBJS)
 
 paper01.exe: $(PAP01OBJS)
 	 $(CXX) -o $(EXEDIR)/$@ $(PAP01OBJS) $(LINKFLAGS) $(LIBS)
-
-paper02.exe: $(PAP02OBJS)
-	 $(CXX) -o $(EXEDIR)/$@ $(PAP02OBJS) $(LINKFLAGS) $(LIBS)
 
 earthval.exe: $(EARTHOBJS)
 	 $(CXX) -o $(EXEDIR)/$@ $(EARTHOBJS) $(LINKFLAGS) $(LIBS)

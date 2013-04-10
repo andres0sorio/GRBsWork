@@ -519,7 +519,10 @@ bool NeutrinosInMediumPaper::Init( const char * in_model , const char * src_step
  
 }
 
-void NeutrinosInMediumPaper::StudyResonances( const char * out_model, const char * model_options, ModelParameters * modelpars ) 
+void NeutrinosInMediumPaper::StudyResonances( const char * out_model, 
+                                              const char * model_options, 
+                                              ModelParameters * modelpars,
+                                              bool anti_nu )
 {
   
   double Ax       = 1.E-14;
@@ -544,13 +547,18 @@ void NeutrinosInMediumPaper::StudyResonances( const char * out_model, const char
   m_tree->Branch("theta_1M", &theta_1M, "theta_1M/d");
   m_tree->Branch("theta_2M", &theta_2M, "theta_2M/d");
   m_tree->Branch("theta_3M", &theta_3M, "theta_3M/d");
-    
-  DensityModels * density_Mod = m_Models[out_model];
   
   double XMIN      = modelpars->GetPar("LMIN");
   double XMAX      = modelpars->GetPar("LMAX");
   long double Dx   = (long double) modelpars->GetPar("Dx");  
 
+  DensityModels * density_Mod = m_Models[out_model];
+
+  if ( anti_nu ) 
+    density_Mod->treat_as_AntiNu();
+  else 
+    density_Mod->treat_as_Nu();
+  
   bool use_special_step = false;
   
   if ( (XMAX/XMIN) > 100.0 ) use_special_step = true;
@@ -635,24 +643,30 @@ void NeutrinosInMediumPaper::StudyResonances( const char * out_model, const char
     {
       
       ///Need Improve the step procedure otherwise it becomes trial/error
+      
+      //Good 1TeV Set I/Set II and Figures 1 & 3
 
-      //Good for setup I and II - Mena
-      //if ( Ax < 1.0E-21 )
-      //  Ax += Dx*1.0e1; 
-      //else if ( Ax >=1.0E-21 && Ax < 1.0E-18 )
-      //  Ax += (Dx*1.0e6); 
-      //else
-      //  Ax += (Dx*1.0e12);
-
-      if ( Ax < 1.0E-19 )
-        Ax += Dx*1.0e1; 
-      else if ( Ax >=1.0E-19 && Ax < 1.0E-15 )
+      if ( Ax < 1.0E-20 )
+        Ax += Dx*1.0e2; 
+      else if ( Ax >=1.0E-20 && Ax < 1.0E-17 )
+        Ax += (Dx*1.0e5); 
+      else if ( Ax >=1.0E-17 && Ax < 1.0E-14 )
         Ax += (Dx*1.0e6); 
-      else if ( Ax >=1.0E-15 && Ax < 1.0E-14 )
+      else if ( Ax >= 1.0E-14 && Ax < XMAX )
+        Ax += (Dx*1.0e10);
+      else
+        std::cout << " OUTSIDE RANGE" << std::endl;
+      
+      /*
+        if ( Ax < 1.0E-19 )
+        Ax += Dx*1.0e1; 
+        else if ( Ax >=1.0E-19 && Ax < 1.0E-15 )
+        Ax += (Dx*1.0e6); 
+        else if ( Ax >=1.0E-15 && Ax < 1.0E-14 )
         Ax += (Dx*1.0e7);
-      else 
+        else 
         Ax += (Dx*1.0e15);
-
+      */
       
     }
     

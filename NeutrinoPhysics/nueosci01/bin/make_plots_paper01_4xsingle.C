@@ -191,7 +191,8 @@ void makePlots( const char * model, const char * src, const char * infile , cons
   c1->Divide(1,4);
   c1->Draw();
 
-  TLegend * leg = new TLegend(0.13,0.80,0.20,0.99);
+  TLegend * leg = new TLegend(0.84,0.31,0.91,0.50);
+  
   leg->SetMargin(0.45);
   leg->SetBorderSize(1);
   leg->SetTextSize(0.11);

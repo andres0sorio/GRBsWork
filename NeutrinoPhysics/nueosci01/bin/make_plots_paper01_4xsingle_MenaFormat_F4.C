@@ -13,7 +13,7 @@ void topTitle(const char *title)
   latex.SetNDC();
   latex.SetTextSize(0.10);
   latex.SetTextAlign(31); // align right
-  latex.DrawLatex(0.90,0.92, title);
+  latex.DrawLatex(0.88, 0.66, title);
  
 }
 
@@ -62,14 +62,16 @@ void makePlots( const char * modelA, const char * config,
 
   int lineColor[3];
   lineColor[0] = 1;
-  lineColor[1] = 15;
-  lineColor[2] = TColor::GetColor("#333333");
+  lineColor[1] = 1; //15;
+  lineColor[2] = 1; //TColor::GetColor("#333333");
 
   int lineStyle[3];
   lineStyle[0] = 1;
   lineStyle[1] = 2;
-  lineStyle[2] = 4;
-
+  lineStyle[2] = 3;
+  
+  int lineWidth = 1;
+  
   //Output path
   TString path("./paper01-plots/flux/");
 
@@ -198,7 +200,7 @@ void makePlots( const char * modelA, const char * config,
     
     std::cout << " g1 " << g1 << std::endl;
   
-    g1->SetLineWidth(2); //update April 04 - for final version
+    g1->SetLineWidth(lineWidth); //update April 04 - for final version
     
     if ( idx == 1 ) 
     {

@@ -64,8 +64,8 @@ void makePlots( const char * modelA,
   
   bool use_color = false;
   
-  int lineColor[3] = {1,2,4};
-  int lineStyle[3] = {1,2,4};
+  int lineColor[3] = {1,1,1};
+  int lineStyle[3] = {1,2,3};
   
   //Output path
   TString path("./paper01-plots/flux/");
@@ -106,7 +106,7 @@ void makePlots( const char * modelA,
   TList * PeeTree = new TList();
   TList * PhiGraphs = new TList();
 
-  TLegend * leg = new TLegend(0.16,0.75,0.26,0.96);
+  TLegend * leg = new TLegend(0.16,0.57,0.26,0.78);
   leg->SetBorderSize(1);
   leg->SetMargin(0.50);
   leg->SetTextFont(42);
@@ -207,10 +207,10 @@ void makePlots( const char * modelA,
   c1->Draw();
   
   double ymin = 0.0;
-  double ymax = 1.5;
+  double ymax = 1.7;
   
   if ( std::string(modelA).compare("Vacuum") == 0 ) {
-    ymin = 0.0;
+    ymin = 0.5;
     ymax = 1.0;
   }
   
@@ -261,8 +261,8 @@ void makePlots( const char * modelA,
     else 
       g1->Draw("L");
 
-    TString title = ((TObjString*)v_Title->At(k-6))->GetString();
-    topTitle(title.Data());
+    //TString title = ((TObjString*)v_Title->At(k-6))->GetString();
+    //topTitle(title.Data());
     
   }
   
