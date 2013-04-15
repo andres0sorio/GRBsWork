@@ -58,17 +58,14 @@ void makePlots( const char * modelA, const char * modelB, const char * src, cons
                 const char * infileA ,  const char * infileB,  const char * infileC)
 {
   
-  bool with_color = false;
-
-  int lineColor[3];
-  lineColor[0] = 1;
-  lineColor[1] = 1; //15;
-  lineColor[2] = 1; //TColor::GetColor("#333333");
-
-  int lineStyle[3];
-  lineStyle[0] = 1;
-  lineStyle[1] = 2;
-  lineStyle[2] = 3;
+  bool use_color = true;
+  
+  //gray = 15;
+  //light gray = TColor::GetColor("#333333");
+  
+  int color[3] = {1, 4, 2};
+ 
+  int lineStyle[3] = {1,2,3};
       
   int lineWidth = 1;
   
@@ -107,13 +104,13 @@ void makePlots( const char * modelA, const char * modelB, const char * src, cons
   v_Labels->Add( label ); 
   
   TList * v_Title = new TList();
-  label = new TObjString( "Vacuum (inside star)" );
+  label = new TObjString( "(a) Vacuum (inside star)" );
   v_Title->Add( label ); 
-  label = new TObjString( "Model A" );
+  label = new TObjString( "(b) Model A" );
   v_Title->Add( label ); 
-  label = new TObjString( "Model B" );
+  label = new TObjString( "(c) Model B" );
   v_Title->Add( label ); 
-  label = new TObjString( "Model A" );
+  label = new TObjString( "(d) Model A" );
   v_Title->Add( label ); 
   
   TList * PeeTree = new TList();
@@ -235,7 +232,11 @@ void makePlots( const char * modelA, const char * modelB, const char * src, cons
       g1->GetYaxis()->SetTitleFont(42);
       
       g1->SetLineStyle( lineStyle[idx-1] );
-      g1->SetLineColor( lineColor[idx-1] );
+      
+      g1->SetLineColor( 1 );
+
+      if( use_color ) g1->SetLineColor( color[idx-1] );
+      
       
       g1->Draw("AL");
 
@@ -248,11 +249,12 @@ void makePlots( const char * modelA, const char * modelB, const char * src, cons
 
       std::cout << " - " << idxc << " " << idx << std::endl;
 
-      g1->SetLineColor( lineColor[idx-1] );
+      g1->SetLineColor( 1 );
 
-      if( with_color) g1->SetLineColor(4);
+      if( use_color ) g1->SetLineColor( color[idx-1] );
       
       g1->SetLineStyle( lineStyle[idx-1] );
+
       g1->Draw("L");
       
     }
@@ -261,11 +263,12 @@ void makePlots( const char * modelA, const char * modelB, const char * src, cons
       
       std::cout << " -- "<< idxc << " " << idx << std::endl;
 
-      g1->SetLineColor( lineColor[idx-1] );
+      g1->SetLineColor( 1 );
       
-      if( with_color) g1->SetLineColor(2);
+      if( use_color ) g1->SetLineColor( color[idx-1]);
       
       g1->SetLineStyle( lineStyle[idx-1] );
+
       g1->Draw("L");
       
       idxc += 1;

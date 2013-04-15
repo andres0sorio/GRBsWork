@@ -109,7 +109,11 @@ void makePlots( const char * model, const char * src, const char * infile , cons
 {
   
   bool is_final = true;
+
+  bool use_color = true;
   
+  int color[2] = { 1, 2};
+    
   TFile * f1 = new TFile(infile);
   
   //Output path
@@ -209,10 +213,18 @@ void makePlots( const char * model, const char * src, const char * infile , cons
     c1->cd(k+1);
     g1->SetMarkerStyle(1);
     g1->SetFillColor(10);
-    
     g1->SetMaximum(1.0);
     g1->SetMinimum(0.0);
     
+    if ( use_color ) {
+      g1->SetLineColor( color[0] );
+      g1->SetMarkerColor( color[0] );
+    } else 
+    {
+      g1->SetLineColor(1);
+      g1->SetMarkerColor(1);
+    }
+
     TString yaxis = ((TObjString*)v_Labels->At(k))->GetString();
     g1->GetYaxis()->SetTitle( yaxis.Data() );
     g1->GetXaxis()->SetTitle("E_{#nu} (eV)");
@@ -237,8 +249,6 @@ void makePlots( const char * model, const char * src, const char * infile , cons
     if ( std::string(model).compare("EarthB") == 0 ) 
     {
       g1->SetMarkerStyle(22);
-      g1->SetFillColor(10);
-      g1->SetMarkerColor(1);
       g1->SetMarkerSize(0.2);
     }
     
@@ -253,24 +263,24 @@ void makePlots( const char * model, const char * src, const char * infile , cons
     TGraph * g2 = (TGraph*)v_Graphs->At(k+4);
     
     g2->SetMarkerStyle(1);
-    
-    if ( !is_final) {
-      g2->SetLineColor(2);
-      g2->SetMarkerColor(2);
-    } else 
-    {
-      g2->SetLineStyle(2);
-      g2->SetLineColor(1);
-    }
-        
+    g2->SetLineStyle(2);
     g2->SetFillColor(10);
     g2->SetMaximum(1.0);
+
+    if ( use_color ) {
+      g2->SetLineColor( color[1] );
+      g2->SetMarkerColor( color[1] );
+    } else 
+    {
+      g2->SetLineColor(1);
+      g2->SetMarkerColor(1);
+    }
+        
+    
     
     if ( std::string(model).compare("EarthB") == 0 ) 
     {
       g2->SetMarkerStyle(25);
-      g2->SetFillColor(10);
-      g2->SetMarkerColor(2);
       g2->SetMarkerSize(0.3);
     }
 
@@ -286,7 +296,10 @@ void makePlots( const char * model, const char * src, const char * infile , cons
       leg->AddEntry( g1, "#nu","L");
       leg->AddEntry( g2, "#bar{#nu}","L");
     }
-    
+
+    //
+    g1->Draw("L");
+
     leg->DrawClone();
     
   }

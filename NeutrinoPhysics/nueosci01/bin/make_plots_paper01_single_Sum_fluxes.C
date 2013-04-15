@@ -25,7 +25,7 @@ void makePlots()
   gROOT->ProcessLine(".L tdrStyle.C");
   setTDRStyle();
   tdrStyle->SetErrorX(0.5);
-  tdrStyle->SetPadLeftMargin(0.10);
+  tdrStyle->SetPadLeftMargin(0.15);
   tdrStyle->SetPadRightMargin(0.10);
 
   tdrStyle->SetPadTopMargin(0.20);
@@ -64,7 +64,8 @@ void makePlots( const char * modelA,
   
   bool use_color = false;
   
-  int lineColor[3] = {1,1,1};
+  int color[3] = {1,4,2};
+
   int lineStyle[3] = {1,2,3};
   
   //Output path
@@ -203,14 +204,14 @@ void makePlots( const char * modelA,
   
   std::cout << " " << nGraphs << std::endl;
 
-  TCanvas * c1 = new TCanvas(modelA, "Fluxes", 184,60,861,263);
+  TCanvas * c1 = new TCanvas(modelA, "Fluxes",453,128,485,350);
   c1->Draw();
   
   double ymin = 0.0;
   double ymax = 1.7;
   
   if ( std::string(modelA).compare("Vacuum") == 0 ) {
-    ymin = 0.5;
+    ymin = 0.55;
     ymax = 1.0;
   }
   
@@ -232,7 +233,7 @@ void makePlots( const char * modelA,
     g1->SetMaximum( ymax );
     g1->SetMinimum( ymin );
     
-    g1->SetLineColor( lineColor[k-6] );
+    g1->SetLineColor( color[k-6] );
     g1->SetLineStyle( lineStyle[k-6] );
     
     g1->GetYaxis()->SetNdivisions(504);
@@ -245,15 +246,15 @@ void makePlots( const char * modelA,
     g1->GetYaxis()->CenterTitle(true); 
     g1->GetXaxis()->CenterTitle(true); 
     g1->GetXaxis()->SetLabelOffset(0.007);
-    g1->GetXaxis()->SetLabelSize(0.08);
+    g1->GetXaxis()->SetLabelSize(0.07);
     g1->GetXaxis()->SetTitleSize(0.07);
-    g1->GetXaxis()->SetTitleOffset(0.9);
+    g1->GetXaxis()->SetTitleOffset(1.10);
     g1->GetXaxis()->SetLabelFont(42);
     g1->GetYaxis()->SetLabelOffset(0.007);
-    g1->GetYaxis()->SetLabelSize(0.08);
+    g1->GetYaxis()->SetLabelSize(0.07);
     g1->GetYaxis()->SetLabelFont(42);
-    g1->GetYaxis()->SetTitleSize(0.09);
-    g1->GetYaxis()->SetTitleOffset(0.45);
+    g1->GetYaxis()->SetTitleSize(0.07);
+    g1->GetYaxis()->SetTitleOffset(0.89);
     g1->GetYaxis()->SetTitleFont(42);
     
     if ( k == 6 )
