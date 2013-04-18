@@ -242,7 +242,7 @@ void makePlots( const char * modelA,
     leg->AddEntry( g1, yaxis.Data(),"L");
     
     g1->GetYaxis()->SetTitle( "#phi ( E_{#nu})" );
-    g1->GetXaxis()->SetTitle("E [eV]");
+    g1->GetXaxis()->SetTitle("E (eV)");
     g1->GetYaxis()->CenterTitle(true); 
     g1->GetXaxis()->CenterTitle(true); 
     g1->GetXaxis()->SetLabelOffset(0.007);

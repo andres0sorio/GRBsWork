@@ -40,10 +40,19 @@ void makePlots()
   
   //... 
 
-  makePlots("LinearFig2","0", "Fig2","root_files/Lambdas/output-Fig2.root");
+  //makePlots("LinearFig2","0", "Fig2","root_files/Lambdas/output-Fig2.root");
+  
+  //makePlots("LinearFig4","0", "Fig4","root_files/Lambdas/output-Fig4.root");
 
-  makePlots("LinearFig4","0", "Fig4","root_files/Lambdas/output-Fig4.root");
+  //... This graphs goes into paper
+  
+  makePlots("Linear1TeV","0", "SetI","./root_files/Lambdas/output-1TeV_SetI.root");
 
+  //... Testing this for anti-nuetrinos
+
+  makePlots("Linear1TeV","0", "SetIANu","./root_files/Lambdas/output-1TeV_SetI_AntiNu.root");
+  
+  
   
 }
 
@@ -81,7 +90,7 @@ void makePlots( const char * model, const char * src, const char * config, const
   TCanvas * c1 = new TCanvas( cname.Data(), "Resonance studies", 101,127,676,562);
  
   
-  TLegend * leg = new TLegend(0.59,0.70,0.80,0.86);
+  TLegend * leg = new TLegend(0.29,0.51,0.50,0.68);
   leg->SetBorderSize(1);
   leg->SetMargin(0.30);
   leg->SetTextFont(42);
@@ -160,7 +169,7 @@ void makePlots( const char * model, const char * src, const char * config, const
     xmin   =  1.0e-24;
     xmax   =  1.0e-13;
     ymin   =  0.0;
-    ymax   =  1.0;
+    ymax   =  1.05;
         
     xLabel = TString("A (eV)");
     yLabel = TString("sin^{2}2#theta^{M}_{i}");
@@ -171,8 +180,9 @@ void makePlots( const char * model, const char * src, const char * config, const
 
    
   for (Long64_t i=0;i<nentries;i++) {
-    InputTree->GetEntry(i);
 
+    InputTree->GetEntry(i);
+    
     double sintheta_1 = pow( sin(2.0*theta_1M), 2.0);
     double sintheta_2 = pow( sin(2.0*theta_2M), 2.0);
     double sintheta_3 = pow( sin(2.0*theta_3M), 2.0);
