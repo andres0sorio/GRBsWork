@@ -82,6 +82,8 @@ void makePlots( const char * model, const char * src, const char * config, const
   label = new TObjString( "|#lambda_{1}-#lambda_{3}|" );
   v_Labels->Add( label ); 
     
+  float lineWidth = 3;
+  
   TFile * f1 = new TFile(infile);
   
   f1->cd();
@@ -206,7 +208,7 @@ void makePlots( const char * model, const char * src, const char * config, const
   
   //For dataset No2
   style[1] = 7; //marker style
-  color[1] = 15;
+  color[1] = 1; //was 15
   size[1]  = 0.8;
   line[1]  = 3;
   
@@ -235,6 +237,8 @@ void makePlots( const char * model, const char * src, const char * config, const
       ((TGraph*)allgraphs->At(k))->SetLineColor( color[k] );
       ((TGraph*)allgraphs->At(k))->SetLineStyle( line[k] );
 
+      ((TGraph*)allgraphs->At(k))->SetLineWidth( lineWidth ); //Referee request
+      
       ((TGraph*)allgraphs->At(k))->SetFillColor( 10 );
       ((TGraph*)allgraphs->At(k))->GetXaxis()->SetTitle(xLabel.Data());
       ((TGraph*)allgraphs->At(k))->GetYaxis()->SetTitle(yLabel.Data());
@@ -245,14 +249,15 @@ void makePlots( const char * model, const char * src, const char * config, const
       ((TGraph*)allgraphs->At(k))->GetXaxis()->SetLabelSize(0.04);
       ((TGraph*)allgraphs->At(k))->GetXaxis()->SetTitleSize(0.05);
       ((TGraph*)allgraphs->At(k))->GetXaxis()->SetTitleOffset(1.20);
-      ((TGraph*)allgraphs->At(k))->GetXaxis()->SetLabelFont(42);
+      ((TGraph*)allgraphs->At(k))->GetXaxis()->SetTitleFont(22);
+      ((TGraph*)allgraphs->At(k))->GetXaxis()->SetLabelFont(22);
     
       ((TGraph*)allgraphs->At(k))->GetYaxis()->SetLabelOffset(0.007);
       ((TGraph*)allgraphs->At(k))->GetYaxis()->SetLabelSize(0.04);
       ((TGraph*)allgraphs->At(k))->GetYaxis()->SetTitleSize(0.05);
       ((TGraph*)allgraphs->At(k))->GetYaxis()->SetTitleOffset(1.45);
-      ((TGraph*)allgraphs->At(k))->GetYaxis()->SetTitleFont(42);
-      ((TGraph*)allgraphs->At(k))->GetYaxis()->SetLabelFont(42);
+      ((TGraph*)allgraphs->At(k))->GetYaxis()->SetTitleFont(22);
+      ((TGraph*)allgraphs->At(k))->GetYaxis()->SetLabelFont(22);
 
       ((TGraph*)allgraphs->At(k))->Draw("AL"); // Draw option AP A=draw axis P=draw a marker for the data
       
@@ -268,6 +273,8 @@ void makePlots( const char * model, const char * src, const char * config, const
       ((TGraph*)allgraphs->At(k))->SetLineColor( color[k] );
       ((TGraph*)allgraphs->At(k))->SetFillColor( 10 );
       ((TGraph*)allgraphs->At(k))->SetLineStyle( line[k] );
+
+      ((TGraph*)allgraphs->At(k))->SetLineWidth( lineWidth ); //Referee request
 
       ((TGraph*)allgraphs->At(k))->Draw("L"); // since we have already plotted the axis on the first graph we only need option P
       

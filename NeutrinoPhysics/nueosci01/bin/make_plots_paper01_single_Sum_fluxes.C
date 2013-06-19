@@ -107,7 +107,22 @@ void makePlots( const char * modelA,
   TList * PeeTree = new TList();
   TList * PhiGraphs = new TList();
 
-  TLegend * leg = new TLegend(0.16,0.57,0.26,0.78);
+  float leg_X1 = 0.17;
+  float leg_X2 = 0.32;
+  float leg_Y1 = 0.73;
+  float leg_Y2 = 0.92;
+  
+  if ( std::string(modelA).compare("Vacuum") == 0 ) {
+ 
+    leg_X1 = 0.78;
+    leg_X2 = 0.93;
+    leg_Y1 = 0.69;
+    leg_Y2 = 0.90;
+
+  }
+
+  TLegend * leg = new TLegend(leg_X1, leg_Y1, leg_X2, leg_Y2, NULL,"brNDC");
+
   leg->SetBorderSize(1);
   leg->SetMargin(0.50);
   leg->SetTextFont(42);
@@ -204,15 +219,25 @@ void makePlots( const char * modelA,
   
   std::cout << " " << nGraphs << std::endl;
 
-  TCanvas * c1 = new TCanvas(modelA, "Fluxes",453,128,485,350);
+  TCanvas * c1 = new TCanvas(modelA, "Fluxes",162,56,732,596);
+  
+  c1->SetLeftMargin(0.150);
+  c1->SetRightMargin(0.045);
+  c1->SetTopMargin(0.056);
+  c1->SetBottomMargin(0.165);
+  c1->SetFrameFillStyle(0);
+  c1->SetFrameBorderMode(0);
+  c1->SetFrameFillStyle(0);
+  c1->SetFrameBorderMode(0);
+  
   c1->Draw();
   
   double ymin = 0.0;
-  double ymax = 1.7;
+  double ymax = 1.6;
   
   if ( std::string(modelA).compare("Vacuum") == 0 ) {
     ymin = 0.55;
-    ymax = 1.0;
+    ymax = 0.8;
   }
   
 
@@ -223,7 +248,7 @@ void makePlots( const char * modelA,
     
     std::cout << " g1 " << g1 << std::endl;
     
-    g1->SetLineWidth(1);
+    g1->SetLineWidth(2);
     
     gPad->SetGridx();
     gPad->SetGridy();
@@ -246,17 +271,20 @@ void makePlots( const char * modelA,
     g1->GetYaxis()->CenterTitle(true); 
     g1->GetXaxis()->CenterTitle(true); 
     g1->GetXaxis()->SetLabelOffset(0.007);
-    g1->GetXaxis()->SetLabelSize(0.07);
-    g1->GetXaxis()->SetTitleSize(0.07);
-    g1->GetXaxis()->SetTitleOffset(1.10);
-    g1->GetXaxis()->SetLabelFont(42);
+    g1->GetXaxis()->SetLabelSize(0.08);
+    g1->GetXaxis()->SetTitleSize(0.09);
+    g1->GetXaxis()->SetTitleOffset(0.85);
+    g1->GetXaxis()->SetLabelFont(22);
+    g1->GetXaxis()->SetTitleFont(22);
+
     g1->GetYaxis()->SetLabelOffset(0.007);
     g1->GetYaxis()->SetLabelSize(0.07);
-    g1->GetYaxis()->SetLabelFont(42);
-    g1->GetYaxis()->SetTitleSize(0.07);
-    g1->GetYaxis()->SetTitleOffset(0.89);
-    g1->GetYaxis()->SetTitleFont(42);
-    
+    g1->GetYaxis()->SetTitleSize(0.08);
+    g1->GetYaxis()->SetTitleOffset(0.81);
+
+    g1->GetYaxis()->SetTitleFont(22);
+    g1->GetYaxis()->SetLabelFont(22);
+
     if ( k == 6 )
       g1->Draw("AL");
     else 

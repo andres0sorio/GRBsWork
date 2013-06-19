@@ -34,7 +34,7 @@ NeutrinosDetectionPaper::~NeutrinosDetectionPaper() {
   m_file->Close();
   
   m_output_file->Close();
-  
+
   std::cout << "NeutrinosDetectionPaper> cleanly destroyed" << std::endl;
   
 } 
@@ -73,8 +73,7 @@ void NeutrinosDetectionPaper::MakeVariation01(const char * in_model, const char 
     m_tree->Branch("TauTks", &m_TauTks,  "TauTks/d");
     m_tree->Branch("HadShw", &m_HadShw,  "HadShw/d");
     m_tree->Branch("Ratio",  &m_Ratio,   "Ratio/d");
-    
-        
+          
     //Loop over input, propagate and save into new tree
     ////
     
@@ -109,8 +108,6 @@ void NeutrinosDetectionPaper::MakeVariation01(const char * in_model, const char 
       m_MuTks  = mu1->m_NuMuTracks;
       m_TauTks = mu1->m_NuTauTracks;
       
-      delete mu1;
-
       std::cout << " mu done " << std::endl;
       
       ShowerEvents * sh1 =  new ShowerEvents("XSec_neut.dat", "XSec_anti.dat", m_config );
@@ -121,9 +118,8 @@ void NeutrinosDetectionPaper::MakeVariation01(const char * in_model, const char 
       
       m_HadShw = sh1->Evaluate( );
 
-      delete sh1;
+      m_Ratio  = TkSum / m_HadShw;
 
-      m_Ratio  =   TkSum / m_HadShw;
 
       std::cout << "NeutrinosDetectionPaper> "
                 << m_Ex     << '\t'
@@ -131,9 +127,13 @@ void NeutrinosDetectionPaper::MakeVariation01(const char * in_model, const char 
                 << m_TauTks << '\t'
                 << m_HadShw << '\t'
                 << m_Ratio  << std::endl;
-      
-      m_tree->Fill();
+  
     
+      m_tree->Fill();
+
+      delete mu1;
+      delete sh1;
+
       //break;
         
     }

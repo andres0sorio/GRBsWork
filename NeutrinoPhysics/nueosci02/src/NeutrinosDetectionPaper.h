@@ -7,7 +7,7 @@
 #include <Graphics.h>
 #include <MuTrackEvents.h>
 #include <ShowerEvents.h>
-
+#include <DensityModels.h>
 #include <TTree.h>
 #include <TFile.h>
 

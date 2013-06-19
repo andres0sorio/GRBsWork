@@ -5,6 +5,7 @@
 #include <sstream>
 #include <boost/program_options.hpp>
 #include <boost/algorithm/string.hpp>
+#include <DOMParameters.h>
 
 namespace po = boost::program_options;
 

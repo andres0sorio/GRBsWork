@@ -48,7 +48,7 @@ void makePlots()
 
   //Model B - Set I  - Goes into Paper as Fig 3
   makePlots("ModelB","0","./root_files/ModelB/output_ModelB_SetI.root","SetI");
-  
+    
   //Model B - Set II 
   //makePlots("ModelB","0","./root_files/ModelB/output_ModelB_SetII.root", "SetII");
   
@@ -57,7 +57,7 @@ void makePlots()
   
   //Model C - Set II
   //makePlots("ModelC","0","./root_files/ModelC/output_ModelC_SetII.root", "SetII");
-
+  
   //Model A - Mena
   //makePlots("ModelA","0","./root_files/Mena/output_EarthB_ModelA.root","Mena");
   

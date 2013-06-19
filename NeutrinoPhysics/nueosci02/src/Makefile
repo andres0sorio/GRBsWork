@@ -21,9 +21,9 @@ GSLLIB       =$(shell $(GSLPATH)/bin/gsl-config --libs)
 
 BOOSTINC     =-I$(BOOSTPATH)/include
 
-INCDIR       = .
+INCDIR       = ../../nueoscilib/src -I.
 SRCDIR       = .
-LIBDIR       = .
+NUOSCIDIR    = ../../nueoscilib
 EXEDIR       = ../bin
 
 GARBAGE      = *.o $(EXEDIR)/*.so $(EXEDIR)/*.d $(EXEDIR)/paper02.exe
@@ -34,16 +34,11 @@ CXXFLAGS    += -I$(INCDIR) $(ROOTCFLAGS) $(GSLINC) $(BOOSTINC)
 LINKFLAGS    =
 
 ##Libraries
-LIBS       += $(ROOTLIBS) -lMinuit -lMathCore -lMathMore -lXMLParser $(GSLLIB) \
-	-L$(BOOSTPATH)/lib -lboost_program_options
+LIBS       += $(ROOTLIBS) -lMinuit -lMathCore -lMathMore -lXMLParser $(GSLLIB)
+LIBS       += -L$(BOOSTPATH)/lib -lboost_program_options 
+LIBS       += -L$(NUOSCIDIR)/lib -lnueosci
 
 PAP02OBJS =  Graphics.o \
-	Integrals.o \
-	DOMParameters.o \
-	nuN_interpxsec.o \
-	PShadow.o \
-	ShowerEvents.o \
-	MuTrackEvents.o \
 	NeutrinosDetectionPaper.o \
 	paper02.o
 
