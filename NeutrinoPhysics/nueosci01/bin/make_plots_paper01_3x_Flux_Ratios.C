@@ -43,10 +43,10 @@ void makePlots()
             "ModelC", 
             "0",
             "SetI",
-            "./root_files/ModelA/output_ModelA_SetI.root", 
+            "./root_files/ModelA/output_ModelA_SetI_FineDX.root", 
             "./root_files/ModelB/output_ModelB_SetI.root",
             "./root_files/ModelC/output_ModelC_SetI.root",
-            "./root_files/ZeroPt/output_ZeroPt_SetI.root");
+            "./root_files/ZeroPt/output_ZeroPt_SetI_FineDX.root");
   
   /*
     makePlots("ModelA",

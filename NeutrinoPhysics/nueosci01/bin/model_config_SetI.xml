@@ -21,7 +21,7 @@
       1.0e14
     </Par>
     <Par Id="6" Name="Dx">
-      0.5e14
+      0.01e14
     </Par>
     <Par Id="7" Name="De">
       1.0e9
@@ -59,7 +59,7 @@
       1.0E14
     </Par>
     <Par Id="10" Name="Dx">
-      0.5E14
+      0.01e14
     </Par>
     <Par Id="11" Name="De">
       1.0E9
@@ -109,7 +109,7 @@
       1.0e14
     </Par>
     <Par Id="14" Name="Dx">
-      0.5e14
+      0.01e14
     </Par>
     <Par Id="15" Name="De">
       1.0e9
@@ -164,7 +164,7 @@
       1.0e14
     </Par>
     <Par Id="5" Name="Dx">
-      0.1e14
+      0.01e14
     </Par>
     <Par Id="6" Name="De">
       1.0e9

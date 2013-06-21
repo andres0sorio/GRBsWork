@@ -137,6 +137,8 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
   m_tree = new TTree("data","Data points");
   m_tree->Branch("Ex", &m_Ex, "Ex/d");
   m_tree->Branch("Pb", &m_Pb, "Pb/d");
+  m_tree->Branch("Qf", &m_Qf, "Qf/d");
+  
   
   if ( (m_ProbIndex[Pxx].first == 0) && (m_ProbIndex[Pxx].second == 0) ) {
     eval_flux = true;
@@ -247,6 +249,7 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
     double d1 = (*m_Physics->m_Prob_AtoB)( m_ProbIndex[Pxx].first , m_ProbIndex[Pxx].second );
     
     if ( ! (boost::math::isnan)(d1) ) {
+
       m_Ex = Ex;
       m_Pb = d1;
       
@@ -256,24 +259,35 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
         m_Phi_t = m_Physics->Propagate( 2, 1.0, 2.0, 0.0 ); 
       }
       
-      m_tree->Fill();
-    
+      
+      m_Qf = 0.0;
       double SumProbs = 0.0;
       SumProbs = (*m_Physics->m_Prob_AtoB)( 0 , 0 ) + (*m_Physics->m_Prob_AtoB)( 0 , 1 ) + (*m_Physics->m_Prob_AtoB)( 0 , 2 );
       h_paper01[histo1.Data()]->Fill( SumProbs );
+      m_Qf += SumProbs;
+      
       SumProbs = (*m_Physics->m_Prob_AtoB)( 0 , 0 ) + (*m_Physics->m_Prob_AtoB)( 1 , 0 ) + (*m_Physics->m_Prob_AtoB)( 2 , 0 );
       h_paper01[histo2.Data()]->Fill( SumProbs );
+       m_Qf += SumProbs;
 
       SumProbs = (*m_Physics->m_Prob_AtoB)( 1 , 0 ) + (*m_Physics->m_Prob_AtoB)( 1 , 1 ) + (*m_Physics->m_Prob_AtoB)( 1 , 2 );
       h_paper01[histo3.Data()]->Fill( SumProbs );
+      m_Qf += SumProbs;
+
       SumProbs = (*m_Physics->m_Prob_AtoB)( 0 , 1 ) + (*m_Physics->m_Prob_AtoB)( 1 , 1 ) + (*m_Physics->m_Prob_AtoB)( 2 , 1 );
       h_paper01[histo4.Data()]->Fill( SumProbs );
+       m_Qf += SumProbs;
 
       SumProbs = (*m_Physics->m_Prob_AtoB)( 2 , 0 ) + (*m_Physics->m_Prob_AtoB)( 2 , 1 ) + (*m_Physics->m_Prob_AtoB)( 2 , 2 );
       h_paper01[histo5.Data()]->Fill( SumProbs );
+      m_Qf += SumProbs;
+
       SumProbs = (*m_Physics->m_Prob_AtoB)( 0 , 2 ) + (*m_Physics->m_Prob_AtoB)( 1 , 2 ) + (*m_Physics->m_Prob_AtoB)( 2 , 2 );
       h_paper01[histo6.Data()]->Fill( SumProbs );
-            
+      m_Qf += SumProbs;
+      
+      m_tree->Fill();
+    
     }     
     
     k += 1; 
@@ -533,7 +547,7 @@ bool NeutrinosInMediumPaper::Init( const char * in_model , const char * src_step
   // Set branch addresses and branch pointers
   
   m_input_tree->SetBranchAddress("Ex", &m_Ex_in, &b_Ex_in);
-  m_input_tree->SetBranchAddress("Pb", &m_Pb_in, &b_Pb_in);
+  //m_input_tree->SetBranchAddress("Pb", &m_Pb_in, &b_Pb_in);
   m_input_tree->SetBranchAddress("Phi_e", &m_Phi_e_in, &b_Phi_e_in);
   m_input_tree->SetBranchAddress("Phi_m", &m_Phi_m_in, &b_Phi_m_in);
   m_input_tree->SetBranchAddress("Phi_t", &m_Phi_t_in, &b_Phi_t_in);
