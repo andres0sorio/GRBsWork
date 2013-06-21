@@ -151,22 +151,22 @@
     <Par Id="0" Name="MaxPars">
       0.0
     </Par>
-    <Par Id="2" Name="LMAX">
+    <Par Id="1" Name="LMAX">
       1.52280e+17
     </Par>
-    <Par Id="3" Name="LMIN">
-      3.202e+15
+    <Par Id="2" Name="LMIN">
+      3.20270e+15
     </Par>
-    <Par Id="4" Name="Emin">
+    <Par Id="3" Name="Emin">
       1.0e11
     </Par>
-    <Par Id="5" Name="Emax">
+    <Par Id="4" Name="Emax">
       1.0e14
     </Par>
-    <Par Id="6" Name="Dx">
-      0.5e14
+    <Par Id="5" Name="Dx">
+      0.1e14
     </Par>
-    <Par Id="7" Name="De">
+    <Par Id="6" Name="De">
       1.0e9
     </Par>
   </ModelParameters>

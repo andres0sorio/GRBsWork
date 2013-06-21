@@ -219,8 +219,10 @@ void makePlots( const char * modelA,
       gPad->SetGridx();
       gPad->SetGridy();
       gPad->SetLogx();
-      gPad->SetLogy();
+      //gPad->SetLogy();
+
       
+
       g1->SetMarkerStyle(1);
       g1->SetFillColor(10);
       g1->SetMaximum(1.04);
@@ -319,7 +321,14 @@ void makePlots( const char * modelA,
       idxc += 1;
       
     } else { }
-    
+   
+    TLine *line = new TLine(7.9e+10,0.333,2.25e+14,0.333);
+    line->SetLineColor(3);
+    line->SetLineStyle(2);
+    line->SetLineWidth(2);
+    line->Draw("same");
+
+ 
     idx += 1;
         
   }
@@ -329,7 +338,10 @@ void makePlots( const char * modelA,
   //..................................................................................................
 
   idx = 1;
-  
+
+  double xp1 = 0.0;
+  double xp2 = 0.0;
+    
   for( int k = 3; k < nGraphs; ++k) 
   {
     
@@ -355,13 +367,15 @@ void makePlots( const char * modelA,
       for( int j = 0; j < maxpts; ++j) 
       {
         
-        g1->GetPoint(j, xx, y1);
-        denom->GetPoint(j, xx, y2);
+        g1->GetPoint(j, xp1, y1);
+        denom->GetPoint(j, xp2, y2);
         if ( y2 <= 1.0e-3 ) continue;
         ratio = y1/y2;
-        if (ratio > 5 ) std::cout << " nu_e> x= " << xx << " num= " 
+
+        if (ratio > 5 ) std::cout << " nu_e> x1= " << xp1 << " x2= " << xp2 << " num= " 
                                   << y1 << " den= " << y2 << " num/den= " << ratio << std::endl;
-        r1->SetPoint( np, xx, ratio );
+
+        r1->SetPoint( np, xp1, ratio );
         ++np;
       }
       
@@ -376,13 +390,13 @@ void makePlots( const char * modelA,
       for( int j = 0; j < maxpts; ++j) 
       {
 
-        g1->GetPoint(j, xx, y1);
-        denom->GetPoint(j, xx, y2);
+        g1->GetPoint(j, xp1, y1);
+        denom->GetPoint(j, xp2, y2);
         if ( y2 <= 1.0e-3 ) continue;
         ratio = y1/y2;
-        if (ratio > 5 ) std::cout << " nu_mu> x= " << xx << " num= " 
+        if (ratio > 5 ) std::cout << " nu_e> x1= " << xp1 << " x2= " << xp2 << " num= " 
                                   << y1 << " den= " << y2 << " num/den= " << ratio << std::endl;
-        r1->SetPoint( np, xx, ratio );
+        r1->SetPoint( np, xp1, ratio );
         ++np;
       }
       
@@ -397,13 +411,13 @@ void makePlots( const char * modelA,
       for( int j = 0; j < maxpts; ++j) 
       {
         
-        g1->GetPoint(j, xx, y1);
-        denom->GetPoint(j, xx, y2);
+        g1->GetPoint(j, xp1, y1);
+        denom->GetPoint(j, xp2, y2);
         if ( y2 <= 1.0e-3 ) continue;
         ratio = y1/y2;
-        if (ratio > 5 ) std::cout << " nu_tau> x= " << xx << " num= " 
+        if (ratio > 5 ) std::cout << " nu_e> x1= " << xp1 << " x2= " << xp2 << " num= " 
                                   << y1 << " den= " << y2 << " num/den= " << ratio << std::endl;
-        r1->SetPoint( np, xx, ratio );
+        r1->SetPoint( np, xp1, ratio );
         ++np;
       }
       
