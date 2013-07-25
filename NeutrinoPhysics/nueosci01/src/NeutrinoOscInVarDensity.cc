@@ -32,10 +32,10 @@ NeutrinoOscInVarDensity::NeutrinoOscInVarDensity( MixingParameters * mixpars ) :
   m_invUr  = new matrix<  long double >(3,3);
   m_UTU    = new matrix<  long double >(3,3);
   m_UTUSq  = new matrix<  long double >(3,3);
-  m_Uf     = new matrix< std::complex<  long double > >(3,3);
-  m_Ufd    = new matrix< std::complex<  long double > >(3,3);
+  m_Uf     = new matrix<  std::complex<  long double > >(3,3);
+  m_Ufd    = new matrix<  std::complex<  long double > >(3,3);
   
-  m_phi    = std::complex<  long double >(1.0, 1.0);
+  m_phi    = std::complex< long double >(1.0, 1.0);
   
   initializeAngles();
         
@@ -47,7 +47,18 @@ NeutrinoOscInVarDensity::NeutrinoOscInVarDensity( MixingParameters * mixpars ) :
 NeutrinoOscInVarDensity::~NeutrinoOscInVarDensity() {
 
   //delete all Matrices
-
+  std::cout << "NeutrinoOscInVarDensity> Deleting matrices" << std::endl;
+  
+  if( v_Lambda ) delete v_Lambda;
+  if( m_Eab )    delete m_Eab;
+  if( m_Tab )    delete m_Tab;
+  if( m_Ur )     delete m_Ur;
+  if( m_invUr )  delete m_invUr;
+  if( m_UTU )    delete m_UTU;
+  if( m_UTUSq )  delete m_UTUSq;
+  if( m_Uf )     delete m_Uf;
+  if( m_Ufd )    delete m_Ufd;
+  
 } 
 
 //=============================================================================
@@ -130,9 +141,10 @@ void NeutrinoOscInVarDensity::updateLambdas()
   long double Lambda_3 = 2.0L * sqrt(- oneover3 * m_c1) * 
     cos( oneover3 * acos( threeover2 * (m_c0/m_c1) * sqrt(-3.0L / m_c1 ) ) - (4.0L * M_PI / 3.0L) );
   
-  (*v_Lambda)(0,0) = Lambda_1;
+  // Reverse order (???) - 25/07/2013 AO
+  (*v_Lambda)(0,0) = Lambda_3;
   (*v_Lambda)(0,1) = Lambda_2;
-  (*v_Lambda)(0,2) = Lambda_3;
+  (*v_Lambda)(0,2) = Lambda_1;
   
 }
 

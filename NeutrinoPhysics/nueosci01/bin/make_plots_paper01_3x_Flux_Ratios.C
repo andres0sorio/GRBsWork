@@ -44,8 +44,8 @@ void makePlots()
             "0",
             "SetI",
             "./root_files/ModelA/output_ModelA_SetI_FineDX.root", 
-            "./root_files/ModelB/output_ModelB_SetI.root",
-            "./root_files/ModelC/output_ModelC_SetI.root",
+            "./root_files/ModelB/output_ModelB_SetI_FineDX.root",
+            "./root_files/ModelC/output_ModelC_SetI_FineDX.root",
             "./root_files/ZeroPt/output_ZeroPt_SetI_FineDX.root");
   
   /*
@@ -160,6 +160,7 @@ void makePlots( const char * modelA,
     double phi_e = 0.0;
     double phi_m = 0.0;
     double phi_t = 0.0;
+    double Qf = 0.0;
     
     TTree * currentTree = (TTree*)PeeTree->At(k);
     
@@ -167,19 +168,30 @@ void makePlots( const char * modelA,
     currentTree->SetBranchAddress("Phi_e",&phi_e);
     currentTree->SetBranchAddress("Phi_m",&phi_m);
     currentTree->SetBranchAddress("Phi_t",&phi_t);
-  
+    currentTree->SetBranchAddress("Qf",&Qf);
+    
     Long64_t nentries = currentTree->GetEntries();
     
     TGraph * g1 = new TGraph();
     TGraph * g2 = new TGraph();
     TGraph * g3 = new TGraph();
     
+    int np = 0;
+    
     for (Long64_t i=0;i<nentries;i++) {
       currentTree->GetEntry(i);
-      g1->SetPoint( i, xx, phi_e);
-      g2->SetPoint( i, xx, phi_m);
-      g3->SetPoint( i, xx, phi_t);
       
+      if ( Qf >= 0 ) 
+      {
+        
+        g1->SetPoint( np, xx, phi_e);
+        g2->SetPoint( np, xx, phi_m);
+        g3->SetPoint( np, xx, phi_t);
+        np++;
+        
+      }
+      
+
     }
     
     PhiGraphs->Add( g1 );
