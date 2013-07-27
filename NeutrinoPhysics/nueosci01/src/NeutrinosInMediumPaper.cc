@@ -139,30 +139,43 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
   m_tree->Branch("Pb", &m_Pb, "Pb/d");
   m_tree->Branch("Qf", &m_Qf, "Qf/d");
   
+  // Add some control histogram
+  TString histo1  = TString("Sum_of_Probs_Row1_")  + TString(Pxx);
+  TString histo2  = TString("Sum_of_Probs_Col1_")  + TString(Pxx);
+  TString histo3  = TString("Sum_of_Probs_Row2_")  + TString(Pxx);
+  TString histo4  = TString("Sum_of_Probs_Col2_")  + TString(Pxx);
+  TString histo5  = TString("Sum_of_Probs_Row3_")  + TString(Pxx);
+  TString histo6  = TString("Sum_of_Probs_Col3_")  + TString(Pxx);
+  TString histo7  = TString("Sum_of_Eab_")         + TString(Pxx);
+  TString histo8  = TString("Sum_of_Lambdas_")     + TString(Pxx);
+  TString histo9  = TString("Sum_of_ProdLambdas_") + TString(Pxx);
+  TString histo10 = TString("Prod_Lambdas_")       + TString(Pxx);
+  TString histo11 = TString("Tmona_Diffs_")        + TString(Pxx);
+  TString histo12 = TString("T2mona_Diffs_")       + TString(Pxx);
   
   if ( (m_ProbIndex[Pxx].first == 0) && (m_ProbIndex[Pxx].second == 0) ) {
+    
     eval_flux = true;
+    
     m_tree->Branch("Phi_e", &m_Phi_e, "Phi_e/d");
     m_tree->Branch("Phi_m", &m_Phi_m, "Phi_m/d");
     m_tree->Branch("Phi_t", &m_Phi_t, "Phi_t/d");
+    
+    h_paper01[histo1.Data()]  = new TH1D(histo1.Data(),"Psum_Row1",100,0.99999, 1.0001);
+    h_paper01[histo2.Data()]  = new TH1D(histo2.Data(),"Psum_Col1",100,0.99999, 1.0001);
+    h_paper01[histo3.Data()]  = new TH1D(histo3.Data(),"Psum_Row2",100,0.99999, 1.0001);
+    h_paper01[histo4.Data()]  = new TH1D(histo4.Data(),"Psum_Col2",100,0.99999, 1.0001);
+    h_paper01[histo5.Data()]  = new TH1D(histo5.Data(),"Psum_Row3",100,0.99999, 1.0001);
+    h_paper01[histo6.Data()]  = new TH1D(histo6.Data(),"Psum_Col3",100,0.99999, 1.0001);
+    
+    h_paper01[histo7.Data()]  = new TH1D(histo7.Data(),"Sum of Eab terms E_12 + E_23 + E_31",100, -1.0, 1.0);
+    h_paper01[histo8.Data()]  = new TH1D(histo8.Data(),"Sum of Lambdas",100, -1.0, 1.0);
+    h_paper01[histo9.Data()]  = new TH1D(histo9.Data(),"Sum of L_1 L_2 + L_1 L_3 + L_2L_3 - c1",100, -1.0, 1.0);
+    h_paper01[histo10.Data()] = new TH1D(histo10.Data(),"L_1 L_2 L_3 - c0",100, -1.0, 1.0);
+    h_paper01[histo11.Data()] = new TH1D(histo11.Data(),"Tmona - delta method 1 vs 2",100, -1.0, 1.0);
+    h_paper01[histo12.Data()] = new TH1D(histo12.Data(),"TSqmona - delta method 1 vs 2",100, -1.0, 1.0);
+    
   }
-  
-  // Add some control histogram
-  TString histo1 = TString("Sum_of_Probs_Row1_") + TString(Pxx);
-  TString histo2 = TString("Sum_of_Probs_Col1_") + TString(Pxx);
-  TString histo3 = TString("Sum_of_Probs_Row2_") + TString(Pxx);
-  TString histo4 = TString("Sum_of_Probs_Col2_") + TString(Pxx);
-  TString histo5 = TString("Sum_of_Probs_Row3_") + TString(Pxx);
-  TString histo6 = TString("Sum_of_Probs_Col3_") + TString(Pxx);
-  
-  h_paper01[histo1.Data()] = new TH1D(histo1.Data(),"Psum_Row1",100,0.99999, 1.0001);
-  h_paper01[histo2.Data()] = new TH1D(histo2.Data(),"Psum_Col1",100,0.99999, 1.0001);
-
-  h_paper01[histo3.Data()] = new TH1D(histo3.Data(),"Psum_Row2",100,0.00, 2.0);
-  h_paper01[histo4.Data()] = new TH1D(histo4.Data(),"Psum_Col2",100,0.00, 2.0);
-
-  h_paper01[histo5.Data()] = new TH1D(histo5.Data(),"Psum_Row3",100,0.99999, 1.0001);
-  h_paper01[histo6.Data()] = new TH1D(histo6.Data(),"Psum_Col3",100,0.99999, 1.0001);
   
   DensityModels * density_Mod = m_Models[out_model];
   
@@ -229,8 +242,6 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
         (*tmp) = (*m_Physics->m_Uf); 
       } else
         (*tmp) = prod( (*m_Physics->m_Uf), (*tmp) );
-    
-      //std::cout << " debugging: " << x1 << " " << x2 << " " << Ex << " " << profA->Eval( x2 ) << std::endl;
       
       x1  = x2;
       x2 += dx;
@@ -254,40 +265,54 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
       m_Pb = d1;
       
       if ( eval_flux ) {
+        
         m_Phi_e = m_Physics->Propagate( 0, 1.0, 2.0, 0.0 ); 
         m_Phi_m = m_Physics->Propagate( 1, 1.0, 2.0, 0.0 ); 
         m_Phi_t = m_Physics->Propagate( 2, 1.0, 2.0, 0.0 ); 
+              
+        m_Qf = 0.0;
+        double SumProbs = 0.0;
+        SumProbs = (*m_Physics->m_Prob_AtoB)( 0 , 0 ) + (*m_Physics->m_Prob_AtoB)( 0 , 1 ) + (*m_Physics->m_Prob_AtoB)( 0 , 2 );
+        h_paper01[histo1.Data()]->Fill( SumProbs );
+        m_Qf += SumProbs;
+        
+        SumProbs = (*m_Physics->m_Prob_AtoB)( 0 , 0 ) + (*m_Physics->m_Prob_AtoB)( 1 , 0 ) + (*m_Physics->m_Prob_AtoB)( 2 , 0 );
+        h_paper01[histo2.Data()]->Fill( SumProbs );
+        m_Qf += SumProbs;
+        
+        SumProbs = (*m_Physics->m_Prob_AtoB)( 1 , 0 ) + (*m_Physics->m_Prob_AtoB)( 1 , 1 ) + (*m_Physics->m_Prob_AtoB)( 1 , 2 );
+        h_paper01[histo3.Data()]->Fill( SumProbs );
+        m_Qf += SumProbs;
+        
+        SumProbs = (*m_Physics->m_Prob_AtoB)( 0 , 1 ) + (*m_Physics->m_Prob_AtoB)( 1 , 1 ) + (*m_Physics->m_Prob_AtoB)( 2 , 1 );
+        h_paper01[histo4.Data()]->Fill( SumProbs );
+        m_Qf += SumProbs;
+        
+        SumProbs = (*m_Physics->m_Prob_AtoB)( 2 , 0 ) + (*m_Physics->m_Prob_AtoB)( 2 , 1 ) + (*m_Physics->m_Prob_AtoB)( 2 , 2 );
+        h_paper01[histo5.Data()]->Fill( SumProbs );
+        m_Qf += SumProbs;
+        
+        SumProbs = (*m_Physics->m_Prob_AtoB)( 0 , 2 ) + (*m_Physics->m_Prob_AtoB)( 1 , 2 ) + (*m_Physics->m_Prob_AtoB)( 2 , 2 );
+        h_paper01[histo6.Data()]->Fill( SumProbs );
+        m_Qf += SumProbs;
+        
+        h_paper01[histo7.Data()]->Fill( m_Physics->m_SumEab );
+        
+        h_paper01[histo8.Data()]->Fill( m_Physics->m_SumLambdas );
+
+        h_paper01[histo9.Data()]->Fill( m_Physics->m_SumProdLambdas );
+
+        h_paper01[histo10.Data()]->Fill( m_Physics->m_ProdLambdas );
+
+        h_paper01[histo11.Data()]->Fill( m_Physics->m_TmDiff );
+
+        h_paper01[histo12.Data()]->Fill( m_Physics->m_T2mDiff );
+        
+        
       }
       
-      
-      m_Qf = 0.0;
-      double SumProbs = 0.0;
-      SumProbs = (*m_Physics->m_Prob_AtoB)( 0 , 0 ) + (*m_Physics->m_Prob_AtoB)( 0 , 1 ) + (*m_Physics->m_Prob_AtoB)( 0 , 2 );
-      h_paper01[histo1.Data()]->Fill( SumProbs );
-      m_Qf += SumProbs;
-      
-      SumProbs = (*m_Physics->m_Prob_AtoB)( 0 , 0 ) + (*m_Physics->m_Prob_AtoB)( 1 , 0 ) + (*m_Physics->m_Prob_AtoB)( 2 , 0 );
-      h_paper01[histo2.Data()]->Fill( SumProbs );
-       m_Qf += SumProbs;
-
-      SumProbs = (*m_Physics->m_Prob_AtoB)( 1 , 0 ) + (*m_Physics->m_Prob_AtoB)( 1 , 1 ) + (*m_Physics->m_Prob_AtoB)( 1 , 2 );
-      h_paper01[histo3.Data()]->Fill( SumProbs );
-      m_Qf += SumProbs;
-
-      SumProbs = (*m_Physics->m_Prob_AtoB)( 0 , 1 ) + (*m_Physics->m_Prob_AtoB)( 1 , 1 ) + (*m_Physics->m_Prob_AtoB)( 2 , 1 );
-      h_paper01[histo4.Data()]->Fill( SumProbs );
-       m_Qf += SumProbs;
-
-      SumProbs = (*m_Physics->m_Prob_AtoB)( 2 , 0 ) + (*m_Physics->m_Prob_AtoB)( 2 , 1 ) + (*m_Physics->m_Prob_AtoB)( 2 , 2 );
-      h_paper01[histo5.Data()]->Fill( SumProbs );
-      m_Qf += SumProbs;
-
-      SumProbs = (*m_Physics->m_Prob_AtoB)( 0 , 2 ) + (*m_Physics->m_Prob_AtoB)( 1 , 2 ) + (*m_Physics->m_Prob_AtoB)( 2 , 2 );
-      h_paper01[histo6.Data()]->Fill( SumProbs );
-      m_Qf += SumProbs;
-      
       m_tree->Fill();
-    
+      
     }     
     
     k += 1; 
@@ -309,12 +334,18 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
   
   m_tree->Write();
   
-  h_paper01[histo1.Data()]->Write();
-  h_paper01[histo2.Data()]->Write();
-  h_paper01[histo3.Data()]->Write();
-  h_paper01[histo4.Data()]->Write();
-  h_paper01[histo5.Data()]->Write();
-  h_paper01[histo6.Data()]->Write();
+  std::map<std::string, TH1D *>::iterator hItr;
+  
+  for( hItr = h_paper01.begin(); hItr != h_paper01.end(); ++hItr) 
+  {
+    (*hItr).second->Write();
+  }
+  
+  //h_paper01[histo2.Data()]->Write();
+  //h_paper01[histo3.Data()]->Write();
+  //h_paper01[histo4.Data()]->Write();
+  //h_paper01[histo5.Data()]->Write();
+  //h_paper01[histo6.Data()]->Write();
   
   m_file->cd("../");
 

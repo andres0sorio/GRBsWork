@@ -38,28 +38,56 @@ void makePlots()
   //Figure 3
   //Star - These plots go into the paper01
 
+
+  //. SET I
+  
   makePlots("ModelA",
             "ModelB",
             "ModelC", 
             "0",
             "SetI",
-            "./root_files/ModelA/output_ModelA_SetI_FineDX.root", 
-            "./root_files/ModelB/output_ModelB_SetI_FineDX.root",
-            "./root_files/ModelC/output_ModelC_SetI_FineDX.root",
-            "./root_files/ZeroPt/output_ZeroPt_SetI_FineDX.root");
+            //"./root_files/ModelA/output_ModelA_SetI.root",
+            "output_ModelA.root",
+            "./root_files/ModelB/output_ModelB_SetI.root",
+            "./root_files/ModelC/output_ModelC_SetI.root",
+            //"./root_files/ZeroPt/output_ZeroPt_SetI.root");
+            "output_ZeroPt.root");
+  
   
   /*
+    
+    //. SET I - Fine DX
+    
     makePlots("ModelA",
-    "ModelB", 
+    "ModelB",
     "ModelC", 
-    "0", 
-    "SetII",
-    "./root_files/ModelA/output_ModelA_SetII.root", 
-    "./root_files/ModelB/output_ModelB_SetII.root",
-    "./root_files/ModelC/output_ModelC_SetII.root",
-    "./root_files/ZeroPt/output_ZeroPt_SetII.root");
+    "0",
+    "SetI",
+    "./root_files/ModelA/output_ModelA_SetI_FineDX.root", 
+    "./root_files/ModelB/output_ModelB_SetI_FineDX.root",
+    "./root_files/ModelC/output_ModelC_SetI_FineDX.root",
+    "./root_files/ZeroPt/output_ZeroPt_SetI_FineDX.root");
+      
   */
-
+  
+  
+  /* 
+     
+     //. SET II 
+     
+     makePlots("ModelA",
+     "ModelB", 
+     "ModelC", 
+     "0", 
+     "SetII",
+     "./root_files/ModelA/output_ModelA_SetII.root", 
+     "./root_files/ModelB/output_ModelB_SetII.root",
+     "./root_files/ModelC/output_ModelC_SetII.root",
+     "./root_files/ZeroPt/output_ZeroPt_SetII.root");
+     
+  */
+  
+  
 }
 
 void makePlots( const char * modelA, 

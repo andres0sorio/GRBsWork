@@ -12,7 +12,7 @@
       1.52280e+17
     </Par>
     <Par Id="3" Name="LMIN">
-      3.2027E+015
+      3.2027e+15
     </Par>
     <Par Id="4" Name="Emin">
       1.0e11
@@ -21,7 +21,7 @@
       1.0e14
     </Par>
     <Par Id="6" Name="Dx">
-      0.01e14
+      1.00e14
     </Par>
     <Par Id="7" Name="De">
       1.0e9
@@ -50,7 +50,7 @@
       1.52280e+17
     </Par>
     <Par Id="7" Name="LMIN">
-      3.202e+15
+      3.20270e+15
     </Par>
     <Par Id="8" Name="Emin">
       1.0E11
@@ -59,7 +59,7 @@
       1.0E14
     </Par>
     <Par Id="10" Name="Dx">
-      0.01e14
+      1.00e14
     </Par>
     <Par Id="11" Name="De">
       1.0E9
@@ -100,7 +100,7 @@
       1.52280e+17
     </Par>
     <Par Id="11" Name="LMIN">
-      3.202e+15
+      3.20270e+15
     </Par>
     <Par Id="12" Name="Emin">
       1.0e11
@@ -109,7 +109,7 @@
       1.0e14
     </Par>
     <Par Id="14" Name="Dx">
-      0.01e14
+      1.00e14
     </Par>
     <Par Id="15" Name="De">
       1.0e9
@@ -164,7 +164,7 @@
       1.0e14
     </Par>
     <Par Id="5" Name="Dx">
-      0.01e14
+      1.00e14
     </Par>
     <Par Id="6" Name="De">
       1.0e9

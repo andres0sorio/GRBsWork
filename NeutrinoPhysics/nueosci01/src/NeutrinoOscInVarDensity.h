@@ -69,6 +69,18 @@ public:
   long double m_sign;
   long double m_c0_0;
 
+  long double m_SumEab;
+  
+  long double m_SumLambdas;
+  
+  long double m_SumProdLambdas;
+
+  long double m_ProdLambdas;
+
+  long double m_TmDiff;
+  
+  long double m_T2mDiff;
+    
   std::complex<  long double > m_phi;
   
   matrix<  long double > * v_Lambda; // Eigenvalues lambda 
@@ -76,6 +88,12 @@ public:
   matrix<  long double > * m_Eab; // Energy differences
   
   matrix<  long double > * m_Tab; // T == Hm - (tr Hm)I3/
+
+  matrix<  long double > * m_TabSq; // (T^2) xcheck
+
+  matrix<  long double > * m_Tmona; // (T mona - method 2) xcheck
+ 
+  matrix<  long double > * m_T2mona; // (T2 mona - method 2) xcheck
   
   matrix<  long double > * m_Ur; // Re( U_CKM )
   
