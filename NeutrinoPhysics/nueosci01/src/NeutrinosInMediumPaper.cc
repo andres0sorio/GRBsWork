@@ -168,12 +168,12 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
     h_paper01[histo5.Data()]  = new TH1D(histo5.Data(),"Psum_Row3",100,0.99999, 1.0001);
     h_paper01[histo6.Data()]  = new TH1D(histo6.Data(),"Psum_Col3",100,0.99999, 1.0001);
     
-    h_paper01[histo7.Data()]  = new TH1D(histo7.Data(),"Sum of Eab terms E_12 + E_23 + E_31",100, -1.0, 1.0);
-    h_paper01[histo8.Data()]  = new TH1D(histo8.Data(),"Sum of Lambdas",100, -1.0, 1.0);
-    h_paper01[histo9.Data()]  = new TH1D(histo9.Data(),"Sum of L_1 L_2 + L_1 L_3 + L_2L_3 - c1",100, -1.0, 1.0);
-    h_paper01[histo10.Data()] = new TH1D(histo10.Data(),"L_1 L_2 L_3 - c0",100, -1.0, 1.0);
-    h_paper01[histo11.Data()] = new TH1D(histo11.Data(),"Tmona - delta method 1 vs 2",100, -1.0, 1.0);
-    h_paper01[histo12.Data()] = new TH1D(histo12.Data(),"TSqmona - delta method 1 vs 2",100, -1.0, 1.0);
+    h_paper01[histo7.Data()]  = new TH1D(histo7.Data(),"Sum of Eab terms E_12 + E_23 + E_31",100, 5.0, 1.5);
+    h_paper01[histo8.Data()]  = new TH1D(histo8.Data(),"Sum of Lambdas",100, 90.0, 110.0);
+    h_paper01[histo9.Data()]  = new TH1D(histo9.Data(),"Sum of L_1 L_2 + L_1 L_3 + L_2L_3 - c1",100, 90.0, 110.0);
+    h_paper01[histo10.Data()] = new TH1D(histo10.Data(),"L_1 L_2 L_3 - c0",100, 90.0, 110.0);
+    h_paper01[histo11.Data()] = new TH1D(histo11.Data(),"Tmona - delta method 1 vs 2",100, 900.0, 1010.0);
+    h_paper01[histo12.Data()] = new TH1D(histo12.Data(),"TSqmona - delta method 1 vs 2",100, 900.0, 1010.0);
     
   }
   
