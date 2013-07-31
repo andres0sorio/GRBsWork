@@ -296,17 +296,17 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
         h_paper01[histo6.Data()]->Fill( SumProbs );
         m_Qf += SumProbs;
         
-        h_paper01[histo7.Data()]->Fill( m_Physics->m_SumEab );
+        h_paper01[histo7.Data()]->Fill( m_Physics->m_SumEab + 10.0L);
         
-        h_paper01[histo8.Data()]->Fill( m_Physics->m_SumLambdas );
+        h_paper01[histo8.Data()]->Fill( m_Physics->m_SumLambdas + 101.0L);
 
-        h_paper01[histo9.Data()]->Fill( m_Physics->m_SumProdLambdas );
+        h_paper01[histo9.Data()]->Fill( m_Physics->m_SumProdLambdas + 102.0L);
 
-        h_paper01[histo10.Data()]->Fill( m_Physics->m_ProdLambdas );
+        h_paper01[histo10.Data()]->Fill( m_Physics->m_ProdLambdas + 103.0L );
 
-        h_paper01[histo11.Data()]->Fill( m_Physics->m_TmDiff );
+        h_paper01[histo11.Data()]->Fill( m_Physics->m_TmDiff + 1001.0L);
 
-        h_paper01[histo12.Data()]->Fill( m_Physics->m_T2mDiff );
+        h_paper01[histo12.Data()]->Fill( m_Physics->m_T2mDiff + 1002.0L);
         
         
       }
@@ -321,8 +321,10 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
       Ex += dE; // step in energy
     else if ( Ex >=1.0E12 && Ex < 1.0E13 )
       Ex += (dE*10.0); //step in energy
-    else
+    else if ( Ex >=1.0E13 && Ex < 1.0E14 )
       Ex += (dE*100.0); //step in energy
+    else
+      Ex += (dE*1000.0);
 
     delete tmp;
     

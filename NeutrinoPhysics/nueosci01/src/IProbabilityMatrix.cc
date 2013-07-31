@@ -22,7 +22,7 @@ IProbabilityMatrix::IProbabilityMatrix(  ) {
   debug = false;
   
   //intialize parameters and set matrix elements
-  setPhase( 0.0 );
+  setPhase( 0.0L );
   
   //Angles:
   m_Q   = new matrix< long double >(3,3);
@@ -62,15 +62,15 @@ IProbabilityMatrix::~IProbabilityMatrix() {
 void IProbabilityMatrix::setAngle(int i, int j, long double angle) 
 {
 
-  (*m_Q)(i-1,j-1) = (angle * M_PI)/180.0;
-  (*m_Q)(j-1,i-1) = (angle * M_PI)/180.0;
+  (*m_Q)(i-1,j-1) = (angle * M_PIl)/180.0L;
+  (*m_Q)(j-1,i-1) = (angle * M_PIl)/180.0L;
   
 }
 
 void IProbabilityMatrix::setPhase( long double angle ) 
 {
 
-  m_dCP = (angle * M_PI)/180.0L;
+  m_dCP = (angle * M_PIl)/180.0L;
   
 }
 

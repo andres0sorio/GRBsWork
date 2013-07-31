@@ -48,13 +48,6 @@ public:
   void   Eval_UFlavour( long double );
   void   Eval_UFlavour( long double , long double );
   
-  //
-  void   Validate( );
-  void   ValidateInVarDensity( );
-  void   ValidateSolarProfile( );
-  void   TestProcedure( );
-  //
-
   void   setPotential( TF1 * f1) { f_Ve = f1; } ;
   
   bool m_debug;
@@ -91,9 +84,9 @@ public:
 
   matrix<  long double > * m_TabSq; // (T^2) xcheck
 
-  matrix<  long double > * m_Tmona; // (T mona - method 2) xcheck
+  matrix<  long double > * m_Tmona; // (T tilde - method 2) xcheck
  
-  matrix<  long double > * m_T2mona; // (T2 mona - method 2) xcheck
+  matrix<  long double > * m_T2mona; // (T2 tilde - method 2) xcheck
   
   matrix<  long double > * m_Ur; // Re( U_CKM )
   
@@ -103,9 +96,9 @@ public:
   
   matrix<  long double > * m_UTUSq; // (T~)^2
   
-  matrix< std::complex< long double> > * m_Uf; // 
+  matrix< std::complex< long double> > * m_Uf; // A_alfa,beta 
   
-  matrix< std::complex< long double> > * m_Ufd; // 
+  matrix< std::complex< long double> > * m_Ufd; // A_alfa,beta conjugate
   
   TF1 * f_Ve;
   

@@ -85,20 +85,24 @@ void NeutrinoOscInVarDensity::initializeAngles()
     m_Ev = 10.0E9L;
     m_DeltamSq = 1.0E-4L;
     m_DeltaMSq = 1.0E-3L;
-
+    
+    m_dCP = 0.0L;
+    
   } else {
 
     std::cout << "initializeAngles> reading parameters from XML" << std::endl;
     
     m_Ev = 10.0E9L;
 
-    setAngle(1, 2, m_input->GetPar1() );  //theta_12
-    setAngle(1, 3, m_input->GetPar2() );  //theta_13
-    setAngle(2, 3, m_input->GetPar3() );  //theta_23
+    setAngle(1, 2, m_input->GetPar1() );  //theta_12 == theta_1
+    setAngle(1, 3, m_input->GetPar2() );  //theta_13 == theta_2
+    setAngle(2, 3, m_input->GetPar3() );  //theta_23 == theta_3
     
     m_DeltaMSq = m_input->GetPar4(); //Dm2_32 -> typically set to 3e-3
     m_DeltamSq = m_input->GetPar8(); //Dm2_21 -> typically set to 8e-5
     
+    m_dCP  = 0.0L;
+
   }
   
 }
@@ -148,10 +152,10 @@ void NeutrinoOscInVarDensity::updateLambdas()
     cos( oneover3 * acos( threeover2 * (m_c0/m_c1) * sqrt(-3.0L / m_c1 ) ) );
 
   long double Lambda_2 = 2.0L * sqrt(- oneover3 * m_c1) * 
-    cos( oneover3 * acos( threeover2 * (m_c0/m_c1) * sqrt(-3.0L / m_c1 ) ) - (2.0L * M_PI / 3.0L) );
+    cos( oneover3 * acos( threeover2 * (m_c0/m_c1) * sqrt(-3.0L / m_c1 ) ) - (2.0L * M_PIl / 3.0L) );
   
   long double Lambda_3 = 2.0L * sqrt(- oneover3 * m_c1) * 
-    cos( oneover3 * acos( threeover2 * (m_c0/m_c1) * sqrt(-3.0L / m_c1 ) ) - (4.0L * M_PI / 3.0L) );
+    cos( oneover3 * acos( threeover2 * (m_c0/m_c1) * sqrt(-3.0L / m_c1 ) ) - (4.0L * M_PIl / 3.0L) );
   
   (*v_Lambda)(0,0) = Lambda_1;
   (*v_Lambda)(0,1) = Lambda_2;
@@ -169,6 +173,10 @@ void NeutrinoOscInVarDensity::updateLambdas()
 void NeutrinoOscInVarDensity::updateMixingMatrix( )
 {
   
+  initializeMatrix( m_Ur );
+
+  initializeMatrix( m_invUr );
+    
   // this is the CKM Matrix 
   (*m_Ur) (0,0) = real( std::complex<long double>( cosTh(1,2)*cosTh(1,3), 0.0L) );
   
@@ -193,7 +201,14 @@ void NeutrinoOscInVarDensity::updateMixingMatrix( )
   (*m_Ur) (2,2) = real( std::complex<long double>( cosTh(1,3)*cosTh(2,3), 0.0L) );
   
   // U-1 == inverse of Matrix U
-  invertMat ( (*m_Ur), (*m_invUr) );
+  bool isgood = invertMat ( (*m_Ur), (*m_invUr) );
+
+  if ( !isgood ) 
+    std::cout << "NeutrinoOscInVarDensity::updateMixingMatrix> warning> inverse of Matrix not found" << std::endl;
+  
+  matrix< long double > UxinvU =  prod( (*m_Ur), (*m_invUr) ); //
+  
+  std::cout << "NeutrinoOscInVarDensity::updateMixingMatrix> " << UxinvU << std::endl;
   
 }
 
@@ -442,47 +457,3 @@ void NeutrinoOscInVarDensity::calcProbabilities()
     
 }
 
-void NeutrinoOscInVarDensity::Validate() 
-{
-  
-  //.....................................................................................
-  
-  m_validation = true;
-
-  std::cout << "NeutrinoOscInVarDensity::Validate> Important: this method is no longer in use. " << std::endl;
-  std::cout << "NeutrinoOscInVarDensity::Validate> Changes apply from Apr 02 2013. " << std::endl;
-  std::cout << "NeutrinoOscInVarDensity::Validate> It will be removed. " << std::endl;
-  
-  //.....................................................................................
-
-}
-
-void NeutrinoOscInVarDensity::ValidateInVarDensity() {
-  
-  m_validation = true;
-  
-  std::cout << "NeutrinoOscInVarDensity::ValidateInVarDensity> Important: this method is no longer in use. " << std::endl;
-  std::cout << "NeutrinoOscInVarDensity::ValidateInVarDensity> Changes apply from Apr 05 2013. " << std::endl;
-  std::cout << "NeutrinoOscInVarDensity::ValidateInVarDensity> It will be removed. " << std::endl;
-  
-}
-
-void NeutrinoOscInVarDensity::ValidateSolarProfile() {
-  
-  m_validation = true;
-  
-  std::cout << "NeutrinoOscInVarDensity::ValidateSolarProfile> Important: this method is no longer in use. " << std::endl;
-  std::cout << "NeutrinoOscInVarDensity::ValidateSolarProfile> Changes apply from Apr 05 2013. " << std::endl;
-  std::cout << "NeutrinoOscInVarDensity::ValidateSolarProfile> It will be removed. " << std::endl;
-  
-  
-}
-
-void NeutrinoOscInVarDensity::TestProcedure()
-{
-
-  std::cout << "NeutrinoOscInVarDensity::TestProcedure> Important: this method is no longer in use. " << std::endl;
-  std::cout << "NeutrinoOscInVarDensity::TestProcedure> Changes apply from Apr 05 2013. " << std::endl;
-  std::cout << "NeutrinoOscInVarDensity::TestProcedure> It will be removed. " << std::endl;
-  
-}
