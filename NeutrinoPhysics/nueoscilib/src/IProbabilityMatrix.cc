@@ -22,16 +22,19 @@ IProbabilityMatrix::IProbabilityMatrix(  ) {
   debug = false;
   
   //intialize parameters and set matrix elements
-  setPhase( 0.0 );
+  setPhase( 0.0L );
   
   //Angles:
   m_Q   = new matrix< long double >(3,3);
+
+  initializeMatrix( m_Q );
+
   //initializeAngles();
-  
+    
+  m_U         = new matrix< std::complex<long double> >(3,3);
+  m_UC        = new matrix< std::complex<long double> >(3,3);
   m_Prob_AtoB = new matrix< long double >(3,3);
-  m_U  = new matrix< std::complex<long double> >(3,3);
-  m_UC = new matrix< std::complex<long double> >(3,3);
-  
+
   initializeMatrix( m_U );
   initializeMatrix( m_UC );
   initializeMatrix( m_Prob_AtoB );
@@ -59,15 +62,15 @@ IProbabilityMatrix::~IProbabilityMatrix() {
 void IProbabilityMatrix::setAngle(int i, int j, long double angle) 
 {
 
-  (*m_Q)(i-1,j-1) = (angle * M_PI)/180.0;
-  (*m_Q)(j-1,i-1) = (angle * M_PI)/180.0;
+  (*m_Q)(i-1,j-1) = (angle * M_PIl)/180.0L;
+  (*m_Q)(j-1,i-1) = (angle * M_PIl)/180.0L;
   
 }
 
 void IProbabilityMatrix::setPhase( long double angle ) 
 {
 
-  m_dCP = (angle * M_PI)/180.0;
+  m_dCP = (angle * M_PIl)/180.0L;
   
 }
 
@@ -90,7 +93,7 @@ void IProbabilityMatrix::initializeMatrix( matrix< long double > * Mat )
   
   for(int i=0; i < 3; ++i) 
     for( int j=0; j < 3; ++j)
-      (*Mat)(i,j) = 0.0;
+      (*Mat)(i,j) = 0.0L;
   
 }
 
@@ -99,7 +102,7 @@ void IProbabilityMatrix::initializeMatrix( matrix< std::complex<long double> > *
   
   for(int i=0; i < 3; ++i) 
     for( int j=0; j < 3; ++j)
-      (*Mat)(i,j) = std::complex<long double>(0.0, 0.0);
+      (*Mat)(i,j) = std::complex<long double>(0.0L, 0.0L);
   
 }
 

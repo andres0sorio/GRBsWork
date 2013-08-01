@@ -46,13 +46,10 @@ void makePlots()
             "ModelC", 
             "0",
             "SetI",
-            //"./root_files/ModelA/output_ModelA_SetI.root",
-            "output_ModelA.root",
-            "./root_files/ModelB/output_ModelB_SetI.root",
-            "./root_files/ModelC/output_ModelC_SetI.root",
-            //"./root_files/ZeroPt/output_ZeroPt_SetI.root");
-            "output_ZeroPt.root");
-  
+            "./root_files/Ratios/output_ModelA_SetI.root",
+            "./root_files/Ratios/output_ModelB_SetI.root",
+            "./root_files/Ratios/output_ModelC_SetI.root",
+            "./root_files/Ratios/output_ZeroPt_SetI.root");
   
   /*
     
@@ -552,7 +549,7 @@ void makePlots( const char * modelA,
       gPad->SetGridx();
       gPad->SetGridy();
       gPad->SetLogx();
-      gPad->SetLogy();
+      //gPad->SetLogy();
       
         
       g1->SetMarkerStyle(1);
@@ -565,7 +562,7 @@ void makePlots( const char * modelA,
       TString yaxis = ((TObjString*)v_Labels->At( idxc-1))->GetString();
       g1->GetYaxis()->SetTitle( "#phi/#phi_{vac}" );
 
-      g1->GetXaxis()->SetTitle("E_{#nu} (eV)");
+      g1->GetXaxis()->SetTitle("E_{#nu} (eV)          ");
       g1->GetXaxis()->CenterTitle(true); 
       g1->GetXaxis()->SetLabelOffset(0.007);
       g1->GetXaxis()->SetLabelSize(0.10);
@@ -648,15 +645,15 @@ void makePlots( const char * modelA,
   //
 
   saveAs.str("");
-  saveAs << path << modelA << "/pdf/" << "nueosc_flux_" << config << "_4x_Ratios" << ".pdf";
+  saveAs << path << modelA << "/pdf/" << "nueosc_flux_" << config << "_4x_Ratios_noLog" << ".pdf";
   c2->SaveAs( saveAs.str().c_str() );
   
   saveAs.str("");
-  saveAs << path << modelA << "/png/" << "nueosc_flux_" << config << "_4x_Ratios" << ".png";
+  saveAs << path << modelA << "/png/" << "nueosc_flux_" << config << "_4x_Ratios_noLog" << ".png";
   c2->SaveAs( saveAs.str().c_str() );
 
   saveAs.str("");
-  saveAs << path << modelA << "/eps/" << "nueosc_flux_" << config << "_4x_Ratios" << ".eps";
+  saveAs << path << modelA << "/eps/" << "nueosc_flux_" << config << "_4x_Ratios_noLog" << ".eps";
   c2->SaveAs( saveAs.str().c_str() );
   
 }

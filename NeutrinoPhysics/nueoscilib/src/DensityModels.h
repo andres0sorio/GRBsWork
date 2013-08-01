@@ -258,7 +258,7 @@ public:
   
   virtual double operator() (double *x, double *p) {
 
-    return 0.0;
+    return 0.0L;
         
   };
   

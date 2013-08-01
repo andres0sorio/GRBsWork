@@ -48,13 +48,6 @@ public:
   void   Eval_UFlavour( long double );
   void   Eval_UFlavour( long double , long double );
   
-  //
-  void   Validate( );
-  void   ValidateInVarDensity( );
-  void   ValidateSolarProfile( );
-  void   TestProcedure( );
-  //
-
   void   setPotential( TF1 * f1) { f_Ve = f1; } ;
   
   bool m_debug;
@@ -69,6 +62,18 @@ public:
   long double m_sign;
   long double m_c0_0;
 
+  long double m_SumEab;
+  
+  long double m_SumLambdas;
+  
+  long double m_SumProdLambdas;
+
+  long double m_ProdLambdas;
+
+  long double m_TmDiff;
+  
+  long double m_T2mDiff;
+    
   std::complex<  long double > m_phi;
   
   matrix<  long double > * v_Lambda; // Eigenvalues lambda 
@@ -76,6 +81,12 @@ public:
   matrix<  long double > * m_Eab; // Energy differences
   
   matrix<  long double > * m_Tab; // T == Hm - (tr Hm)I3/
+
+  matrix<  long double > * m_TabSq; // (T^2) xcheck
+
+  matrix<  long double > * m_Tmona; // (T tilde - method 2) xcheck
+ 
+  matrix<  long double > * m_T2mona; // (T2 tilde - method 2) xcheck
   
   matrix<  long double > * m_Ur; // Re( U_CKM )
   
@@ -85,9 +96,9 @@ public:
   
   matrix<  long double > * m_UTUSq; // (T~)^2
   
-  matrix< std::complex< long double> > * m_Uf; // 
+  matrix< std::complex< long double> > * m_Uf; // A_alfa,beta 
   
-  matrix< std::complex< long double> > * m_Ufd; // 
+  matrix< std::complex< long double> > * m_Ufd; // A_alfa,beta conjugate
   
   TF1 * f_Ve;
   
