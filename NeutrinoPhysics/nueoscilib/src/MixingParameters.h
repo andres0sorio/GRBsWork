@@ -1,3 +1,7 @@
+// $Id: $
+#ifndef MIXINGPARAMETERS_H 
+#define MIXINGPARAMETERS_H 1
+
 #include <RootCommon.h>
 #include <TDOMParser.h>
 #include <TXMLAttr.h>
@@ -155,3 +159,5 @@ private:
   TIter * m_iter;
   
 };
+
+#endif
