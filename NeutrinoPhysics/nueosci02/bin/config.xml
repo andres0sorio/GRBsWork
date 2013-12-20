@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE ParameterList PUBLIC "" "config.dtd" []>
+<ParameterList>
+  <Parameters Id="1">
+    <Par1 Name="E_mu_Th">
+      100.0
+    </Par1>
+    <Par2 Name="E_mu_Cut">
+      1.e8
+    </Par2>
+    <Par3 Name="alfa">
+      2.0
+    </Par3>
+    <Par4 Name="N_beta">
+      1.00
+    </Par4>
+    <Par5 Name="rho">
+      0.051
+    </Par5>
+    <Par6 Name="Area">
+      1.e10
+    </Par6>
+    <Par7 Name="NAvogadro">
+      6.022e23
+    </Par7>
+    <Par8 Name="Branching_Ratio">
+      0.178
+    </Par8>
+    <Par9 Name="L_detector_sideways">
+      1.00e5
+    </Par9>
+    <Par10 Name="E_sh_Th">
+      1000.0
+    </Par10>
+    <Par11 Name="phi_nu_e">
+      1.0
+    </Par11>
+    <Par12 Name="phi_nu_mu">
+      1.0
+    </Par12>
+    <Par13 Name="phi_nu_tau">
+      1.0
+    </Par13>
+    <Par14 Name="PShadow switch">
+      1.0
+    </Par14>
+  </Parameters>
+
+  <Parameters Id="2">
+    <Par1 Name="E_mu_Th">
+      1000.0
+    </Par1>
+    <Par2 Name="E_mu_Cut">
+      1.e5
+    </Par2>
+    <Par3 Name="alfa">
+      2.0
+    </Par3>
+    <Par4 Name="N_beta">
+      1.00
+    </Par4>
+    <Par5 Name="rho">
+      0.051
+    </Par5>
+    <Par6 Name="Area">
+      1.e10
+    </Par6>
+    <Par7 Name="NAvogadro">
+      6.022e23
+    </Par7>
+    <Par8 Name="Branching_Ratio">
+      0.178
+    </Par8>
+    <Par9 Name="L_detector_sideways">
+      1.00e5
+    </Par9>
+    <Par10 Name="E_sh_Th">
+      1000.0
+    </Par10>
+    <Par11 Name="phi_nu_e">
+      1.0
+    </Par11>
+    <Par12 Name="phi_nu_mu">
+      1.0
+    </Par12>
+    <Par13 Name="phi_nu_tau">
+      1.0
+    </Par13>
+    <Par14 Name="PShadow switch">
+      1.0
+    </Par14>
+  </Parameters>
+
+  <Parameters Id="3">
+    <Par1 Name="E_mu_Th">
+      5000.0
+    </Par1>
+    <Par2 Name="E_mu_Cut">
+      1.e4
+    </Par2>
+    <Par3 Name="alfa">
+      2.7
+    </Par3>
+    <Par4 Name="N_beta">
+      1.00
+    </Par4>
+    <Par5 Name="rho">
+      0.051
+    </Par5>
+    <Par6 Name="Area">
+      1.e10
+    </Par6>
+    <Par7 Name="NAvogadro">
+      6.022e23
+    </Par7>
+    <Par8 Name="Branching_Ratio">
+      0.178
+    </Par8>
+    <Par9 Name="L_detector_sideways">
+      1.00e5
+    </Par9>
+    <Par10 Name="E_sh_Th">
+      5000.0
+    </Par10>
+    <Par11 Name="phi_nu_e">
+      1.0
+    </Par11>
+    <Par12 Name="phi_nu_mu">
+      1.0
+    </Par12>
+    <Par13 Name="phi_nu_tau">
+      1.0
+    </Par13>
+    <Par14 Name="PShadow switch">
+      1.0
+    </Par14>
+  </Parameters>
+</ParameterList>
