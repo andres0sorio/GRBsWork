@@ -214,14 +214,14 @@ public:
   virtual double operator() (double *x, double *p) {
 
     double value = 0.0;
-    double LMAX  = p[0]; 
+    double LMAX  = p[0];
     double DX    = LMAX/2.0; 
     double x0    = abs( ( x[0]-DX) ) / DX;
     double xx    = pow( x0 , 2.0 );
     double xxx   = pow( x0 , 3.0 );
 
     if( x0 < 0.192 )
-      value = 13.0885 - 8.8381*x0;
+      value = 13.0885 - 8.8381*x0*x0;
     else if( x0 > 0.192 && x0 < 0.546 )
       value = 12.5815 - 1.2638 * x0 - 3.6426 * xx - 5.5281 * xxx;
     else if( x0 > 0.546 && x0 < 0.895 ) 

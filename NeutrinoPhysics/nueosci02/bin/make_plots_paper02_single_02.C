@@ -137,8 +137,8 @@ void makePlots( const char * target,
     ProbNu->SetMarkerColor(1);
     ProbNu->SetLineColor(1);
     ProbNu->SetFillColor(10);
-    ProbNu->SetMaximum(4.0);
-    ProbNu->SetMinimum(1.5);
+    ProbNu->SetMaximum(3.0);
+    ProbNu->SetMinimum(1.0);
     
     ProbNu->GetXaxis()->SetLimits( 2.0, 3.1);
     

@@ -35,6 +35,8 @@ public:
   virtual ~NeutrinoOscInVarDensity( ); ///< Destructor
 
   void   calcProbabilities();
+
+  void   calcVacProbabilities( long double );
   
   void   initializeAngles();
   void   updateEab();
@@ -95,6 +97,10 @@ public:
   matrix<  long double > * m_UTU; // (T~)
   
   matrix<  long double > * m_UTUSq; // (T~)^2
+
+  matrix<  long double > * m_deltaKr; // delta Kronecker
+
+  matrix<  long double > * m_VacProb_AtoB; // Vaccum Probabilities
   
   matrix< std::complex< long double> > * m_Uf; // A_alfa,beta 
   

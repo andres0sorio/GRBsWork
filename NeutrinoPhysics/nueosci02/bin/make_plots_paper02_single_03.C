@@ -38,8 +38,8 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  makePlots("StdPicture", "EarthB", "Vacuum", "alpha", "detection.root");
-   
+  makePlots("StdPicture", "EarthB", "Vacuum", "phi_nue", "detection.root");
+  
 }
 
 void makePlots( const char * model,
@@ -73,6 +73,9 @@ void makePlots( const char * model,
   double xx = 0.0;
   double yy = 0.0;
   
+  double y1 = 0.0;
+  double y2 = 0.0;
+    
   TString cname = TString("Ratio") + TString("_") + TString(var);
   
   TCanvas * c1 = new TCanvas( cname.Data(), "track/shower ratio", 206,141,722,575); 
@@ -85,12 +88,15 @@ void makePlots( const char * model,
   
   PxxTreeNu->SetBranchAddress("Xx",&xx);
   PxxTreeNu->SetBranchAddress("Ratio",&yy);
+  PxxTreeNu->SetBranchAddress("MuTks",&y1);
+  PxxTreeNu->SetBranchAddress("HadShw",&y2);
   
   Long64_t nentries = PxxTreeNu->GetEntries();
   
   for (Long64_t i=0;i<nentries;i++) {
     PxxTreeNu->GetEntry(i);
     ProbNu[0]->SetPoint( i, xx, yy);
+    ProbNu[1]->SetPoint( i, xx, (y1/y2) );
   }
 
   ProbNu[0]->SetMarkerStyle(25);
@@ -98,30 +104,32 @@ void makePlots( const char * model,
   ProbNu[0]->SetMarkerColor(1);
   ProbNu[0]->SetLineColor(1);
   ProbNu[0]->SetFillColor(10);
-  ProbNu[0]->SetMaximum(4.0);
-  ProbNu[0]->SetMinimum(1.5);
+  ProbNu[0]->SetMaximum(6.0);
+  ProbNu[0]->SetMinimum(0.0);
 
-  ProbNu[0]->GetXaxis()->SetLimits( 2.0, 3.1);
+  ProbNu[0]->GetXaxis()->SetLimits( 0.0, 1.0 );
 
-  ProbNu[0]->GetXaxis()->SetTitle("xx");
+  ProbNu[0]->GetXaxis()->SetTitle("#phi_{#nu_e} fraction");
   ProbNu[0]->GetXaxis()->CenterTitle(true);
   ProbNu[0]->GetXaxis()->SetLabelFont(42);
   ProbNu[0]->GetXaxis()->SetLabelOffset(0.006);
-  ProbNu[0]->GetXaxis()->SetLabelSize(0.06);
-  ProbNu[0]->GetXaxis()->SetTitleSize(0.06);
+  ProbNu[0]->GetXaxis()->SetLabelSize(0.05);
+  ProbNu[0]->GetXaxis()->SetTitleSize(0.05);
   ProbNu[0]->GetXaxis()->SetTickLength(0.05);
-  ProbNu[0]->GetXaxis()->SetTitleOffset(0.89);
+  ProbNu[0]->GetXaxis()->SetTitleOffset(1.10);
   ProbNu[0]->GetXaxis()->SetTitleFont(42);
   ProbNu[0]->GetYaxis()->SetTitle("R");
   ProbNu[0]->GetYaxis()->CenterTitle(true);
   ProbNu[0]->GetYaxis()->SetNdivisions(509);
   ProbNu[0]->GetYaxis()->SetLabelFont(42);
   ProbNu[0]->GetYaxis()->SetLabelOffset(0.007);
-  ProbNu[0]->GetYaxis()->SetLabelSize(0.06);
-  ProbNu[0]->GetYaxis()->SetTitleSize(0.06);
+  ProbNu[0]->GetYaxis()->SetLabelSize(0.05);
+  ProbNu[0]->GetYaxis()->SetTitleSize(0.05);
   ProbNu[0]->GetYaxis()->SetTitleOffset(0.93);
   ProbNu[0]->GetYaxis()->SetTitleFont(42);
-  
+
+  ProbNu[0]->SetLineWidth(2);
+
   //leg->AddEntry( ProbNu[0], "#nu");
   //leg->SetBorderSize(0);
   //leg->SetTextSize(0.1);
@@ -136,8 +144,8 @@ void makePlots( const char * model,
   //gPad->SetGridx();
   //gPad->SetGridy();
   
-  ProbNu[0]->Draw("AP");
-  
+  ProbNu[0]->Draw("AC");
+  ProbNu[1]->Draw("C");
   topTitle(var);
   
   //leg->DrawClone();

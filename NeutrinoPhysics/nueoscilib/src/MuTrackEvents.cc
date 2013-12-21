@@ -59,7 +59,6 @@ float MuTrackEvents::EvaluateNuMuContribution() {
   
   m_Numu_integral_dx * ff = new m_Numu_integral_dx();
   
-  m_input->SetPar4( m_phi_nu[1] ); // N_beta = phi_mu
   m_input->SetKonst1( kk * m_sfactor );
   
   ff->SetData(nu_xsec_data, antinu_xsec_data);
@@ -107,7 +106,6 @@ float MuTrackEvents::EvaluateNuTauContribution() {
   
   m_Nutau_integral_dx * ff = new m_Nutau_integral_dx();
   
-  m_input->SetPar4( m_phi_nu[2] ); // N_beta = phi_tau
   m_input->SetKonst1( kk * m_sfactor );
   
   ff->SetData(nu_xsec_data, antinu_xsec_data);
@@ -174,7 +172,6 @@ float MuTrackEvents::EvaluateNuMuContribution( double Enu ) {
   
   m_Numu_integral_dx * ff = new m_Numu_integral_dx();
   
-  m_input->SetPar4( m_phi_nu[1] ); // N_beta = phi_mu
   m_input->SetKonst1( kk * m_sfactor );
   
   ff->SetData(nu_xsec_data, antinu_xsec_data);
@@ -206,7 +203,6 @@ float MuTrackEvents::EvaluateNuTauContribution( double Enu ) {
   
   m_Nutau_integral_dx * ff = new m_Nutau_integral_dx();
   
-  m_input->SetPar4( m_phi_nu[2] ); // N_beta = phi_tau
   m_input->SetKonst1( kk * m_sfactor );
   
   ff->SetData(nu_xsec_data, antinu_xsec_data);

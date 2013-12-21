@@ -21,19 +21,27 @@
 class NeutrinosDetectionPaper : public Graphics  {
 public: 
   /// Standard constructor
-  NeutrinosDetectionPaper( ) { }; 
+  NeutrinosDetectionPaper( ) : Graphics() { }; 
   
-  NeutrinosDetectionPaper( Parameters * , TFile * ); 
+  NeutrinosDetectionPaper( Parameters *); 
   
   virtual ~NeutrinosDetectionPaper( ); ///< Destructor
   
-  void MakeVariation01(const char *, const char * );
+  void MakeVariation01(TFile * , const char *, const char * );
+  
+  void MakeVariation02(TFile * , const char *, const char *, const char *, double, double, double);
+
+  void MakeVariation03(const char *, const char *, const char *, double, double, double);
+
+  void MakeVariationStdPicture( const char *, const char *, double, double, double);
   
 protected:
   
 private:
   
   bool Init( const char *,  const char *, const char * );
+
+  bool InitOutput( const char *, const char *,  const char *, const char * );
   
   bool m_debug;
   
@@ -47,7 +55,7 @@ private:
   
   //Output branches
 
-  double m_Ex;
+  double m_Xx;
   double m_MuTks;
   double m_TauTks;
   double m_HadShw;

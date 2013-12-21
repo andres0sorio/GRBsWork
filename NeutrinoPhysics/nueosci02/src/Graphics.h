@@ -27,8 +27,10 @@ public:
 
   Int_t txtci;
   
+  void Reset();
+
   void SetOptions();
-  
+
   std::map<std::string, TH1D *>    h_1dHistos;
   
   std::map<std::string, TCanvas *> h_Canvas;

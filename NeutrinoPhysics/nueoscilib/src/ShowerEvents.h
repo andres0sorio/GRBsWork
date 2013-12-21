@@ -61,6 +61,7 @@ private:
   std::string antinu_xsec_data;
 
   float m_phi_nu[3];
+  float m_phi_anu[3];
     
 };
 #endif // SHOWEREVENTS_H

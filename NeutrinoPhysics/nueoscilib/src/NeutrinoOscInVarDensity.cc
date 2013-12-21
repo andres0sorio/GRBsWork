@@ -38,7 +38,11 @@ NeutrinoOscInVarDensity::NeutrinoOscInVarDensity( MixingParameters * mixpars ) :
   m_TabSq   = new matrix<  long double >(3,3);
   m_Tmona   = new matrix<  long double >(3,3);
   m_T2mona  = new matrix<  long double >(3,3);
-  
+ 
+  m_deltaKr = new matrix<  long double >(3,3);
+
+  m_VacProb_AtoB = new matrix<  long double >(3,3);
+
   m_phi    = std::complex< long double >(1.0, 1.0);
   
   initializeAngles();
@@ -53,18 +57,21 @@ NeutrinoOscInVarDensity::~NeutrinoOscInVarDensity() {
   //delete all Matrices
   std::cout << "NeutrinoOscInVarDensity> Deleting matrices" << std::endl;
   
-  if( v_Lambda ) delete v_Lambda;
-  if( m_Eab )    delete m_Eab;
-  if( m_Tab )    delete m_Tab;
-  if( m_Ur )     delete m_Ur;
-  if( m_invUr )  delete m_invUr;
-  if( m_UTU )    delete m_UTU;
-  if( m_UTUSq )  delete m_UTUSq;
-  if( m_Uf )     delete m_Uf;
-  if( m_Ufd )    delete m_Ufd;
-  if( m_TabSq )  delete m_TabSq;
-  if( m_Tmona )  delete m_Tmona;
-  if( m_T2mona ) delete m_T2mona;
+  if( v_Lambda )  delete v_Lambda;
+  if( m_Eab )     delete m_Eab;
+  if( m_Tab )     delete m_Tab;
+  if( m_Ur )      delete m_Ur;
+  if( m_invUr )   delete m_invUr;
+  if( m_UTU )     delete m_UTU;
+  if( m_UTUSq )   delete m_UTUSq;
+  if( m_Uf )      delete m_Uf;
+  if( m_Ufd )     delete m_Ufd;
+  if( m_TabSq )   delete m_TabSq;
+  if( m_Tmona )   delete m_Tmona;
+  if( m_T2mona )  delete m_T2mona;
+  if( m_deltaKr ) delete m_deltaKr;
+  
+  if( m_VacProb_AtoB ) delete m_VacProb_AtoB;
   
 } 
 
@@ -454,6 +461,41 @@ void NeutrinoOscInVarDensity::calcProbabilities()
   (*m_Prob_AtoB)(1,2) = real( (*m_Ufd)(1,2) * (*m_Uf)(1,2));
   (*m_Prob_AtoB)(2,1) = real( (*m_Ufd)(2,1) * (*m_Uf)(2,1)); 
  
-    
+  
+}
+
+void NeutrinoOscInVarDensity::calcVacProbabilities(long double distance)
+{
+  
+  // Adding the explicit vacuum expression for comparison
+  
+  initializeMatrix ( m_deltaKr );
+  initializeMatrix ( m_VacProb_AtoB );
+  
+  (*m_deltaKr)(0,0) = 1.0L;
+  (*m_deltaKr)(1,1) = 1.0L;
+  (*m_deltaKr)(2,2) = 1.0L;
+  
+  for(int alfa = 0; alfa < 3; ++alfa) 
+    for(int beta = 0; beta < 3; ++beta) 
+    {
+      
+      (*m_VacProb_AtoB)(alfa,beta) = (*m_deltaKr)(alfa,beta);
+      
+      long double sum = 0.0L;
+      
+      //double sum over a, b
+      for(int a = 0; a < 3; ++a) 
+        for(int b = 0; b < 3; ++b) 
+        {
+          long double x_tilda = (*m_Eab)(a,b) * distance / 2.0L;
+           sum += (*m_Ur)(alfa,a) * (*m_Ur)(beta,a) * (*m_Ur)(alfa,b) * (*m_Ur)(beta,b) * sin( x_tilda ) * sin( x_tilda );
+        }
+      
+      (*m_VacProb_AtoB)(alfa,beta) += -4.0L * sum;
+      
+    }
+  
+  
 }
 

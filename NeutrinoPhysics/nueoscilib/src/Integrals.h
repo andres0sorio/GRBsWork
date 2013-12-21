@@ -206,6 +206,26 @@ private:
   
 };
 
+class m_antiNC_showers_integral_dx : public ROOT::Math::IBaseFunctionOneDim, public Integrals {
+  
+public:
+  
+  m_antiNC_showers_integral_dx() : Integrals() {};
+  
+  m_antiNC_showers_integral_dx( Integrals & base ) : Integrals( base ) {};
+  
+  virtual ~m_antiNC_showers_integral_dx() {};
+  
+  ROOT::Math::IBaseFunctionOneDim* Clone() const;
+
+  double DoEval(double z) const;
+  
+private:
+  
+
+  
+};
+
 //=============================================================================
 
 class m_CCnue_showers_integral_dx : public ROOT::Math::IBaseFunctionOneDim, public Integrals {
@@ -217,6 +237,26 @@ public:
   m_CCnue_showers_integral_dx( Integrals & base ) : Integrals( base ) {};
   
   virtual ~m_CCnue_showers_integral_dx() {};
+  
+  ROOT::Math::IBaseFunctionOneDim* Clone() const;
+  
+  double DoEval(double z) const;
+
+private:
+  
+  
+  
+};
+
+class m_CCantinue_showers_integral_dx : public ROOT::Math::IBaseFunctionOneDim, public Integrals {
+  
+public:
+  
+  m_CCantinue_showers_integral_dx() : Integrals() {};
+  
+  m_CCantinue_showers_integral_dx( Integrals & base ) : Integrals( base ) {};
+  
+  virtual ~m_CCantinue_showers_integral_dx() {};
   
   ROOT::Math::IBaseFunctionOneDim* Clone() const;
   
@@ -249,6 +289,27 @@ private:
   
   
 };
+
+class m_CCantinutau_showers_integral_dx : public ROOT::Math::IBaseFunctionOneDim, public Integrals {
+  
+public:
+  
+  m_CCantinutau_showers_integral_dx() : Integrals() {};
+  
+  m_CCantinutau_showers_integral_dx( Integrals & base ) : Integrals( base ) {};
+  
+  virtual ~m_CCantinutau_showers_integral_dx() {};
+  
+  ROOT::Math::IBaseFunctionOneDim* Clone() const;
+  
+  double DoEval(double z) const;
+  
+private:
+  
+  
+  
+};
+
 
 //=============================================================================
 

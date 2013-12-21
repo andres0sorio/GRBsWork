@@ -1,7 +1,3 @@
-// $Id: $
-#ifndef DOMPARAMETERS_H 
-#define DOMPARAMETERS_H 1
-
 #include <RootCommon.h>
 #include <TDOMParser.h>
 #include <TXMLAttr.h>
@@ -79,9 +75,9 @@ class Parameters : public TObject {
   void SetKonst1(double x) { konst1 =x;}
 
   void SetPar(const char * name, double x) {
-    m_locator = m_params.find( std::string( name ) );
-    if ( m_locator == m_params.end() )
-      m_params[std::string(name)] = x;
+    //m_locator = m_params.find( std::string( name ) );
+    //if ( m_locator == m_params.end() )
+    m_params[std::string(name)] = x;
   };
   
   double GetPar( const char * name ) { 
@@ -92,23 +88,29 @@ class Parameters : public TObject {
   };
   
   friend std::ostream & operator << (std::ostream& out, const Parameters& p) {
-    out << "Par1 " << p.par1 << std::endl;
-    out << "Par2 " << p.par2 << std::endl;
-    out << "Par3 " << p.par3 << std::endl;
-    out << "Par4 " << p.par4 << std::endl;
-    out << "Par5 " << p.par5 << std::endl;
-    out << "Par6 " << p.par6 << std::endl;
-    out << "Par7 " << p.par7 << std::endl;
-    out << "Par8 " << p.par8 << std::endl;
-    out << "Par9 " << p.par9 << std::endl;
-    out << "Par10 " << p.par10 << std::endl;
-    out << "Par11 " << p.par11 << std::endl;
-    out << "Par12 " << p.par12 << std::endl;
-    out << "Par13 " << p.par13 << std::endl;
-    out << "Par14 " << p.par14 << std::endl;
+    
+    out << "Par1  => " << p.par1 << std::endl;
+    out << "Par2  => " << p.par2 << std::endl;
+    out << "Par3  => " << p.par3 << std::endl;
+    out << "Par4  => " << p.par4 << std::endl;
+    out << "Par5  => " << p.par5 << std::endl;
+    out << "Par6  => " << p.par6 << std::endl;
+    out << "Par7  => " << p.par7 << std::endl;
+    out << "Par8  => " << p.par8 << std::endl;
+    out << "Par9  => " << p.par9 << std::endl;
+    out << "Par10  => " << p.par10 << std::endl;
+    out << "Par11  => " << p.par11 << std::endl;
+    out << "Par12  => " << p.par12 << std::endl;
+    out << "Par13  => " << p.par13 << std::endl;
+    out << "Par14  => " << p.par14 << std::endl;
     
     out << "Konst1 " << p.konst1 << std::endl;
+
+    std::map<std::string,double>::const_iterator itr;
     
+    for (itr = p.m_params.begin(); itr != p.m_params.end(); ++itr)
+      std::cout << itr->first << " => " << itr->second << '\n';
+        
     return out;
   }
   
@@ -198,5 +200,3 @@ private:
   TIter * m_iter;
   
 };
-
-#endif

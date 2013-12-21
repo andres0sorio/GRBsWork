@@ -39,13 +39,7 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  // Star
-  
-  makePlots("Vacuum",
-            "ModelA",
-            "SetupI",
-            "./root_files/ModelA/output_ModelA_SetI.root",
-            "Model A (at Earth)");
+  //At the Detector
   
   makePlots("EarthB",
             "Vacuum",
@@ -53,6 +47,37 @@ void makePlots()
             "./root_files/ModelA/output_ModelA_SetI.root",
             "Model A (at Detector)");
   
+  makePlots("EarthB",
+            "Vacuum",
+            "ModelB_SetupI",
+            "./root_files/ModelB/output_ModelB_SetI.root",
+            "Model B (at Detector)");
+
+  makePlots("EarthB",
+            "Vacuum",
+            "ModelC_SetupI",
+            "./root_files/ModelC/output_ModelC_SetI.root",
+            "Model C (at Detector)");
+  
+  makePlots("EarthB",
+            "Vacuum",
+            "ModelA_SetupII",
+            "./root_files/ModelA/output_ModelA_SetII.root",
+            "Model A (at Detector)");
+
+  makePlots("EarthB",
+            "Vacuum",
+            "ModelB_SetupII",
+            "./root_files/ModelB/output_ModelB_SetII.root",
+            "Model B (at Detector)");
+
+  makePlots("EarthB",
+            "Vacuum",
+            "ModelC_SetupII",
+            "./root_files/ModelC/output_ModelC_SetII.root",
+            "Model C (at Detector)");
+  
+
 }
 
 void makePlots( const char * modelA,

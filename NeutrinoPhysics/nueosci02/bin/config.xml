@@ -6,12 +6,12 @@
       100.0
     </Par1>
     <Par2 Name="E_mu_Cut">
-      1.e8
+      1.e5
     </Par2>
     <Par3 Name="alfa">
       2.0
     </Par3>
-    <Par4 Name="N_beta">
+    <Par4 Name="Free">
       1.00
     </Par4>
     <Par5 Name="rho">
@@ -56,7 +56,7 @@
     <Par3 Name="alfa">
       2.0
     </Par3>
-    <Par4 Name="N_beta">
+    <Par4 Name="Free">
       1.00
     </Par4>
     <Par5 Name="rho">
@@ -101,7 +101,7 @@
     <Par3 Name="alfa">
       2.7
     </Par3>
-    <Par4 Name="N_beta">
+    <Par4 Name="Free">
       1.00
     </Par4>
     <Par5 Name="rho">

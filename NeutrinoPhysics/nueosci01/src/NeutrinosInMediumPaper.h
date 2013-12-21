@@ -64,7 +64,7 @@ private:
   
   double m_Ex;
   double m_Pb;
-  double m_Qf;
+  double m_PbV;
   double m_Phi_e;
   double m_Phi_m;
   double m_Phi_t;

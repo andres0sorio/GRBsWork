@@ -135,9 +135,9 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
   } 
   
   m_tree = new TTree("data","Data points");
-  m_tree->Branch("Ex", &m_Ex, "Ex/d");
-  m_tree->Branch("Pb", &m_Pb, "Pb/d");
-  m_tree->Branch("Qf", &m_Qf, "Qf/d");
+  m_tree->Branch("Ex" , &m_Ex , "Ex/d");
+  m_tree->Branch("Pb" , &m_Pb , "Pb/d");
+  m_tree->Branch("PbV", &m_PbV, "PbV/d");
   
   // Add some control histogram
   TString histo1  = TString("Sum_of_Probs_Row1_")  + TString(Pxx);
@@ -255,14 +255,19 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
     
     m_Physics->calcProbabilities();
 
+    m_Physics->calcVacProbabilities( (LMAX-LMIN) );
+
     //get the Transition probability A->B
     
     double d1 = (*m_Physics->m_Prob_AtoB)( m_ProbIndex[Pxx].first , m_ProbIndex[Pxx].second );
+
+    double d2 = (*m_Physics->m_VacProb_AtoB)( m_ProbIndex[Pxx].first , m_ProbIndex[Pxx].second );
     
     if ( ! (boost::math::isnan)(d1) ) {
-
-      m_Ex = Ex;
-      m_Pb = d1;
+      
+      m_Ex  = Ex;
+      m_Pb  = d1;
+      m_PbV = d2;
       
       if ( eval_flux ) {
         
@@ -270,32 +275,25 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
         m_Phi_m = m_Physics->Propagate( 1, 1.0, 2.0, 0.0 ); 
         m_Phi_t = m_Physics->Propagate( 2, 1.0, 2.0, 0.0 ); 
               
-        m_Qf = 0.0;
         double SumProbs = 0.0;
         SumProbs = (*m_Physics->m_Prob_AtoB)( 0 , 0 ) + (*m_Physics->m_Prob_AtoB)( 0 , 1 ) + (*m_Physics->m_Prob_AtoB)( 0 , 2 );
         h_paper01[histo1.Data()]->Fill( SumProbs );
-        m_Qf += SumProbs;
-        
+                
         SumProbs = (*m_Physics->m_Prob_AtoB)( 0 , 0 ) + (*m_Physics->m_Prob_AtoB)( 1 , 0 ) + (*m_Physics->m_Prob_AtoB)( 2 , 0 );
         h_paper01[histo2.Data()]->Fill( SumProbs );
-        m_Qf += SumProbs;
-        
+                
         SumProbs = (*m_Physics->m_Prob_AtoB)( 1 , 0 ) + (*m_Physics->m_Prob_AtoB)( 1 , 1 ) + (*m_Physics->m_Prob_AtoB)( 1 , 2 );
         h_paper01[histo3.Data()]->Fill( SumProbs );
-        m_Qf += SumProbs;
-        
+                
         SumProbs = (*m_Physics->m_Prob_AtoB)( 0 , 1 ) + (*m_Physics->m_Prob_AtoB)( 1 , 1 ) + (*m_Physics->m_Prob_AtoB)( 2 , 1 );
         h_paper01[histo4.Data()]->Fill( SumProbs );
-        m_Qf += SumProbs;
-        
+                
         SumProbs = (*m_Physics->m_Prob_AtoB)( 2 , 0 ) + (*m_Physics->m_Prob_AtoB)( 2 , 1 ) + (*m_Physics->m_Prob_AtoB)( 2 , 2 );
         h_paper01[histo5.Data()]->Fill( SumProbs );
-        m_Qf += SumProbs;
-        
+                
         SumProbs = (*m_Physics->m_Prob_AtoB)( 0 , 2 ) + (*m_Physics->m_Prob_AtoB)( 1 , 2 ) + (*m_Physics->m_Prob_AtoB)( 2 , 2 );
         h_paper01[histo6.Data()]->Fill( SumProbs );
-        m_Qf += SumProbs;
-        
+                
         h_paper01[histo7.Data()]->Fill( m_Physics->m_SumEab + 10.0L);
         
         h_paper01[histo8.Data()]->Fill( m_Physics->m_SumLambdas + 101.0L);
@@ -342,12 +340,6 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
   {
     (*hItr).second->Write();
   }
-  
-  //h_paper01[histo2.Data()]->Write();
-  //h_paper01[histo3.Data()]->Write();
-  //h_paper01[histo4.Data()]->Write();
-  //h_paper01[histo5.Data()]->Write();
-  //h_paper01[histo6.Data()]->Write();
   
   m_file->cd("../");
 
