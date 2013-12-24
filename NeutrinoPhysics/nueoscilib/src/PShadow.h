@@ -4,7 +4,6 @@
 
 // Include files
 #include <RootCommon.h>
-#include "GSLHelpers.h"
 #include <Math/IFunction.h>
 #include <TCanvas.h>
 #include <TGraph.h>
@@ -57,6 +56,9 @@ public:
   /// Standard constructor
   PShadow( ); 
 
+  //AO dec 2013
+  PShadow( const std::string & ); 
+  
   PShadow( const std::string & , const std::string & ); 
   
   virtual ~PShadow( ); ///< Destructor
@@ -72,6 +74,8 @@ public:
   
   //... Eval as function of the neutrino energy enu @ angle = Pi
   void Eval(double);
+
+  void Eval2(double);
   
   //... Eval as a step function
   void Eval(int, double);
@@ -112,6 +116,18 @@ public:
   
   Interpolation * nu_xsec_interp;
   Interpolation * antinu_xsec_interp;
+
+  //AO dec 2013
+
+  std::ifstream * m_in;
+  std::vector<double> m_xx;
+  std::vector<double> m_nu;
+  std::vector<double> m_anu;
+  
+  ROOT::Math::Interpolator * m_interpolatorNu;
+  ROOT::Math::Interpolator * m_interpolatorANu;
+
+  bool m_full_calculation;
   
 };
 #endif // PSHADOW_H

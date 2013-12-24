@@ -44,9 +44,11 @@ void makePlots()
   makePlots("EarthB",
             "Vacuum",
             "ModelA_SetupI",
-            "./root_files/ModelA/output_ModelA_SetI.root",
+            "./root_files/ModelA/output_ModelA_SetI-1E17.root",
             "Model A (at Detector)");
-  
+
+  /*
+
   makePlots("EarthB",
             "Vacuum",
             "ModelB_SetupI",
@@ -76,7 +78,8 @@ void makePlots()
             "ModelC_SetupII",
             "./root_files/ModelC/output_ModelC_SetII.root",
             "Model C (at Detector)");
-  
+ 
+  */
 
 }
 

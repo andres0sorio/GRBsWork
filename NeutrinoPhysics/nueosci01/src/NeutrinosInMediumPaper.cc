@@ -321,8 +321,14 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
       Ex += (dE*10.0); //step in energy
     else if ( Ex >=1.0E13 && Ex < 1.0E14 )
       Ex += (dE*100.0); //step in energy
+    else if ( Ex >=1.0E14 && Ex < 1.0E15 )
+      Ex += (dE*1000.0); //step in energy
+    else if ( Ex >=1.0E15 && Ex < 1.0E16 )
+      Ex += (dE*10000.0); //step in energy
+    else if ( Ex >=1.0E16 && Ex < 1.0E17 )
+      Ex += (dE*100000.0); //step in energy
     else
-      Ex += (dE*1000.0);
+      Ex += (dE*1000000.0);
 
     delete tmp;
     

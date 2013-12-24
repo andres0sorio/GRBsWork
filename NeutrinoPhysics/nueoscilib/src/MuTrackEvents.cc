@@ -13,6 +13,7 @@ MuTrackEvents::MuTrackEvents(const char * nuxsec, const char * antinuxsec, Param
   
   nu_xsec_data = std::string(nuxsec);
   antinu_xsec_data = std::string(antinuxsec);
+  
   m_input = input;
 
   m_phi_nu[0] = m_input->GetPar11(); //phi_e
@@ -26,6 +27,26 @@ MuTrackEvents::MuTrackEvents(const char * nuxsec, const char * antinuxsec, Param
   m_NuTauTracks = 0.0;
   
   
+}
+
+MuTrackEvents::MuTrackEvents(const char * nuxsec, const char * antinuxsec, const char * pshad, Parameters * input) {
+  
+  nu_xsec_data = std::string(nuxsec);
+  antinu_xsec_data = std::string(antinuxsec);
+  pshadow_data = std::string(pshad);
+  
+  m_input = input;
+
+  m_phi_nu[0] = m_input->GetPar11(); //phi_e
+  m_phi_nu[1] = m_input->GetPar12(); //phi_mu
+  m_phi_nu[2] = m_input->GetPar13(); //phi_tau
+  
+  //std::cout << "MuTrackEvents> " << m_phi_nu[0] << " " << m_phi_nu[1] << " " << m_phi_nu[2] << '\n';
+
+  m_NuMuTracks = 0.0;
+  
+  m_NuTauTracks = 0.0;
+    
 }
 
 float MuTrackEvents::Evaluate() {
@@ -61,7 +82,7 @@ float MuTrackEvents::EvaluateNuMuContribution() {
   
   m_input->SetKonst1( kk * m_sfactor );
   
-  ff->SetData(nu_xsec_data, antinu_xsec_data);
+  ff->SetData(nu_xsec_data, antinu_xsec_data, pshadow_data);
   ff->SetParameters( m_input );
   
   ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( Integrals::AbsError,
@@ -108,7 +129,7 @@ float MuTrackEvents::EvaluateNuTauContribution() {
   
   m_input->SetKonst1( kk * m_sfactor );
   
-  ff->SetData(nu_xsec_data, antinu_xsec_data);
+  ff->SetData(nu_xsec_data, antinu_xsec_data, pshadow_data);
   ff->SetParameters( m_input );
   
   ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( Integrals::AbsError,
@@ -174,7 +195,7 @@ float MuTrackEvents::EvaluateNuMuContribution( double Enu ) {
   
   m_input->SetKonst1( kk * m_sfactor );
   
-  ff->SetData(nu_xsec_data, antinu_xsec_data);
+  ff->SetData(nu_xsec_data, antinu_xsec_data, pshadow_data);
   ff->SetParameters( m_input );
   
   double result = ff->DoEval( Enu );
@@ -205,7 +226,7 @@ float MuTrackEvents::EvaluateNuTauContribution( double Enu ) {
   
   m_input->SetKonst1( kk * m_sfactor );
   
-  ff->SetData(nu_xsec_data, antinu_xsec_data);
+  ff->SetData(nu_xsec_data, antinu_xsec_data, pshadow_data);
   ff->SetParameters( m_input );
 
   double result = ff->DoEval( Enu );
@@ -213,8 +234,6 @@ float MuTrackEvents::EvaluateNuTauContribution( double Enu ) {
   ff->DestroyInterpolator();
   
   delete ff;
-
-  //m_sfactor = 1.0;
 
   return (result/m_sfactor);
   

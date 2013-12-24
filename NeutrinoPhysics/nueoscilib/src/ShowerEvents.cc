@@ -23,13 +23,30 @@ ShowerEvents::ShowerEvents(const char * nuxsec, const char * antinuxsec, Paramet
   m_phi_anu[1] = m_input->GetPar("N_amu");
   m_phi_anu[2] = m_input->GetPar("N_atau");
   
-  std::cout << "ShowerEvents> Fluxes " << m_phi_nu[0] << " " << m_phi_nu[1] << " " << m_phi_nu[2] << '\n';
-  std::cout << "ShowerEvents> Fluxes " << m_phi_anu[0] << " " << m_phi_anu[1] << " " << m_phi_anu[2] << '\n';
+  m_NCShower = 0.0;
+  m_CCNuShower = 0.0;
+  m_CCNutauShower = 0.0;
+  
+}
+
+ShowerEvents::ShowerEvents(const char * nuxsec, const char * antinuxsec, const char * pshad, Parameters * input) {
+  
+  nu_xsec_data = std::string(nuxsec);
+  antinu_xsec_data = std::string(antinuxsec);
+  pshadow_data = std::string(pshad);
+  
+  m_input = input;
+
+  m_phi_nu[0] = m_input->GetPar("N_e");
+  m_phi_nu[1] = m_input->GetPar("N_mu");
+  m_phi_nu[2] = m_input->GetPar("N_tau");
+    
+  m_phi_anu[0] = m_input->GetPar("N_ae");
+  m_phi_anu[1] = m_input->GetPar("N_amu");
+  m_phi_anu[2] = m_input->GetPar("N_atau");
   
   m_NCShower = 0.0;
-  
   m_CCNuShower = 0.0;
-  
   m_CCNutauShower = 0.0;
   
 }
@@ -71,17 +88,20 @@ float ShowerEvents::EvaluateNCContribution()
     m_NC_showers_integral_dx * ff = new m_NC_showers_integral_dx();
 
     m_antiNC_showers_integral_dx * gg = new m_antiNC_showers_integral_dx();
-    
+
     // AO dec 2013
-    m_input->SetPar( "N_beta", m_phi_nu[i] ); // N_beta = phi_(e,mu,tau)
-    m_input->SetPar( "N_abeta", m_phi_anu[i] ); // N_beta = phi_(ae,amu,atau)
+    ff->SetFlavour ( i );
+    gg->SetFlavour ( i );
+  
+    //m_input->SetPar( "N_beta", m_phi_nu[i] ); // N_beta = phi_(e,mu,tau)
+    //m_input->SetPar( "N_abeta", m_phi_anu[i] ); // N_beta = phi_(ae,amu,atau)
     
     m_input->SetKonst1( kk * m_sfactor );
     
-    ff->SetData(nu_xsec_data, antinu_xsec_data);
+    ff->SetData(nu_xsec_data, antinu_xsec_data, pshadow_data);
     ff->SetParameters( m_input );
 
-    gg->SetData(nu_xsec_data, antinu_xsec_data);
+    gg->SetData(nu_xsec_data, antinu_xsec_data, pshadow_data);
     gg->SetParameters( m_input );
     
     ROOT::Math::GSLIntegrator * nminteg = new ROOT::Math::GSLIntegrator( Integrals::AbsError,
@@ -141,10 +161,10 @@ float ShowerEvents::EvaluateCCNueContribution()
   
   m_input->SetKonst1( kk * m_sfactor );
   
-  ff->SetData(nu_xsec_data, antinu_xsec_data);
+  ff->SetData(nu_xsec_data, antinu_xsec_data, pshadow_data);
   ff->SetParameters( m_input );
   
-  gg->SetData(nu_xsec_data, antinu_xsec_data);
+  gg->SetData(nu_xsec_data, antinu_xsec_data, pshadow_data);
   gg->SetParameters( m_input );
   
   ROOT::Math::GSLIntegrator * nminteg = new ROOT::Math::GSLIntegrator( Integrals::AbsError,
@@ -201,10 +221,10 @@ float ShowerEvents::EvaluateCCNutauContribution()
   
   m_input->SetKonst1( kk * m_sfactor );
   
-  ff->SetData(nu_xsec_data, antinu_xsec_data);
+  ff->SetData(nu_xsec_data, antinu_xsec_data, pshadow_data);
   ff->SetParameters( m_input );
 
-  gg->SetData(nu_xsec_data, antinu_xsec_data);
+  gg->SetData(nu_xsec_data, antinu_xsec_data, pshadow_data);
   gg->SetParameters( m_input );
   
   ROOT::Math::GSLIntegrator * nminteg = new ROOT::Math::GSLIntegrator( Integrals::AbsError,
@@ -276,12 +296,14 @@ float ShowerEvents::EvaluateNCContribution( double Enu )
     m_NC_showers_integral_dx * ff = new m_NC_showers_integral_dx();
     
     // AO dec 2013
-    m_input->SetPar( "N_beta", m_phi_nu[i] ); // N_beta = phi_(e,mu,tau)
-    m_input->SetPar( "N_abeta", m_phi_anu[i] ); // N_beta = phi_(ae,amu,atau)
+    ff->SetFlavour ( i );
+
+    //m_input->SetPar( "N_beta", m_phi_nu[i] ); // N_beta = phi_(e,mu,tau)
+    //m_input->SetPar( "N_abeta", m_phi_anu[i] ); // N_beta = phi_(ae,amu,atau)
 
     m_input->SetKonst1( kk * m_sfactor );
     
-    ff->SetData(nu_xsec_data, antinu_xsec_data);
+    ff->SetData(nu_xsec_data, antinu_xsec_data, pshadow_data);
     ff->SetParameters( m_input );
     
     double result = ff->DoEval( Enu );
@@ -316,7 +338,7 @@ float ShowerEvents::EvaluateCCNueContribution( double Enu )
   
   m_input->SetKonst1( kk * m_sfactor );
   
-  ff->SetData(nu_xsec_data, antinu_xsec_data);
+  ff->SetData(nu_xsec_data, antinu_xsec_data, pshadow_data);
   ff->SetParameters( m_input );
   
   double result = ff->DoEval( Enu );
@@ -347,7 +369,7 @@ float ShowerEvents::EvaluateCCNutauContribution( double Enu )
   
   m_input->SetKonst1( kk * m_sfactor );
   
-  ff->SetData(nu_xsec_data, antinu_xsec_data);
+  ff->SetData(nu_xsec_data, antinu_xsec_data, pshadow_data);
   ff->SetParameters( m_input );
   
   double result = ff->DoEval( Enu );

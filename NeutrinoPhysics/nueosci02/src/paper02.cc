@@ -83,10 +83,21 @@ int main(int iargv, char **argv) {
   
   //............................................................................................
 
+  MixingParameterList mixparlist;
+  
+  std::cout << " ---MixingParameterList: read ---" << '\n';
+  
+  if (mixparlist.ParseFile("matrix_config.xml") == 0)
+    std::cout << mixparlist;
+  
+  MixingParameters *mixpars =  mixparlist.GetParameters(0);
+  
+  //............................................................................................
+  
   //Step Selection
   
   std::map<std::string,bool> execSteps;
-  execSteps["1"] = true;
+  execSteps["1"] = false;
   execSteps["2"] = false;
   execSteps["3"] = false;
   execSteps["4"] = false;
@@ -175,9 +186,14 @@ int main(int iargv, char **argv) {
       
       //std::cout << pos1 << " " << pos2 << " " << (*itr).substr(pos1+1, (pos2-pos1-1) ) << std::endl;
       
-      nudet->MakeVariation02(infile, model.c_str(), "EarthB","Vacuum", 2.0, 3.1, 0.05); //
+      nudet->SetFluxHistograms(infile, model.c_str(), "EarthB","Vacuum" );
+      
+      nudet->MakeVariation02(model.c_str(), "EarthB","Vacuum", 2.0, 3.1, 0.05); //
+      
+      nudet->ResetFluxHistograms();
       
       infile->Close();
+      
       
     }
     
@@ -189,6 +205,16 @@ int main(int iargv, char **argv) {
   
   }
 
+  if( execSteps["4"] ) {
+    
+    nudet->SetMixingParameters (  mixpars );
+    
+    nudet->MakeVariation04("StdPicture", "EarthB", "Vacuum", 0.0, 15.0, 1.0, 1.8, 0.0); //
+
+    nudet->MakeVariation04("StdPicture", "EarthB", "Vacuum", 0.0, 15.0, 1.0, 1.8, 180.0); //
+    
+  }
+  
   //
   
   delete nudet;

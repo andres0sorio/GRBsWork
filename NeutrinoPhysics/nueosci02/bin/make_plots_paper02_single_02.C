@@ -125,8 +125,12 @@ void makePlots( const char * target,
     }
 
   }
-  
-  ///
+
+
+  int colour[5]    = {1, 2, 2, 2, 2};
+  int linestyle[5] = { 1, 1, 1, 1, 1};
+  int linewidth[5] = { 1, 1, 1, 1, 1};
+      ///
   
   for( int k = 0; k < max; ++k ) { 
 
@@ -137,8 +141,8 @@ void makePlots( const char * target,
     ProbNu->SetMarkerColor(1);
     ProbNu->SetLineColor(1);
     ProbNu->SetFillColor(10);
-    ProbNu->SetMaximum(3.0);
-    ProbNu->SetMinimum(1.0);
+    ProbNu->SetMaximum(2.5);
+    ProbNu->SetMinimum(1.6);
     
     ProbNu->GetXaxis()->SetLimits( 2.0, 3.1);
     
@@ -169,6 +173,10 @@ void makePlots( const char * target,
     //leg->SetLineWidth(1);
     //leg->SetFillColor(0);
     //leg->SetFillStyle(1001);
+
+    ProbNu->SetLineColor( colour[k] );
+    ProbNu->SetLineStyle( linestyle[k] );
+    ProbNu->SetLineWidth( linewidth[k] );
     
     c1->cd();
     
@@ -177,11 +185,11 @@ void makePlots( const char * target,
 
     if ( k == 0 ) {
       
-      ProbNu->Draw("AP");
+      ProbNu->Draw("AL");
       topTitle(var);
 
     } else 
-      ProbNu->Draw("P");
+      ProbNu->Draw("L");
         
   }
   

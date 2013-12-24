@@ -19,8 +19,11 @@ class MuTrackEvents {
 public:
   
   MuTrackEvents() {};
-  MuTrackEvents(const char *, const char *, Parameters *);
   
+  MuTrackEvents(const char *, const char *, Parameters *);
+
+  MuTrackEvents(const char *, const char *, const char *, Parameters *);
+
   virtual ~MuTrackEvents() {};
   
   //............................................
@@ -51,7 +54,8 @@ private:
   
   std::string nu_xsec_data;
   std::string antinu_xsec_data;
-
+  std::string pshadow_data;
+  
   float m_phi_nu[3];
   
 };

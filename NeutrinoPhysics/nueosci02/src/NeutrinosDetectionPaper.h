@@ -10,6 +10,8 @@
 #include <DensityModels.h>
 #include <TTree.h>
 #include <TFile.h>
+#include <TH1F.h>
+#include <NeutrinoOscInVacuum.h>
 
 /** @class NeutrinosDetectionPaper NeutrinosDetectionPaper.h
  *  
@@ -27,14 +29,23 @@ public:
   
   virtual ~NeutrinosDetectionPaper( ); ///< Destructor
   
-  void MakeVariation01(TFile * , const char *, const char * );
+  void MakeVariation01( TFile * , const char *, const char * );
   
-  void MakeVariation02(TFile * , const char *, const char *, const char *, double, double, double);
+  void MakeVariation02( const char *, const char *, const char *, double, double, double);
 
-  void MakeVariation03(const char *, const char *, const char *, double, double, double);
+  void MakeVariation03( const char *, const char *, const char *, double, double, double);
 
+  void MakeVariation04( const char *, const char *, const char *, double, double, double, double, double);
+  
   void MakeVariationStdPicture( const char *, const char *, double, double, double);
   
+  void SetFluxHistograms( TFile *, const char *, const char *, const char *);
+  
+  void ResetFluxHistograms( );
+
+  void SetMixingParameters( MixingParameters * mixing) { m_mixpars = mixing; };
+  
+
 protected:
   
 private:
@@ -42,11 +53,17 @@ private:
   bool Init( const char *,  const char *, const char * );
 
   bool InitOutput( const char *, const char *,  const char *, const char * );
+
+  void SetFluxAverages( TFile *, const char *, const char *, const char *);
+  
+  
   
   bool m_debug;
   
   Parameters * m_config;
-    
+  
+  MixingParameters * m_mixpars;
+  
   TFile * m_file;
   TFile * m_output_file;
   
@@ -75,6 +92,14 @@ private:
   TBranch * b_Phi_m_in;
   TBranch * b_Phi_t_in;
   
+  int m_e_bins;
+  
+  float m_e_max;
+  float m_e_min;
+  
+  std::map<int,double> m_energy_bin;
 
+  std::map<std::string,TH1F*> m_flux_histos;
+  
 };
 #endif // NEUTRINOSDETECTIONPAPER_H

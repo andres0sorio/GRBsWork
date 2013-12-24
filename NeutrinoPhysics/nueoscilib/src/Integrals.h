@@ -45,6 +45,8 @@ public:
   virtual ~Integrals( ); ///< Destructor
   
   void SetData( const std::string &, const std::string &);
+
+  void SetData( const std::string &, const std::string &,  const std::string &);
   
   void SetParameters( Parameters * );
 
@@ -190,7 +192,13 @@ class m_NC_showers_integral_dx : public ROOT::Math::IBaseFunctionOneDim, public 
   
 public:
   
-  m_NC_showers_integral_dx() : Integrals() {};
+  m_NC_showers_integral_dx() : Integrals() { 
+    
+    m_flavour.push_back(std::string("N_e"));
+    m_flavour.push_back(std::string("N_mu"));
+    m_flavour.push_back(std::string("N_tau"));
+
+  };
   
   m_NC_showers_integral_dx( Integrals & base ) : Integrals( base ) {};
   
@@ -200,17 +208,26 @@ public:
 
   double DoEval(double z) const;
   
+  void SetFlavour( int fv ) { m_fv = fv; };
+  
 private:
-  
 
-  
+  int m_fv;
+    
+  std::vector<std::string> m_flavour;
+    
+
 };
 
 class m_antiNC_showers_integral_dx : public ROOT::Math::IBaseFunctionOneDim, public Integrals {
   
 public:
   
-  m_antiNC_showers_integral_dx() : Integrals() {};
+  m_antiNC_showers_integral_dx() : Integrals() {
+    m_flavour.push_back(std::string("N_ae"));
+    m_flavour.push_back(std::string("N_amu"));
+    m_flavour.push_back(std::string("N_atau"));
+  };
   
   m_antiNC_showers_integral_dx( Integrals & base ) : Integrals( base ) {};
   
@@ -219,10 +236,14 @@ public:
   ROOT::Math::IBaseFunctionOneDim* Clone() const;
 
   double DoEval(double z) const;
-  
+
+  void SetFlavour( int fv ) { m_fv = fv; };
+
 private:
   
+  int m_fv;
 
+  std::vector<std::string> m_flavour;
   
 };
 

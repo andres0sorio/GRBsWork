@@ -37,8 +37,9 @@ Integrals::~Integrals() {
     if( m_pshadow )
       if (m_debug) std::cout << "destroying pshadow" << std::endl;
     delete m_pshadow;
+  
   }
-    
+  
 } 
 
 void Integrals::SetParameters( Parameters * input ) 
@@ -52,6 +53,15 @@ void Integrals::SetData( const std::string & xsec1, const std::string & xsec2)
   nu_xsec_interp     = new Interpolation( xsec1.c_str() );
   antinu_xsec_interp = new Interpolation( xsec2.c_str() );
   m_pshadow          = new PShadow( xsec1, xsec2 );
+  
+}
+
+void Integrals::SetData( const std::string & xsec1, const std::string & xsec2, const std::string & pshad)
+{
+  
+  nu_xsec_interp     = new Interpolation( xsec1.c_str() );
+  antinu_xsec_interp = new Interpolation( xsec2.c_str() );
+  m_pshadow          = new PShadow( pshad );
   
 }
 
@@ -267,16 +277,14 @@ double m_Numu_integral_dxdy::DoEval(double y) const {
   // par[1] = m_input->GetPar4(); // N_beta = phi_mu
   
   par[0] = m_input->GetPar3(); // alfa
-  par[1] = m_input->GetPar("N_mu"); // N_beta = phi_mu
+  par[1] = m_input->GetPar("N_mu", m_x ); // N_beta = phi_mu
   
-  //P-shadow as a step function
-  //m_pshadow->Eval( 1e5, m_x );
+  // P-shadow always == 1
+  // m_pshadow->Eval();
   
-  //P-shadow always == 1
-  m_pshadow->Eval();
-  
-  //P-shadow normal evaluation
-  //m_pshadow->Eval( m_x );
+  // AO dec 2013
+  // P-shadow evaluation - with interpoled data
+  m_pshadow->Eval2( m_x );
   
   double pshadow = m_pshadow->Nu_PShadow();
   
@@ -288,7 +296,7 @@ double m_Numu_integral_dxdy::DoEval(double y) const {
   pshadow = m_pshadow->ANu_PShadow();
   
   par[0] = m_input->GetPar3(); // alfa
-  par[1] = m_input->GetPar("N_amu"); // N_beta = phi_amu
+  par[1] = m_input->GetPar("N_amu", m_x); // N_beta = phi_amu
   
   double gg = k1 * Rmu ( x1 ) * dFnub( x2, par) * sigma_CC * dsigmady( x3 ) * pshadow;
   
@@ -406,17 +414,17 @@ double m_Nutau_integral_dxdydz::DoEval(double z) const{
   ///par[1] = m_input->GetPar4(); // N_beta
   
   par[0] = m_input->GetPar3(); // alfa
-  par[1] = m_input->GetPar("N_mu"); // N_beta = phi_mu
+  par[1] = m_input->GetPar("N_mu", m_x); // N_beta = phi_mu
 
-
-  //P-shadow normal evaluation
-  //m_pshadow->Eval(m_x);
-
-  //P-shadow always == 1
-  m_pshadow->Eval();
+  // P-shadow always == 1
+  // m_pshadow->Eval();
+  
+  // AO dec 2013
+  // P-shadow evaluation - with interpoled data
+  m_pshadow->Eval2( m_x );
   
   double pshadow = m_pshadow->Nu_PShadow();
-    
+  
   double ff = k1 * Rmu ( xx ) * dFnub( x2, par) * fBLimOne( yy ) * sigma_CC * dsigmady( x3 ) * pshadow;
   
   sigma_CC_log10 = antinu_xsec_interp->evaluateCC( log10( m_x ) );
@@ -425,7 +433,7 @@ double m_Nutau_integral_dxdydz::DoEval(double z) const{
   pshadow = m_pshadow->ANu_PShadow();
   
   par[0] = m_input->GetPar3(); // alfa
-  par[1] = m_input->GetPar("N_amu"); // N_beta = phi_mu
+  par[1] = m_input->GetPar("N_amu", m_x); // N_beta = phi_mu
 
   double gg = k1 * Rmu ( xx ) * dFnub( x2, par) * fBLimOne( yy ) * sigma_CC * dsigmady( x3 ) * pshadow;
   
@@ -448,12 +456,14 @@ double m_NC_showers_integral_dx::DoEval(double x) const{
   xx[0]  = x;
   
   par[0] = m_input->GetPar3(); // alfa
-  par[1] = m_input->GetPar("N_beta"); // N_beta = phi_(e,mu,tau)
+  par[1] = m_input->GetPar( m_flavour[m_fv].c_str() , x); // N_beta = phi_(e,mu,tau)
   
-  //P-shadow normal evaluation
-  //m_pshadow->Eval( x );
-  //P-shadow always == 1
-  m_pshadow->Eval();
+  // P-shadow always == 1
+  // m_pshadow->Eval();
+
+  // AO dec 2013
+  // P-shadow evaluation - with interpoled data
+  m_pshadow->Eval2( x );
 
   double pshadow = m_pshadow->Nu_PShadow();
   
@@ -473,19 +483,21 @@ double m_antiNC_showers_integral_dx::DoEval(double x) const{
   
   xx[0]  = x;
   
-  //P-shadow normal evaluation
-  //m_pshadow->Eval( x );
-  //P-shadow always == 1
-  m_pshadow->Eval();
+  // P-shadow always == 1
+  // m_pshadow->Eval();
+  
+  // AO dec 2013
+  // P-shadow evaluation - with interpoled data
+  m_pshadow->Eval2( x );
   
   double sigma_NC_log10 = antinu_xsec_interp->evaluateNC( log10(x) );
   double sigma_NC = pow( 10.0, sigma_NC_log10);
   
   double pshadow = m_pshadow->ANu_PShadow();
-
+  
   par[0] = m_input->GetPar3(); // alfa
-  par[1] = m_input->GetPar("N_abeta"); // N_beta = phi_(ae,amu,atau)
-
+  par[1] = m_input->GetPar( m_flavour[m_fv].c_str() , x); // N_beta = phi_(ae,amu,atau)
+  
   double gg = k1 * dFnub( xx, par) * sigma_NC * pshadow ;
   
   return ( gg );
@@ -507,13 +519,15 @@ double m_CCnue_showers_integral_dx::DoEval(double x) const{
   xx[0]  = x;
   
   par[0] = m_input->GetPar3(); // alfa
-  par[1] = m_input->GetPar("N_e"); // N_beta = phi_e
+  par[1] = m_input->GetPar("N_e", x); // N_beta = phi_e
  
-  //P-shadow normal evaluation
-  //m_pshadow->Eval( x );
-  //P-shadow always == 1
-  m_pshadow->Eval();
-
+  // P-shadow always == 1
+  // m_pshadow->Eval();
+  
+  // AO dec 2013
+  // P-shadow evaluation - with interpoled data
+  m_pshadow->Eval2( x );
+  
   double pshadow = m_pshadow->Nu_PShadow();
   
   double ff = k1 * dFnub( xx, par) * sigma_CC * pshadow;
@@ -533,10 +547,12 @@ double m_CCantinue_showers_integral_dx::DoEval(double x) const{
   
   xx[0]  = x;
   
-  //P-shadow normal evaluation
-  //m_pshadow->Eval( x );
-  //P-shadow always == 1
-  m_pshadow->Eval();
+  // P-shadow always == 1
+  // m_pshadow->Eval();
+  
+  // AO dec 2013
+  // P-shadow evaluation - with interpoled data
+  m_pshadow->Eval2( x );
   
   double sigma_CC_log10 = antinu_xsec_interp->evaluateCC( log10(x) );
   double sigma_CC = pow( 10.0, sigma_CC_log10);
@@ -544,7 +560,7 @@ double m_CCantinue_showers_integral_dx::DoEval(double x) const{
   double pshadow = m_pshadow->ANu_PShadow();
 
   par[0] = m_input->GetPar3(); // alfa
-  par[1] = m_input->GetPar("N_ae"); // N_beta = phi_ae
+  par[1] = m_input->GetPar("N_ae", x); // N_beta = phi_ae
   
   double gg = k1 * dFnub( xx, par) * sigma_CC * pshadow;
   
@@ -567,12 +583,14 @@ double m_CCnutau_showers_integral_dx::DoEval(double x) const{
   xx[0]  = x;
   
   par[0] = m_input->GetPar3(); // alfa
-  par[1] = m_input->GetPar("N_tau"); // N_beta = phi_tau
+  par[1] = m_input->GetPar("N_tau", x ); // N_beta = phi_tau
   
-  //P-shadow normal evaluation
-  //m_pshadow->Eval( x );
-  //P-shadow always == 1
-  m_pshadow->Eval();
+  // P-shadow always == 1
+  // m_pshadow->Eval();
+
+  // AO dec 2013
+  // P-shadow evaluation - with interpoled data
+  m_pshadow->Eval2( x );
   
   double pshadow = m_pshadow->Nu_PShadow();
   
@@ -592,10 +610,12 @@ double m_CCantinutau_showers_integral_dx::DoEval(double x) const{
   
   xx[0]  = x;
   
-  //P-shadow normal evaluation
-  //m_pshadow->Eval( x );
-  //P-shadow always == 1
-  m_pshadow->Eval();
+  // P-shadow always == 1
+  // m_pshadow->Eval();
+
+  // AO dec 2013
+  // P-shadow evaluation - with interpoled data
+  m_pshadow->Eval2( x );
   
   double pshadow = m_pshadow->Nu_PShadow();
   
@@ -605,7 +625,7 @@ double m_CCantinutau_showers_integral_dx::DoEval(double x) const{
   pshadow = m_pshadow->ANu_PShadow();
 
   par[0] = m_input->GetPar3(); // alfa
-  par[1] = m_input->GetPar("N_atau"); // N_beta = phi_atau
+  par[1] = m_input->GetPar("N_atau", x); // N_beta = phi_atau
 
   double gg = k1 * dFnub( xx, par) * sigma_CC * pshadow;
   

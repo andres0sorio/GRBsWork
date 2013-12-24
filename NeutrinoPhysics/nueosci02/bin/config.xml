@@ -6,7 +6,7 @@
       100.0
     </Par1>
     <Par2 Name="E_mu_Cut">
-      1.e5
+      1.e8
     </Par2>
     <Par3 Name="alfa">
       2.0

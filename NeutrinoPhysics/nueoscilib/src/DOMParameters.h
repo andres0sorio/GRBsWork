@@ -3,6 +3,7 @@
 #include <TXMLAttr.h>
 #include <TXMLNode.h>
 #include <TList.h>
+#include <TH1F.h>
 #include <map>
 
 /** @class Parameters Parameters.h
@@ -18,7 +19,9 @@ class Parameters : public TObject {
   
   Parameters() {};
   Parameters(int id) {
+    
     Id = id; 
+    
     par1  = -1.0; 
     par2  = -1.0; 
     par3  = -1.0;
@@ -35,7 +38,9 @@ class Parameters : public TObject {
     par14 = -1.0;
   
     konst1 = 1.0;
-        
+
+    m_use_varying_Nbeta = false;
+            
   };
   
   virtual ~Parameters() {};
@@ -86,6 +91,36 @@ class Parameters : public TObject {
       return (*m_locator).second;
     return -1.1234; 
   };
+
+  double GetPar( const char * name , double xx) { 
+
+    if (m_use_varying_Nbeta) 
+    {
+      m_histo_locator = m_histo_params.find( std::string( name ) );
+      if ( m_histo_locator != m_histo_params.end() ) 
+      {
+        //
+        int bin_pos = m_histo_locator->second->FindBin( xx*1.0E9 );
+        return m_histo_locator->second->GetBinContent( bin_pos );
+        //
+      } else
+        return -1.1234;
+    } else {
+      
+      m_locator = m_params.find( std::string( name ) );
+      if ( m_locator != m_params.end() )
+        return (*m_locator).second;
+      return -1.1234; 
+    }
+        
+  };
+  
+  // Use a specific parametrization
+  
+  void UseVaryingNbeta( bool option ) {
+    m_use_varying_Nbeta = option;
+  };
+  
   
   friend std::ostream & operator << (std::ostream& out, const Parameters& p) {
     
@@ -107,12 +142,27 @@ class Parameters : public TObject {
     out << "Konst1 " << p.konst1 << std::endl;
 
     std::map<std::string,double>::const_iterator itr;
+    std::map<std::string,TH1F*>::const_iterator itr2;
     
     for (itr = p.m_params.begin(); itr != p.m_params.end(); ++itr)
       std::cout << itr->first << " => " << itr->second << '\n';
+    
+    for (itr2 = p.m_histo_params.begin(); itr2 != p.m_histo_params.end(); ++itr2)
+      std::cout << itr2->first << " => " << itr2->second << '\n';
+
+
+
         
     return out;
-  }
+  };
+  
+
+  ///
+  // AO dec 2013
+  
+  std::map<std::string,TH1F*> m_histo_params; //Histogram parametrization
+  
+  ///
   
 private:
   int Id;
@@ -139,6 +189,11 @@ private:
   std::map<std::string,std::string> m_params_name;
 
   std::map<std::string,double>::iterator m_locator;
+
+  std::map<std::string,TH1F*>::iterator m_histo_locator;
+
+  bool m_use_varying_Nbeta;
+    
     
 };
 

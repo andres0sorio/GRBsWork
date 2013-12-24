@@ -18,7 +18,7 @@
       1.0e11
     </Par>
     <Par Id="5" Name="Emax">
-      1.0e15
+      1.0e17
     </Par>
     <Par Id="6" Name="Dx">
       1.00e14
@@ -56,13 +56,13 @@
       1.0E11
     </Par>
     <Par Id="9" Name="Emax">
-      1.0E15
+      1.0E17
     </Par>
     <Par Id="10" Name="Dx">
       1.00e14
     </Par>
     <Par Id="11" Name="De">
-      1.0E9
+      1.0e9
     </Par>
   </ModelParameters>
   <ModelParameters Id="ModelC">
@@ -106,7 +106,7 @@
       1.0e11
     </Par>
     <Par Id="13" Name="Emax">
-      1.0e15
+      1.0e17
     </Par>
     <Par Id="14" Name="Dx">
       1.00e14
@@ -161,7 +161,7 @@
       1.0e11
     </Par>
     <Par Id="4" Name="Emax">
-      1.0e15
+      1.0e17
     </Par>
     <Par Id="5" Name="Dx">
       1.00e14

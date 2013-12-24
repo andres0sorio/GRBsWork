@@ -8,7 +8,7 @@ use_file = 1
 
 use_setI = 1
 
-model = 'ZeroPt'
+model = 'ModelC'
 
 xmlfi = ''
 
@@ -26,7 +26,7 @@ else:
     print 'No configuration available'
     sys.exit()
 
-xmax  = 1.0e14
+xmax  = 1.0e17
 x0    = 1.0e11
 dx    = 10.0
 
@@ -104,7 +104,7 @@ mg.ignorefailed = True
 
 #Job declaration and initialisation:
 myjob = Job( application = app, backend = 'Local' )
-myjob.name = 'nueosc.cmssw'
+myjob.name = 'nueosc.'+model
 myjob.splitter = sp
 myjob.merger = mg
 

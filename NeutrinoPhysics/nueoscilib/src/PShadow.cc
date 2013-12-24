@@ -27,7 +27,7 @@ double GetEarthDensity( double x )
   double xxx = pow(x,3);
   
   if( x < 0.192 )
-    value = 13.0885 - 8.8381*x;
+    value = 13.0885 - 8.8381*x*x;
   else if( x > 0.192 && x < 0.546 )
     value = 12.5815 - 1.2638 * x - 3.6426 * xx - 5.5281 * xxx;
   else if( x > 0.546 && x < 0.895 ) 
@@ -107,7 +107,9 @@ PShadow::PShadow() {
   
   m_pshadow_Nu = 0.0;
   m_pshadow_aNu = 0.0;
-  
+
+  m_full_calculation = true;
+    
 }
 
 PShadow::PShadow( const std::string & xsec1, const std::string & xsec2 ) {
@@ -126,16 +128,83 @@ PShadow::PShadow( const std::string & xsec1, const std::string & xsec2 ) {
   
   m_pshadow_Nu = 0.0;
   m_pshadow_aNu = 0.0;
+
+  m_full_calculation = true;
   
 }
+
+//Interpolate the PShadow term from data points
+
+PShadow::PShadow( const std::string & infile ) {
+  
+  m_debug = false;
+  
+  m_in = new std::ifstream(infile.c_str(), ifstream::in);
+  
+  if(!m_in->is_open()) {
+    //std::cout << "Data> cannot open file" << std::endl;
+  } else { 
+    //std::cout << "Data> file is now open" << std::endl;
+  }
+  
+  m_xx.clear();
+  m_nu.clear();
+  m_anu.clear();
+  
+  double e_nu      = -.1;
+  double nu_point  = -.1;
+  double anu_point = -.1;
+  
+  while( m_in->good() ) {
+    
+    if ( m_in->eof() ) break;
+    
+    (*m_in) >> e_nu >> nu_point >> anu_point;
+    
+    m_xx.push_back( e_nu );
+    m_nu.push_back( nu_point );
+    m_anu.push_back( anu_point );
+    
+    if ( m_in->fail()) break;
+    
+  }
+  
+  m_xx.pop_back();
+  m_nu.pop_back();
+  m_anu.pop_back();
+  
+  m_interpolatorNu  = new  ROOT::Math::Interpolator( m_xx, m_nu, ROOT::Math::Interpolation::kCSPLINE);
+  m_interpolatorANu = new  ROOT::Math::Interpolator( m_xx, m_anu, ROOT::Math::Interpolation::kCSPLINE);
+  
+  m_pshadow_Nu = 0.0;
+  m_pshadow_aNu = 0.0;
+
+  m_in->close();
+  
+  delete m_in;
+
+  m_full_calculation = false;
+      
+}
+
 
 //=============================================================================
 // Destructor
 //=============================================================================
 PShadow::~PShadow() {
   
-  if ( nu_xsec_interp ) delete nu_xsec_interp;
-  if ( antinu_xsec_interp ) delete antinu_xsec_interp;
+  if( m_full_calculation ) 
+  {
+    
+    if ( nu_xsec_interp ) delete nu_xsec_interp;
+    if ( antinu_xsec_interp ) delete antinu_xsec_interp;
+    
+  } else {
+    
+    delete m_interpolatorNu;
+    delete m_interpolatorANu;
+
+  }
   
 } 
 
@@ -189,6 +258,20 @@ void PShadow::Eval( double enu )
   Eval( PI , enu );
   
 }
+
+void PShadow::Eval2( double enu )
+{
+  
+  //AO dec 2013 - use interpolated data
+  
+  m_pshadow_Nu = m_interpolatorNu->Eval( enu );
+  
+  m_pshadow_aNu = m_interpolatorANu->Eval( enu );
+  
+
+}
+
+
 
 void PShadow::Eval( double angle, double enu )
 {

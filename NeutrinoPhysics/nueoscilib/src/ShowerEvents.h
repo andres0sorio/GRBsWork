@@ -19,7 +19,10 @@ class ShowerEvents {
 public: 
   
   ShowerEvents() {};
+  
   ShowerEvents(const char *, const char *, Parameters *);
+
+  ShowerEvents(const char *, const char *, const char *, Parameters *);
 
   virtual ~ShowerEvents() {};
   
@@ -59,7 +62,8 @@ private:
   
   std::string nu_xsec_data;
   std::string antinu_xsec_data;
-
+  std::string pshadow_data;
+  
   float m_phi_nu[3];
   float m_phi_anu[3];
     
