@@ -273,14 +273,8 @@ double m_Numu_integral_dxdy::DoEval(double y) const {
 
   x3[0] = y;
     
-  // AO - dec 2013 change - GetPar4() is not valid anymore
-  // par[1] = m_input->GetPar4(); // N_beta = phi_mu
-  
   par[0] = m_input->GetPar3(); // alfa
   par[1] = m_input->GetPar("N_mu", m_x ); // N_beta = phi_mu
-  
-  // P-shadow always == 1
-  // m_pshadow->Eval();
   
   // AO dec 2013
   // P-shadow evaluation - with interpoled data
@@ -410,15 +404,9 @@ double m_Nutau_integral_dxdydz::DoEval(double z) const{
   
   x2[0] = m_x;
   
-  // AO - dec 2013 change - GetPar4 is not valid anymore
-  ///par[1] = m_input->GetPar4(); // N_beta
-  
   par[0] = m_input->GetPar3(); // alfa
   par[1] = m_input->GetPar("N_mu", m_x); // N_beta = phi_mu
 
-  // P-shadow always == 1
-  // m_pshadow->Eval();
-  
   // AO dec 2013
   // P-shadow evaluation - with interpoled data
   m_pshadow->Eval2( m_x );
@@ -458,9 +446,6 @@ double m_NC_showers_integral_dx::DoEval(double x) const{
   par[0] = m_input->GetPar3(); // alfa
   par[1] = m_input->GetPar( m_flavour[m_fv].c_str() , x); // N_beta = phi_(e,mu,tau)
   
-  // P-shadow always == 1
-  // m_pshadow->Eval();
-
   // AO dec 2013
   // P-shadow evaluation - with interpoled data
   m_pshadow->Eval2( x );
@@ -482,9 +467,6 @@ double m_antiNC_showers_integral_dx::DoEval(double x) const{
   double k1 = m_input->GetKonst1();
   
   xx[0]  = x;
-  
-  // P-shadow always == 1
-  // m_pshadow->Eval();
   
   // AO dec 2013
   // P-shadow evaluation - with interpoled data
@@ -521,9 +503,6 @@ double m_CCnue_showers_integral_dx::DoEval(double x) const{
   par[0] = m_input->GetPar3(); // alfa
   par[1] = m_input->GetPar("N_e", x); // N_beta = phi_e
  
-  // P-shadow always == 1
-  // m_pshadow->Eval();
-  
   // AO dec 2013
   // P-shadow evaluation - with interpoled data
   m_pshadow->Eval2( x );
@@ -546,9 +525,6 @@ double m_CCantinue_showers_integral_dx::DoEval(double x) const{
   double k1 = m_input->GetKonst1();
   
   xx[0]  = x;
-  
-  // P-shadow always == 1
-  // m_pshadow->Eval();
   
   // AO dec 2013
   // P-shadow evaluation - with interpoled data
@@ -585,9 +561,6 @@ double m_CCnutau_showers_integral_dx::DoEval(double x) const{
   par[0] = m_input->GetPar3(); // alfa
   par[1] = m_input->GetPar("N_tau", x ); // N_beta = phi_tau
   
-  // P-shadow always == 1
-  // m_pshadow->Eval();
-
   // AO dec 2013
   // P-shadow evaluation - with interpoled data
   m_pshadow->Eval2( x );
@@ -610,9 +583,6 @@ double m_CCantinutau_showers_integral_dx::DoEval(double x) const{
   
   xx[0]  = x;
   
-  // P-shadow always == 1
-  // m_pshadow->Eval();
-
   // AO dec 2013
   // P-shadow evaluation - with interpoled data
   m_pshadow->Eval2( x );

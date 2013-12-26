@@ -92,6 +92,8 @@ private:
   TBranch * b_Phi_m_in;
   TBranch * b_Phi_t_in;
   
+  float * m_vbins;
+  
   int m_e_bins;
   
   float m_e_max;

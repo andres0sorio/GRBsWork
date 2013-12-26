@@ -25,24 +25,58 @@ NeutrinosDetectionPaper::NeutrinosDetectionPaper( Parameters * pars ) : Graphics
 
   ///Set energy bins
 
+  m_e_min  = m_config->GetPar1() * 1.0E9;
+  m_e_max  = m_config->GetPar2() * 1.0E9;
+ 
+  /*
+    m_energy_bin[1]  = 0.5E12;
+    m_energy_bin[2]  = 1.0E12;
+    m_energy_bin[3]  = 0.5E13;
+    m_energy_bin[4]  = 1.0E13;
+    m_energy_bin[5]  = 0.5E14;
+    m_energy_bin[6]  = 1.0E14;
+    m_energy_bin[7]  = 0.5E15;
+    m_energy_bin[8]  = 1.0E15;
+    m_energy_bin[9]  = 0.5E16;
+    m_energy_bin[10] = 1.0E16;
+    m_energy_bin[11] = 0.5E17;
+    m_energy_bin[12] = m_e_max;
+    m_e_bins = m_energy_bin.size();
+  */
 
-  m_e_min  = 1.0E11;
-  m_e_max  = 1.0E17;
+  //
+  // Energy binning - IceCube energy resolution of 30%: DEx = 0.30Ex
+  //
+
+  double DEx  = 0.30;
+  double Xx   = m_e_min;
   
-  m_energy_bin[1]  = 0.5E12;
-  m_energy_bin[2]  = 1.0E12;
-  m_energy_bin[3]  = 0.5E13;
-  m_energy_bin[4]  = 1.0E13;
-  m_energy_bin[5]  = 0.5E14;
-  m_energy_bin[6]  = 1.0E14;
-  m_energy_bin[7]  = 0.5E15;
-  m_energy_bin[8]  = 1.0E15;
-  m_energy_bin[9]  = 0.5E16;
-  m_energy_bin[10] = 1.0E16;
-  m_energy_bin[11] = 0.5E17;
-  m_energy_bin[12] = m_e_max;
+  int k = 0;
 
-  m_e_bins = m_energy_bin.size();
+  m_vbins = new float[100];
+    
+  while( Xx < m_e_max ) 
+  {
+    
+    double DeltaBin = DEx * Xx;
+    double low_bin = Xx;
+    double upp_bin = Xx + DeltaBin;
+    
+    std::cout << "NeutrinosDetectionPaper> Energy binning: " << low_bin << " " << upp_bin << std::endl;
+    
+    Xx = upp_bin;
+
+    m_vbins[k] = Xx;
+    m_energy_bin[k+1] = Xx;
+    
+    k += 1;
+        
+  }
+
+  std::cout << "NeutrinosDetectionPaper> Total bins set " 
+            << k << '\t'
+            << m_energy_bin.size() << std::endl;
+  
   
 }
 //=============================================================================
@@ -51,7 +85,9 @@ NeutrinosDetectionPaper::NeutrinosDetectionPaper( Parameters * pars ) : Graphics
 NeutrinosDetectionPaper::~NeutrinosDetectionPaper() {
   
   m_output_file->Close();
-  
+
+  delete[] m_vbins;
+    
   std::cout << "NeutrinosDetectionPaper> cleanly destroyed" << std::endl;
   
 } 

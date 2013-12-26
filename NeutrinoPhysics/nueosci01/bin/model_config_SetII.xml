@@ -18,7 +18,7 @@
       1.0e11
     </Par>
     <Par Id="5" Name="Emax">
-      1.0e14
+      1.0e17
     </Par>
     <Par Id="6" Name="Dx">
       0.5e14
@@ -56,7 +56,7 @@
       1.0E11
     </Par>
     <Par Id="9" Name="Emax">
-      1.0E14
+      1.0E17
     </Par>
     <Par Id="10" Name="Dx">
       0.5E14
@@ -106,7 +106,7 @@
       1.0e11
     </Par>
     <Par Id="13" Name="Emax">
-      1.0e14
+      1.0e17
     </Par>
     <Par Id="14" Name="Dx">
       0.5e14
@@ -161,7 +161,7 @@
       1.0e11
     </Par>
     <Par Id="5" Name="Emax">
-      1.0e14
+      1.0e17
     </Par>
     <Par Id="6" Name="Dx">
       0.5e14

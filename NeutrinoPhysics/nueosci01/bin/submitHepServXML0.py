@@ -4,9 +4,9 @@ import sys, os, stat, shutil
 
 arguments = []
 
-use_file = 1
+use_file = 2
 
-use_setI = 1
+use_setI = 2
 
 model = 'ModelC'
 
