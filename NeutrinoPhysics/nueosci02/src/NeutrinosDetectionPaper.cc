@@ -86,20 +86,66 @@ NeutrinosDetectionPaper::~NeutrinosDetectionPaper() {
 
 //=============================================================================
 
-void NeutrinosDetectionPaper::MakeVariation01(TFile * infile, const char * target, const char * source)
+void NeutrinosDetectionPaper::MakeVariation01(const char * model, const char * target, const char * source, const char * var)
 {
  
-  m_file = infile;
-  
   // source ----> (progragation) -----> target
- 
-  std::vector<std::string> input;
-  std::vector<std::string>::iterator inputItr;
   
-  input.push_back( std::string("Pee") );
-  input.push_back( std::string("aPee") );
+  TString variation = TString("RvsEv") + TString("_") + TString(var);
+  
+  InitOutput(model, target, source, variation.Data() );
+    
+  //Here is the loop for the parameter variation
+  
+  for( int i = 1; i <= m_e_bins; ++i ) {
+        
+    ///
+    // Set N_betas 
+  
+    m_Xx = m_energy_bin[i];
+    
+    m_config->SetPar("N_e", m_flux_histos["phi_e"]->GetBinContent(i) );
+    m_config->SetPar("N_mu", m_flux_histos["phi_mu"]->GetBinContent(i) );
+    m_config->SetPar("N_tau", m_flux_histos["phi_tau"]->GetBinContent(i) );
+    
+    m_config->SetPar("N_ae", m_flux_histos["phi_ae"]->GetBinContent(i) );
+    m_config->SetPar("N_amu", m_flux_histos["phi_amu"]->GetBinContent(i) );
+    m_config->SetPar("N_atau", m_flux_histos["phi_atau"]->GetBinContent(i) );
+    
+    MuTrackEvents * mu1 = new MuTrackEvents("../data/XSec_neut.dat", "../data/XSec_anti.dat", 
+                                            "../data/pshadow-at-180.dat", m_config );
+    
+    double TkSum = mu1->Evaluate( );
+    
+    m_MuTks  = mu1->m_NuMuTracks;
+    m_TauTks = mu1->m_NuTauTracks;
+    
+    ShowerEvents * sh1 =  new ShowerEvents("../data/XSec_neut.dat", "../data/XSec_anti.dat", 
+                                           "../data/pshadow-at-180.dat", m_config );
+    
+    m_HadShw = sh1->Evaluate( );
 
-  InitOutput("X", target, source, (*inputItr).c_str() );
+    m_HadShwE = sh1->m_CCNuShower;
+    
+    m_HadShwT = sh1->m_CCNutauShower;
+    
+    m_HadShwNC = sh1->m_NCShower;
+        
+    m_Ratio  = TkSum  / m_HadShw; 
+    
+    std::cout << "NeutrinosDetectionPaper> "
+              << "Ev "   << m_Xx     << '\t'
+              << "muTrk "   << m_MuTks  << '\t' 
+              << "tauTrk "  << m_TauTks << '\t'
+              << "hadShow " << m_HadShw << '\t'
+              << "R "       << m_Ratio  << std::endl;
+    
+    m_tree->Fill();
+    
+    delete mu1;
+    delete sh1;
+
+  }
 
   m_tree->Write();
   
@@ -141,8 +187,6 @@ void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target,
     
     double TkSum = mu1->Evaluate( );
     
-    std::cout << "MakeVariationStdPicture> TkSum done " << std::endl;
-    
     m_MuTks  = mu1->m_NuMuTracks;
     m_TauTks = mu1->m_NuTauTracks;
     
@@ -151,7 +195,11 @@ void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target,
     
     m_HadShw = sh1->Evaluate( );
     
-    std::cout << "MakeVariationStdPicture> Sh done " << std::endl;
+    m_HadShwE = sh1->m_CCNuShower;
+    
+    m_HadShwT = sh1->m_CCNutauShower;
+    
+    m_HadShwNC = sh1->m_NCShower;
 
     m_Ratio  = TkSum / m_HadShw;
     
@@ -216,6 +264,12 @@ void NeutrinosDetectionPaper::MakeVariation02(const char * model,
     
     m_HadShw = sh1->Evaluate( );
     
+    m_HadShwE = sh1->m_CCNuShower;
+    
+    m_HadShwT = sh1->m_CCNutauShower;
+    
+    m_HadShwNC = sh1->m_NCShower;
+
     m_Ratio  = TkSum / m_HadShw;
     
     std::cout << "NeutrinosDetectionPaper> "
@@ -280,8 +334,6 @@ void NeutrinosDetectionPaper::MakeVariation03(const char * model,
     m_config->SetPar("N_amu", phi_nmu_fr );
     m_config->SetPar("N_atau", phi_ntau_fr );
   
-    std::cout << *m_config << std::endl;
-  
     MuTrackEvents * mu1 = new MuTrackEvents("../data/XSec_neut.dat", "../data/XSec_anti.dat", 
                                             "../data/pshadow-at-180.dat", m_config );
     
@@ -295,7 +347,11 @@ void NeutrinosDetectionPaper::MakeVariation03(const char * model,
     
     m_HadShw = sh1->Evaluate( );
     
-    std::cout << " shower done " << std::endl;
+    m_HadShwE = sh1->m_CCNuShower;
+    
+    m_HadShwT = sh1->m_CCNutauShower;
+    
+    m_HadShwNC = sh1->m_NCShower;
 
     m_Xx = phi_nue / sum;
         
@@ -392,6 +448,12 @@ void NeutrinosDetectionPaper::MakeVariation04(const char * model,
     
     m_HadShw = sh1->Evaluate( );
     
+    m_HadShwE = sh1->m_CCNuShower;
+    
+    m_HadShwT = sh1->m_CCNutauShower;
+    
+    m_HadShwNC = sh1->m_NCShower;
+   
     m_Ratio  = TkSum / m_HadShw;
 
     m_Xx = sin2theta;
@@ -419,7 +481,6 @@ void NeutrinosDetectionPaper::MakeVariation04(const char * model,
   delete m_Physics_Vacuum;
 
 }
-
 
 //====================================================================================================
 
@@ -487,11 +548,16 @@ bool NeutrinosDetectionPaper::InitOutput(const char * model,
   
   m_tree = new TTree("data","Data points");
                         
-  m_tree->Branch("Xx",     &m_Xx,      "Xx/d");
-  m_tree->Branch("MuTks",  &m_MuTks,   "MuTks/d");
-  m_tree->Branch("TauTks", &m_TauTks,  "TauTks/d");
-  m_tree->Branch("HadShw", &m_HadShw,  "HadShw/d");
-  m_tree->Branch("Ratio",  &m_Ratio,   "Ratio/d");
+  m_tree->Branch("Xx",        &m_Xx,         "Xx/d");
+
+  m_tree->Branch("MuTks",     &m_MuTks,      "MuTks/d");
+  m_tree->Branch("TauTks",    &m_TauTks,     "TauTks/d");
+  m_tree->Branch("HadShw",    &m_HadShw,     "HadShw/d");
+  m_tree->Branch("HadShwE",   &m_HadShwE,    "HadShwE/d");
+  m_tree->Branch("HadShwT",   &m_HadShwT,    "HadShwT/d");
+  m_tree->Branch("HadShwNC",  &m_HadShwNC,   "HadShwNC/d");
+
+  m_tree->Branch("Ratio",     &m_Ratio,      "Ratio/d");
 
   std::cout << "InitOutput> done" << std::endl;
   
@@ -504,7 +570,8 @@ bool NeutrinosDetectionPaper::InitOutput(const char * model,
 void NeutrinosDetectionPaper::SetFluxHistograms(TFile * infile, 
                                                 const char * model, 
                                                 const char * target,
-                                                const char * source)
+                                                const char * source,
+                                                const char * option)
 {
   
   m_file = infile;
@@ -525,10 +592,12 @@ void NeutrinosDetectionPaper::SetFluxHistograms(TFile * infile,
                         + TString("_")
                         + TString(target) 
                         + TString("_") 
-                        + TString(source) )->cd();
+                        + TString(source) 
+                        + TString("_")
+                        + TString(option) )->cd();
   
   /// Book now 3+3 histograms (with variable size bins)
-
+  
   m_flux_histos["phi_e"]     = new TH1F("phi_e"    ,"flux as a function of energy", m_e_bins, m_vbins );
   m_flux_histos["phi_mu"]    = new TH1F("phi_mu"   ,"flux as a function of energy", m_e_bins, m_vbins );
   m_flux_histos["phi_tau"]   = new TH1F("phi_tau"  ,"flux as a function of energy", m_e_bins, m_vbins );

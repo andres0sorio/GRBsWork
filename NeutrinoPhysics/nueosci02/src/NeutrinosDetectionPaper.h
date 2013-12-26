@@ -29,7 +29,7 @@ public:
   
   virtual ~NeutrinosDetectionPaper( ); ///< Destructor
   
-  void MakeVariation01( TFile * , const char *, const char * );
+  void MakeVariation01( const char *, const char *, const char *, const char *);
   
   void MakeVariation02( const char *, const char *, const char *, double, double, double);
 
@@ -39,7 +39,7 @@ public:
   
   void MakeVariationStdPicture( const char *, const char *, double, double, double);
   
-  void SetFluxHistograms( TFile *, const char *, const char *, const char *);
+  void SetFluxHistograms( TFile *, const char *, const char *, const char *, const char *);
   
   void ResetFluxHistograms( );
 
@@ -76,6 +76,9 @@ private:
   double m_MuTks;
   double m_TauTks;
   double m_HadShw;
+  double m_HadShwE;
+  double m_HadShwT;
+  double m_HadShwNC;
   double m_Ratio;
   
   //Input branches

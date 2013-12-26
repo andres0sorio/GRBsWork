@@ -81,6 +81,21 @@ void makePlots()
  
   */
 
+  // with dCP = 180
+  makePlots("EarthB",
+            "Vacuum",
+            "ModelA_SetupI",
+            "./root_files/ModelA/output_ModelA_SetI-1E17-dCP2.root",
+            "Model A #delta = 180 (at Detector)");
+
+  //
+
+  makePlots("EarthB",
+            "Vacuum",
+            "ModelA_SetupI",
+            "./root_files/ModelA/output_ModelA_SetI-1E17-dCP1.root",
+            "Model A #delta = 90 (at Detector)");
+
 }
 
 void makePlots( const char * modelA,

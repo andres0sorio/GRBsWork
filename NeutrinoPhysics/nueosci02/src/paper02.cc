@@ -101,6 +101,7 @@ int main(int iargv, char **argv) {
   execSteps["2"] = false;
   execSteps["3"] = false;
   execSteps["4"] = false;
+  execSteps["5"] = false;
   
   if( steps.size() != 0 )
   {
@@ -114,8 +115,10 @@ int main(int iargv, char **argv) {
     
   }
 
+  if( execSteps["2"] ) execSteps["1"] = true; // special case 1,2 have to be done
+  
   //............................................................................................
-
+  
   //Setup dataset to run over
   std::vector<std::string> dataset;
   std::vector<std::string>::iterator itr;
@@ -158,6 +161,8 @@ int main(int iargv, char **argv) {
   
   if( execSteps["1"] ) {
     
+    //This is R vs the spectral index alpha for the standard picture
+
     nudet->MakeVariationStdPicture("EarthB","Vacuum", 2.0, 3.1, 0.05); // 
     
   }
@@ -170,11 +175,13 @@ int main(int iargv, char **argv) {
 
     TFile * infile;
     std::string model;
-  
+    std::string var;
 
     for( itr = dataset.begin(); itr != dataset.end(); ++itr) 
     {
-      
+     
+      //This is R vs the spectral index alpha for different models
+ 
       std::cout << (*itr) << std::endl;
       
       infile = new TFile( (*itr).c_str(), "READ");
@@ -184,9 +191,12 @@ int main(int iargv, char **argv) {
       
       model = (*itr).substr(pos1+1, (pos2-pos1-1) );
       
-      //std::cout << pos1 << " " << pos2 << " " << (*itr).substr(pos1+1, (pos2-pos1-1) ) << std::endl;
+      pos2  = (*itr).rfind(".");
+      pos1  = (*itr).rfind("-", pos2-1);
       
-      nudet->SetFluxHistograms(infile, model.c_str(), "EarthB","Vacuum" );
+      var   = (*itr).substr(pos1+1, (pos2-pos1-1) );
+      
+      nudet->SetFluxHistograms(infile, model.c_str(), "EarthB", "Vacuum", var.c_str() );
       
       nudet->MakeVariation02(model.c_str(), "EarthB","Vacuum", 2.0, 3.1, 0.05); //
       
@@ -203,11 +213,15 @@ int main(int iargv, char **argv) {
   
   if( execSteps["3"] ) {
     
+    //This is R vs phi_e fraction
+
     nudet->MakeVariation03("StdPicture", "EarthB","Vacuum", 0.0, 1000.0, 1.0); //
   
   }
 
   if( execSteps["4"] ) {
+
+    // This is R as a function of sin2(theta_13) - for different dCP values
     
     nudet->SetMixingParameters (  mixpars );
     
@@ -217,6 +231,45 @@ int main(int iargv, char **argv) {
     
   }
   
+  if( execSteps["5"] ) {
+    
+    TFile * infile;
+    std::string model;
+    std::string var;
+    
+    for( itr = dataset.begin(); itr != dataset.end(); ++itr) 
+    {
+     
+      //This is R vs Ev bins - Olga Mena []
+ 
+      std::cout << (*itr) << std::endl;
+      
+      infile = new TFile( (*itr).c_str(), "READ");
+      
+      unsigned pos2 = (*itr).rfind("/");
+      unsigned pos1 = (*itr).rfind("/", pos2-1);
+      
+      model = (*itr).substr(pos1+1, (pos2-pos1-1) );
+
+      pos2  = (*itr).rfind(".");
+      pos1  = (*itr).rfind("-", pos2-1);
+
+      var   = (*itr).substr(pos1+1, (pos2-pos1-1) );
+
+      nudet->SetFluxHistograms(infile, model.c_str(), "EarthB", "Vacuum", var.c_str() );
+      
+      nudet->MakeVariation01(model.c_str(), "EarthB", "Vacuum", var.c_str() ); //
+      
+      nudet->ResetFluxHistograms();
+      
+      infile->Close();
+   
+    }
+    
+  }
+  
+
+
   //
   
   delete nudet;
