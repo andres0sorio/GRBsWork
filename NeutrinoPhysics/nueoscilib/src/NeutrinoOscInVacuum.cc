@@ -71,8 +71,10 @@ void NeutrinoOscInVacuum::initializeAngles()
     setAngle(1, 3, m_input->GetPar2() );  //theta_13
     setAngle(2, 3, m_input->GetPar3() );  //theta_23
 
-    setPhase( 0.0 ); //Fix this: needs be read from XML
+    setPhase( m_input->GetPar9() ); //AO ok fixed dec 2013
     
+    std::cout << "NeutrinoOscInVacuum> ** dCP=" << m_dCP << std::endl; 
+
   }
     
  

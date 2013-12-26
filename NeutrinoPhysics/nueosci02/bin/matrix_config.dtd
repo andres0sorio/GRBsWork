@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!ELEMENT MixingParameterList (MixingParameters)+ >
-<!ELEMENT MixingParameters (Par1,Par2,Par3,Par4,Par5,Par6,Par7,Par8) >
+<!ELEMENT MixingParameters (Par1,Par2,Par3,Par4,Par5,Par6,Par7,Par8,Par9) >
 <!ATTLIST MixingParameters
   Id	CDATA	#REQUIRED
 >
@@ -14,6 +14,7 @@
 <!ELEMENT Par6 (#PCDATA) >
 <!ELEMENT Par7 (#PCDATA)> 
 <!ELEMENT Par8 (#PCDATA)> 
+<!ELEMENT Par9 (#PCDATA)> 
 
 <!ATTLIST Par1
   Name	CDATA	#REQUIRED
@@ -44,5 +45,9 @@
 >
 
 <!ATTLIST Par8
+  Name	CDATA	#REQUIRED
+>
+
+<!ATTLIST Par9
   Name	CDATA	#REQUIRED
 >

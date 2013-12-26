@@ -108,7 +108,10 @@ void NeutrinoOscInVarDensity::initializeAngles()
     m_DeltaMSq = m_input->GetPar4(); //Dm2_32 -> typically set to 3e-3
     m_DeltamSq = m_input->GetPar8(); //Dm2_21 -> typically set to 8e-5
     
-    m_dCP  = 0.0L;
+    //AO - dec 2013
+    setPhase( m_input->GetPar9() );  //angle enters in deg
+
+    std::cout << "NeutrinoOscInVarDensity> ** dCP=" << m_dCP << std::endl; 
 
   }
   

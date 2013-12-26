@@ -28,22 +28,6 @@ NeutrinosDetectionPaper::NeutrinosDetectionPaper( Parameters * pars ) : Graphics
   m_e_min  = m_config->GetPar1() * 1.0E9;
   m_e_max  = m_config->GetPar2() * 1.0E9;
  
-  /*
-    m_energy_bin[1]  = 0.5E12;
-    m_energy_bin[2]  = 1.0E12;
-    m_energy_bin[3]  = 0.5E13;
-    m_energy_bin[4]  = 1.0E13;
-    m_energy_bin[5]  = 0.5E14;
-    m_energy_bin[6]  = 1.0E14;
-    m_energy_bin[7]  = 0.5E15;
-    m_energy_bin[8]  = 1.0E15;
-    m_energy_bin[9]  = 0.5E16;
-    m_energy_bin[10] = 1.0E16;
-    m_energy_bin[11] = 0.5E17;
-    m_energy_bin[12] = m_e_max;
-    m_e_bins = m_energy_bin.size();
-  */
-
   //
   // Energy binning - IceCube energy resolution of 30%: DEx = 0.30Ex
   //
@@ -51,10 +35,13 @@ NeutrinosDetectionPaper::NeutrinosDetectionPaper( Parameters * pars ) : Graphics
   double DEx  = 0.30;
   double Xx   = m_e_min;
   
-  int k = 0;
+  int k = 1;
 
   m_vbins = new float[100];
-    
+
+  m_vbins[0] = Xx; // This is the first lower edge bin value
+  m_energy_bin[0] = Xx;
+  
   while( Xx < m_e_max ) 
   {
     
@@ -67,15 +54,20 @@ NeutrinosDetectionPaper::NeutrinosDetectionPaper( Parameters * pars ) : Graphics
     Xx = upp_bin;
 
     m_vbins[k] = Xx;
-    m_energy_bin[k+1] = Xx;
+    m_energy_bin[k] = Xx;
     
     k += 1;
         
   }
-
-  std::cout << "NeutrinosDetectionPaper> Total bins set " 
-            << k << '\t'
-            << m_energy_bin.size() << std::endl;
+  
+  m_e_bins = ( m_energy_bin.size() - 1); //Array has to have nbins+1 size
+  
+  for( int i = 0; i <= m_e_bins; ++ i )
+  {
+    std::cout << "NeutrinosDetectionPaper> Bins lower edges data: " << m_vbins[i] << " " << m_energy_bin[i] << std::endl;
+  }
+  
+  std::cout << "NeutrinosDetectionPaper> Total bins set " << m_e_bins << std::endl;
   
   
 }
@@ -535,15 +527,15 @@ void NeutrinosDetectionPaper::SetFluxHistograms(TFile * infile,
                         + TString("_") 
                         + TString(source) )->cd();
   
-  /// Book now 3+3 histograms
+  /// Book now 3+3 histograms (with variable size bins)
 
-  m_flux_histos["phi_e"]     = new TH1F("phi_e"    ,"flux as a function of energy", m_e_bins, m_e_min, m_e_max );
-  m_flux_histos["phi_mu"]    = new TH1F("phi_mu"   ,"flux as a function of energy", m_e_bins, m_e_min, m_e_max );
-  m_flux_histos["phi_tau"]   = new TH1F("phi_tau"  ,"flux as a function of energy", m_e_bins, m_e_min, m_e_max );
+  m_flux_histos["phi_e"]     = new TH1F("phi_e"    ,"flux as a function of energy", m_e_bins, m_vbins );
+  m_flux_histos["phi_mu"]    = new TH1F("phi_mu"   ,"flux as a function of energy", m_e_bins, m_vbins );
+  m_flux_histos["phi_tau"]   = new TH1F("phi_tau"  ,"flux as a function of energy", m_e_bins, m_vbins );
 
-  m_flux_histos["phi_ae"]    = new TH1F("phi_ae"   ,"flux as a function of energy", m_e_bins, m_e_min, m_e_max );
-  m_flux_histos["phi_amu"]   = new TH1F("phi_amu"  ,"flux as a function of energy", m_e_bins, m_e_min, m_e_max );
-  m_flux_histos["phi_atau"]  = new TH1F("phi_atau" ,"flux as a function of energy", m_e_bins, m_e_min, m_e_max );
+  m_flux_histos["phi_ae"]    = new TH1F("phi_ae"   ,"flux as a function of energy", m_e_bins, m_vbins );
+  m_flux_histos["phi_amu"]   = new TH1F("phi_amu"  ,"flux as a function of energy", m_e_bins, m_vbins );
+  m_flux_histos["phi_atau"]  = new TH1F("phi_atau" ,"flux as a function of energy", m_e_bins, m_vbins );
 
   int bin_pos = 1;
   double kval = 0.0;
@@ -578,9 +570,8 @@ void NeutrinosDetectionPaper::SetFluxHistograms(TFile * infile,
       sum["phi_t"] = sum["phi_t"] / kval;
       
       //Store the info in the histograms
+      //std::cout << bin_pos << " " << sum["phi_e"] << '\t' << sum["phi_m"] << '\t' << sum["phi_t"] << std::endl; 
       
-      std::cout << bin_pos << " " << sum["phi_e"] << '\t' << sum["phi_m"] << '\t' << sum["phi_t"] << std::endl; 
-
       m_flux_histos["phi_e"]->SetBinContent(bin_pos, sum["phi_e"]);
       m_flux_histos["phi_mu"]->SetBinContent(bin_pos, sum["phi_m"]);
       m_flux_histos["phi_tau"]->SetBinContent(bin_pos, sum["phi_t"]);
@@ -605,8 +596,7 @@ void NeutrinosDetectionPaper::SetFluxHistograms(TFile * infile,
       sum["phi_t"] = sum["phi_t"] / kval;
       
       //Store the info in the histograms
-      
-      std::cout << bin_pos << " " << sum["phi_e"] << '\t' << sum["phi_m"] << '\t' << sum["phi_t"] << std::endl; 
+      //std::cout << bin_pos << " " << sum["phi_e"] << '\t' << sum["phi_m"] << '\t' << sum["phi_t"] << std::endl; 
       
       m_flux_histos["phi_e"]->SetBinContent(bin_pos, sum["phi_e"]);
       m_flux_histos["phi_mu"]->SetBinContent(bin_pos, sum["phi_m"]);
@@ -649,8 +639,7 @@ void NeutrinosDetectionPaper::SetFluxHistograms(TFile * infile,
       sum["phi_t"] = sum["phi_t"] / kval;
       
       //Store the info in the histograms
-      
-      std::cout << bin_pos << " " << sum["phi_e"] << '\t' << sum["phi_m"] << '\t' << sum["phi_t"] << std::endl; 
+      //std::cout << bin_pos << " " << sum["phi_e"] << '\t' << sum["phi_m"] << '\t' << sum["phi_t"] << std::endl; 
 
       m_flux_histos["phi_ae"]->SetBinContent(bin_pos, sum["phi_e"]);
       m_flux_histos["phi_amu"]->SetBinContent(bin_pos, sum["phi_m"]);
@@ -676,8 +665,7 @@ void NeutrinosDetectionPaper::SetFluxHistograms(TFile * infile,
       sum["phi_t"] = sum["phi_t"] / kval;
       
       //Store the info in the histograms
-      
-      std::cout << bin_pos << " " << sum["phi_e"] << '\t' << sum["phi_m"] << '\t' << sum["phi_t"] << std::endl; 
+      //std::cout << bin_pos << " " << sum["phi_e"] << '\t' << sum["phi_m"] << '\t' << sum["phi_t"] << std::endl; 
       
       m_flux_histos["phi_ae"]->SetBinContent(bin_pos, sum["phi_e"]);
       m_flux_histos["phi_amu"]->SetBinContent(bin_pos, sum["phi_m"]);

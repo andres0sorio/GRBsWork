@@ -27,6 +27,7 @@ class MixingParameters : public TObject {
     par6  = -1.0;
     par7  = -1.0;
     par8  = -1.0;
+    par9  = -1.0;
     
     
   };
@@ -41,6 +42,7 @@ class MixingParameters : public TObject {
   float GetPar6() const { return par6; }
   float GetPar7() const { return par7; }
   float GetPar8() const { return par8; }
+  float GetPar9() const { return par9; }
 
   void SetPar1(float x) { par1 =x;}
   void SetPar2(float x) { par2 =x;}
@@ -50,6 +52,7 @@ class MixingParameters : public TObject {
   void SetPar6(float x) { par6 =x;}
   void SetPar7(float x) { par7 =x;}
   void SetPar8(float x) { par8 =x;}
+  void SetPar9(float x) { par9 =x;}
 
   
   void SetPar(const char * name, float x) {
@@ -74,6 +77,7 @@ class MixingParameters : public TObject {
     out << "Par6 " << p.par6 << std::endl;
     out << "Par7 " << p.par7 << std::endl;
     out << "Par8 " << p.par8 << std::endl;
+    out << "Par9 " << p.par9 << std::endl;
     return out;
   }
   
@@ -88,6 +92,7 @@ private:
   float par6;
   float par7;
   float par8;
+  float par9;
 
   std::map<std::string,float> m_params;
   
