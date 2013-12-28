@@ -1,9 +1,5 @@
 #! /bin/tcsh -f
 
-cd /opt/hepsw/root/pro/bin/
-source thisroot.csh
-cd -
-
 setenv EMIN  $1
 setenv EMAX  $2
 setenv MODEL $3
@@ -12,7 +8,7 @@ setenv XMLF  $5
 setenv ANGS  $6
 setenv DM2S  $7
 
-### setenv CMD  "./paper01.exe --model "$MODEL" --prob Pee,aPee,Pem,aPem,Pet,aPet,Pmt,aPmt --erange "$EMIN","$EMAX" --step "$STEP" --modfile "$XMLF" --angles "$ANGS" --dmass2 "$DM2S
+###setenv CMD  "./paper01.exe --model "$MODEL" --prob Pee,aPee,Pem,aPem,Pet,aPet,Pmt,aPmt --erange "$EMIN","$EMAX" --step "$STEP" --modfile "$XMLF" --angles "$ANGS" --dmass2 "$DM2S
 
 setenv CMD  "./paper01.exe --model "$MODEL" --prob Pee,aPee --erange "$EMIN","$EMAX" --step "$STEP" --modfile "$XMLF" --angles "$ANGS" --dmass2 "$DM2S
 

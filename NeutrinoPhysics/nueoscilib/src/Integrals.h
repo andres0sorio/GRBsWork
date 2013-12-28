@@ -68,6 +68,7 @@ public:
   static const double AbsError;
   static const double RelError;
   static const int SubIntervals;
+  static const double NMFactor;
 
  protected:
   

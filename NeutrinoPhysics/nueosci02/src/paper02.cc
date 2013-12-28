@@ -14,8 +14,11 @@ int main(int iargv, char **argv) {
 
   std::string input;
   std::string config;
+  std::string neuosc;
   std::string steps;
-  
+
+  bool no_dataset = false;
+    
   try {
     
     po::options_description desc("Allowed options");
@@ -24,6 +27,7 @@ int main(int iargv, char **argv) {
       ("help"     , "produce help message")
       ("input"    , po::value<std::string>(), "input file")
       ("config"   , po::value<std::string>(), "configuration file (.xml)")
+      ("neuosc"   , po::value<std::string>(), "neutrino oscillation data & input constants (.xml)")
       ("steps"    , po::value<std::string>(), "excecute steps ( 1,2,3,... )")
       ;
     
@@ -40,14 +44,22 @@ int main(int iargv, char **argv) {
     if (vm.count("input")) 
       input = vm["input"].as<std::string>();
     else {
-      std::cout << "please select which file to run on \n";
-      return 1; }
+      std::cout << "No input file selected ... I hope this is Ok. \n";
+      no_dataset = true;
+    }
     
     if (vm.count("config")) 
       config = vm["config"].as<std::string>();
     else {
       config = std::string("config.xml");
       std::cout << "using the default configuration file config.xml \n";
+    }
+
+    if (vm.count("neuosc")) 
+      neuosc = vm["neuosc"].as<std::string>();
+    else {
+      neuosc = std::string("matrix_config.xml");
+      std::cout << "using the default configuration file matrix_config.xml \n";
     }
 
     if (vm.count("steps")) {
@@ -85,11 +97,11 @@ int main(int iargv, char **argv) {
 
   MixingParameterList mixparlist;
   
-  std::cout << " ---MixingParameterList: read ---" << '\n';
-  
-  if (mixparlist.ParseFile("matrix_config.xml") == 0)
-    std::cout << mixparlist;
-  
+  if (mixparlist.ParseFile( neuosc.c_str() ) == 0) 
+    std::cout << "MixingParameterList> opened file: " << neuosc << '\n';
+  else
+    return 1;
+    
   MixingParameters *mixpars =  mixparlist.GetParameters(0);
   
   //............................................................................................
@@ -97,6 +109,7 @@ int main(int iargv, char **argv) {
   //Step Selection
   
   std::map<std::string,bool> execSteps;
+  execSteps["0"] = false;
   execSteps["1"] = false;
   execSteps["2"] = false;
   execSteps["3"] = false;
@@ -113,38 +126,50 @@ int main(int iargv, char **argv) {
       std::cout << (*itr) << " turns true" << std::endl;
     }
     
+  } else 
+    execSteps["1"] = true; 
+  
+  if( execSteps["2"] && ( !execSteps["0"] ) )  { 
+    execSteps["1"] = true; // special case 1&2 have to be done
+    std::cout << "Both steps 1&2 will be executed" << std::endl;
   }
-
-  if( execSteps["2"] ) execSteps["1"] = true; // special case 1,2 have to be done
+  
   
   //............................................................................................
   
   //Setup dataset to run over
+  
   std::vector<std::string> dataset;
   std::vector<std::string>::iterator itr;
 
-  std::ifstream * m_in = new std::ifstream( input.c_str(), ifstream::in);
-  
-  if(!m_in->is_open()) {
-    std::cout << "Data> cannot open file" << std::endl;
-  } else { 
-    std::cout << "Data> file is now open" << std::endl;
+  if( !no_dataset ) 
+  {
+    
+    std::ifstream * m_in = new std::ifstream( input.c_str(), ifstream::in);
+    
+    if(!m_in->is_open()) {
+      std::cout << "Data> cannot open file" << std::endl;
+      return 0;
+    } else { 
+      std::cout << "Data> file is now open" << std::endl;
+    }
+    
+    std::string strfile;
+    
+    while( m_in->good() ) {
+      
+      if ( m_in->eof() ) break;
+      
+      (*m_in) >> strfile;
+      
+      dataset.push_back( strfile );
+      
+      if ( m_in->fail()) break;
+      
+    }
+      
   }
-
-  std::string strfile;
-  
-  while( m_in->good() ) {
     
-    if ( m_in->eof() ) break;
-    
-    (*m_in) >> strfile;
-    
-    dataset.push_back( strfile );
-    
-    if ( m_in->fail()) break;
-
-  }
-  
   //............................................................................................
 
   // Variation 1 ( IceCube! -> R calculation as a function of alpha )
@@ -163,8 +188,12 @@ int main(int iargv, char **argv) {
     
     //This is R vs the spectral index alpha for the standard picture
 
-    nudet->MakeVariationStdPicture("EarthB","Vacuum", 2.0, 3.1, 0.05); // 
-    
+    nudet->SetMixingParameters (  mixpars );
+
+    nudet->MakeVariationStdPicture("EarthB","Vacuum", "dCP0", 2.0, 3.1, 0.05, 0.0); // 
+
+    nudet->MakeVariationStdPicture("EarthB","Vacuum", "dCP1", 2.0, 3.1, 0.05, 180.0); // 
+        
   }
   
   // (EarthB,Vacuum) == Model X ---> Vaccuum ---> Earth ---> Detector
@@ -192,21 +221,20 @@ int main(int iargv, char **argv) {
       model = (*itr).substr(pos1+1, (pos2-pos1-1) );
       
       pos2  = (*itr).rfind(".");
-      pos1  = (*itr).rfind("-", pos2-1);
-      
+      pos1  = (*itr).rfind("_", pos2-1);
+
       var   = (*itr).substr(pos1+1, (pos2-pos1-1) );
+      
+      //std::cout << " option: " << var << std::endl;
       
       nudet->SetFluxHistograms(infile, model.c_str(), "EarthB", "Vacuum", var.c_str() );
       
-      nudet->MakeVariation02(model.c_str(), "EarthB","Vacuum", 2.0, 3.1, 0.05); //
+      nudet->MakeVariation02(model.c_str(), "EarthB","Vacuum", var.c_str(), 2.0, 3.1, 0.05); //
       
       nudet->ResetFluxHistograms();
       
       infile->Close();
-   
-      //break;
-      
-      
+         
     }
     
   }
@@ -228,6 +256,14 @@ int main(int iargv, char **argv) {
     nudet->MakeVariation04("StdPicture", "EarthB", "Vacuum", 0.0, 15.0, 1.0, 1.8, 0.0); //
 
     nudet->MakeVariation04("StdPicture", "EarthB", "Vacuum", 0.0, 15.0, 1.0, 1.8, 180.0); //
+
+    nudet->MakeVariation04("StdPicture", "EarthB", "Vacuum", 0.0, 15.0, 1.0, 2.0, 0.0); //
+
+    nudet->MakeVariation04("StdPicture", "EarthB", "Vacuum", 0.0, 15.0, 1.0, 2.0, 180.0); //
+
+    nudet->MakeVariation04("StdPicture", "EarthB", "Vacuum", 0.0, 15.0, 1.0, 2.2, 0.0); //
+
+    nudet->MakeVariation04("StdPicture", "EarthB", "Vacuum", 0.0, 15.0, 1.0, 2.2, 180.0); //
     
   }
   

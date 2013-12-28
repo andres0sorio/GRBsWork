@@ -72,23 +72,23 @@ public:
     m_pshadow_aNu = 1.0;
   };
   
-  //... Eval as function of the neutrino energy enu @ angle = Pi
+  //... Evaluate as function of the neutrino energy enu @ angle = Pi
   void Eval(double);
 
   void Eval2(double);
   
-  //... Eval as a step function
-  void Eval(int, double);
-  
-  //... Eval as function of neutrino angle and energy 
+  //... Evaluate  as function of neutrino angle and energy 
   void Eval(double, double); 
-  
+
+  //... Evaluate  as a step function 
+  void Eval2(double, double);
+
   double timeAtT1(double);
   
   void Validate();
   
-  double Nu_PShadow() {return m_pshadow_Nu; };
-  double ANu_PShadow() { return m_pshadow_aNu; };
+  double Nu_PShadow() { if( m_pshadow_Nu < 0 ) return 0.0; else return m_pshadow_Nu; };
+  double ANu_PShadow() { if( m_pshadow_aNu < 0 ) return 0.0; else return m_pshadow_aNu; };
   
  protected:
   

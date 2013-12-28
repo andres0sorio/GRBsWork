@@ -26,7 +26,8 @@ MuTrackEvents::MuTrackEvents(const char * nuxsec, const char * antinuxsec, Param
   
   m_NuTauTracks = 0.0;
   
-  
+  m_sfactor = Integrals::NMFactor;
+    
 }
 
 MuTrackEvents::MuTrackEvents(const char * nuxsec, const char * antinuxsec, const char * pshad, Parameters * input) {
@@ -46,6 +47,8 @@ MuTrackEvents::MuTrackEvents(const char * nuxsec, const char * antinuxsec, const
   m_NuMuTracks = 0.0;
   
   m_NuTauTracks = 0.0;
+
+  m_sfactor = Integrals::NMFactor;
     
 }
 
@@ -54,13 +57,17 @@ float MuTrackEvents::Evaluate() {
   //... get Nu_mu / Anti-Nu_mu contribution
 
   float v1 = EvaluateNuMuContribution();
-
+  
+  std::cout << "MuTrackEvents> EvaluateNuMuContribution> done \n";
+  
   m_NuMuTracks = v1;
     
   //... get Nu_tau / Anti-Nu_tau contribution
 
   float v2 = EvaluateNuTauContribution();
   
+  std::cout << "MuTrackEvents> EvaluateNuTauContribution> done \n";
+
   m_NuTauTracks = v2;
 
   return (v1 + v2);
@@ -69,8 +76,6 @@ float MuTrackEvents::Evaluate() {
 
 float MuTrackEvents::EvaluateNuMuContribution() {
   
-  double m_sfactor = 1.e5; //
-
   double rho  = m_input->GetPar5();
   double Area = m_input->GetPar6();
   double Na   = m_input->GetPar7();
@@ -84,18 +89,22 @@ float MuTrackEvents::EvaluateNuMuContribution() {
   
   ff->SetData(nu_xsec_data, antinu_xsec_data, pshadow_data);
   ff->SetParameters( m_input );
-  
+
+  /*
   ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( Integrals::AbsError,
                                                                         Integrals::RelError,
                                                                         Integrals::SubIntervals);
-
-  /* AO - march 30
-    new ROOT::Math::GSLIntegrator( ROOT::Math::IntegrationOneDim::kADAPTIVE, 
-                                   ROOT::Math::Integration::kGAUSS31,
-                                   Integrals::AbsError, 
-                                   Integrals::RelError, 
-                                   Integrals::SubIntervals );
   */
+  
+  ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( ROOT::Math::IntegrationOneDim::kADAPTIVESINGULAR,
+                                                                        ROOT::Math::Integration::kGAUSS31,
+                                                                        Integrals::AbsError, 
+                                                                        Integrals::RelError, 
+                                                                        Integrals::SubIntervals );
+  
+  
+  
+
 
   nminteg->SetFunction( *(ROOT::Math::IGenFunction*)ff );
   
@@ -115,8 +124,6 @@ float MuTrackEvents::EvaluateNuMuContribution() {
 
 float MuTrackEvents::EvaluateNuTauContribution() {
 
-  double m_sfactor = 1.e5;
-
   double rho  = m_input->GetPar5();
   double Area = m_input->GetPar6();
   double Na   = m_input->GetPar7();
@@ -132,18 +139,18 @@ float MuTrackEvents::EvaluateNuTauContribution() {
   ff->SetData(nu_xsec_data, antinu_xsec_data, pshadow_data);
   ff->SetParameters( m_input );
   
+  /*
   ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( Integrals::AbsError,
                                                                         Integrals::RelError,
                                                                         Integrals::SubIntervals);
-
-  /* AO - march 30
-    new ROOT::Math::GSLIntegrator(  ROOT::Math::IntegrationOneDim::kADAPTIVE,
-                                    ROOT::Math::Integration::kGAUSS31,
-                                    Integrals::AbsError, 
-                                    Integrals::RelError, 
-                                    Integrals::SubIntervals );
   */
-
+  
+  ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( ROOT::Math::IntegrationOneDim::kADAPTIVESINGULAR,
+                                                                        ROOT::Math::Integration::kGAUSS31,
+                                                                        Integrals::AbsError, 
+                                                                        Integrals::RelError, 
+                                                                        Integrals::SubIntervals );
+  
   nminteg->SetFunction( *(ROOT::Math::IGenFunction*)ff );
   
   float m_mu_Th = m_input->GetPar1();
@@ -182,8 +189,6 @@ float MuTrackEvents::Evaluate( double Enu ) {
 
 float MuTrackEvents::EvaluateNuMuContribution( double Enu ) {
   
-  double m_sfactor = 1.e5;
-  
   double rho  = m_input->GetPar5();
   double Area = m_input->GetPar6();
   double Na   = m_input->GetPar7();
@@ -204,15 +209,11 @@ float MuTrackEvents::EvaluateNuMuContribution( double Enu ) {
 
   delete ff;
 
-  //m_sfactor = 1.0;
-
   return (result/m_sfactor);
 
 }
 
 float MuTrackEvents::EvaluateNuTauContribution( double Enu ) {
-
-  double m_sfactor = 1.e5;
 
   double rho  = m_input->GetPar5();
   double Area = m_input->GetPar6();

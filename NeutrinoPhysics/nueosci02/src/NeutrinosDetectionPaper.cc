@@ -154,28 +154,48 @@ void NeutrinosDetectionPaper::MakeVariation01(const char * model, const char * t
 }
 
 void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target, 
-                                                      const char * source, 
-                                                      double Xmin, double Xmax, double Dx)
+                                                      const char * source,
+                                                      const char * option,
+                                                      double Xmin, 
+                                                      double Xmax, 
+                                                      double Dx,
+                                                      double phase)
 {
   
   //Make the variation for the Standard Picture 1:1:1
   
-  InitOutput("StdPicture", target, source, "alpha");
+  InitOutput("StdPicture", target, source, option);
   
-  // Loop over the parameter
+  NeutrinoOscInVacuum * m_Physics_Vacuum =  new NeutrinoOscInVacuum( m_mixpars );
   
-  m_Xx = Xmin;
+  m_Physics_Vacuum->use_default_pars = false; // read parameters from file
+
+  m_Physics_Vacuum->setPhase( phase );
   
+  m_Physics_Vacuum->initializeAngles();
+  m_Physics_Vacuum->updateMixingMatrix();
+  m_Physics_Vacuum->calcProbabilities();
+  m_Physics_Vacuum->Propagate( 1.0, 2.0, 0.0 );
+  
+  std::cout << "MakeVariation04> alpha: " << m_config->GetPar3() << " dCP: " << m_Physics_Vacuum->m_dCP << std::endl;
+
   // Set N_betas 
   
-  m_config->SetPar("N_e", 1.0 );
-  m_config->SetPar("N_mu", 1.0 );
-  m_config->SetPar("N_tau", 1.0 );
+  m_config->SetPar("N_e", (m_Physics_Vacuum->m_phi_e_f) );
+  m_config->SetPar("N_mu", (m_Physics_Vacuum->m_phi_mu_f) );
+  m_config->SetPar("N_tau", (m_Physics_Vacuum->m_phi_tau_f) );
   
-  m_config->SetPar("N_ae", 1.0 );
-  m_config->SetPar("N_amu", 1.0 );
-  m_config->SetPar("N_atau", 1.0 );
-
+  double N1bar = (m_Physics_Vacuum->m_phi_e_f);
+  double N2bar = (m_Physics_Vacuum->m_phi_mu_f);
+  double N3bar = (m_Physics_Vacuum->m_phi_tau_f);
+  
+  m_config->SetPar("N_ae", N1bar );
+  m_config->SetPar("N_amu", N2bar );
+  m_config->SetPar("N_atau", N3bar );
+  
+  // Loop over the parameter
+  m_Xx = Xmin;
+  
   while ( 1 ) {
     
     if ( m_Xx >= Xmax ) break;
@@ -193,15 +213,15 @@ void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target,
     ShowerEvents * sh1 =  new ShowerEvents("../data/XSec_neut.dat", "../data/XSec_anti.dat", 
                                            "../data/pshadow-at-180.dat", m_config );
     
-    m_HadShw = sh1->Evaluate( );
+    m_HadShw   = sh1->Evaluate( );
     
-    m_HadShwE = sh1->m_CCNuShower;
+    m_HadShwE  = sh1->m_CCNuShower;
     
-    m_HadShwT = sh1->m_CCNutauShower;
+    m_HadShwT  = sh1->m_CCNutauShower;
     
     m_HadShwNC = sh1->m_NCShower;
 
-    m_Ratio  = TkSum / m_HadShw;
+    m_Ratio    = TkSum / m_HadShw;
     
     std::cout << "NeutrinosDetectionPaper> "
               << m_Xx     << '\t'
@@ -217,25 +237,27 @@ void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target,
 
     m_Xx = m_Xx + Dx;
     
-    //break;
-    
   }
   
   m_tree->Write();
   
   m_output_file->cd("../");
   
+  delete m_Physics_Vacuum;
+  
+
 }
 
 void NeutrinosDetectionPaper::MakeVariation02(const char * model,
                                               const char * target, 
-                                              const char * source, 
+                                              const char * source,
+                                              const char * option,
                                               double Xmin, 
                                               double Xmax, 
                                               double Dx)
 {
   
-  InitOutput(model, target, source, "alpha");
+  InitOutput(model, target, source, option);
   
   // Here is the loop for the parameter variation
   
@@ -394,6 +416,8 @@ void NeutrinosDetectionPaper::MakeVariation04(const char * model,
                                               double phase )
 {
   
+  /// Variation of R as a function of theta13
+  
   NeutrinoOscInVacuum * m_Physics_Vacuum =  new NeutrinoOscInVacuum( m_mixpars );
   
   m_Physics_Vacuum->use_default_pars = false; // read parameters from file
@@ -412,6 +436,8 @@ void NeutrinosDetectionPaper::MakeVariation04(const char * model,
   
   m_config->SetPar3( alpha );
 
+  std::cout << "MakeVariation04> alpha: " << m_config->GetPar3() << " dCP: " << m_Physics_Vacuum->m_dCP << std::endl;
+  
   while(1) 
   {
     
@@ -427,13 +453,17 @@ void NeutrinosDetectionPaper::MakeVariation04(const char * model,
     
     m_Physics_Vacuum->Propagate( 1.0, 2.0, 0.0 );
     
-    m_config->SetPar("N_e", (m_Physics_Vacuum->m_phi_e_f) / 2.0 );
-    m_config->SetPar("N_mu", (m_Physics_Vacuum->m_phi_mu_f) / 2.0 );
-    m_config->SetPar("N_tau", (m_Physics_Vacuum->m_phi_tau_f) / 2.0 );
+    m_config->SetPar("N_e", (m_Physics_Vacuum->m_phi_e_f) );
+    m_config->SetPar("N_mu", (m_Physics_Vacuum->m_phi_mu_f) );
+    m_config->SetPar("N_tau", (m_Physics_Vacuum->m_phi_tau_f) );
+
+    double N1bar = (m_Physics_Vacuum->m_phi_e_f);
+    double N2bar = (m_Physics_Vacuum->m_phi_mu_f);
+    double N3bar = (m_Physics_Vacuum->m_phi_tau_f);
     
-    m_config->SetPar("N_ae", (m_Physics_Vacuum->m_phi_e_f) / 2.0 );
-    m_config->SetPar("N_amu", (m_Physics_Vacuum->m_phi_mu_f) / 2.0 );
-    m_config->SetPar("N_atau", (m_Physics_Vacuum->m_phi_tau_f) / 2.0 );
+    m_config->SetPar("N_ae", N1bar );
+    m_config->SetPar("N_amu", N2bar );
+    m_config->SetPar("N_atau", N3bar );
     
     MuTrackEvents * mu1 = new MuTrackEvents("../data/XSec_neut.dat", "../data/XSec_anti.dat", 
                                             "../data/pshadow-at-180.dat", m_config );

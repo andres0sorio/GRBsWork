@@ -53,7 +53,14 @@ public:
   double m_CCNuShower;
 
   double m_CCNutauShower;
+
+  void SetSFactor( double factor ) 
+  {
+    m_sfactor = factor;
+    std::cout << "ShowerEvents> SetSfactor> m_sfactor changes to: " << m_sfactor << std::endl;
+  };
   
+    
 protected:
 
 private:
@@ -66,6 +73,8 @@ private:
   
   float m_phi_nu[3];
   float m_phi_anu[3];
-    
+
+  double m_sfactor;
+      
 };
 #endif // SHOWEREVENTS_H

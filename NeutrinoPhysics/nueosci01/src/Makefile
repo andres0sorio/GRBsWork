@@ -21,7 +21,9 @@ GSLLIB       =$(shell $(GSLPATH)/bin/gsl-config --libs)
 
 BOOSTINC     =-I$(BOOSTPATH)/include
 
-INCDIR       = .
+NUOSCIDIR    = ../../nueoscilib
+
+INCDIR       = ../../nueoscilib/src -I.
 SRCDIR       = .
 LIBDIR       = .
 EXEDIR       = ../bin
@@ -34,54 +36,24 @@ CXXFLAGS    += -I$(INCDIR) $(ROOTCFLAGS) $(GSLINC) $(BOOSTINC)
 LINKFLAGS    =
 
 ##Libraries
-LIBS       += $(ROOTLIBS) -lMinuit -lMathCore -lMathMore -lXMLParser $(GSLLIB) \
-	-L$(BOOSTPATH)/lib -lboost_program_options
+LIBS       += $(ROOTLIBS) -lMinuit -lMathCore -lMathMore -lXMLParser $(GSLLIB)
+LIBS       += -L$(BOOSTPATH)/lib -lboost_program_options
+LIBS       += -L$(NUOSCIDIR)/lib -lnueosci
 
 OBJS   = Graphics.o \
-	Integrals.o \
-	DOMParameters.o \
-	nuN_interpxsec.o \
-	PShadow.o \
-	ShowerEvents.o \
-	MuTrackEvents.o \
-	IProbabilityMatrix.o \
-	MixingParameters.o \
-	NeutrinoOscInVacuum.o \
-	NeutrinoOscInMatter.o \
-	main.o
+	 main.o
 
 VALOBJS =  Graphics.o \
-	DOMParameters.o \
-	ModelParameters.o \
-	MixingParameters.o \
-	IProbabilityMatrix.o \
-	DensityModels.o \
-	NeutrinoOscInVacuum.o \
-	NeutrinoOscInVarDensity.o \
-	NeutrinosInMediumPaper.o \
-	validate.o
+	   NeutrinosInMediumPaper.o \
+	   validate.o
 
 PAP01OBJS = Graphics.o \
-	DOMParameters.o \
-	ModelParameters.o \
-	MixingParameters.o \
-	IProbabilityMatrix.o \
-	DensityModels.o \
-	NeutrinoOscInVacuum.o \
-	NeutrinoOscInVarDensity.o \
-	NeutrinosInMediumPaper.o \
-	paper01.o
+	    NeutrinosInMediumPaper.o \
+	    paper01.o
 
 EARTHOBJS = Graphics.o \
-	DOMParameters.o \
-	ModelParameters.o \
-	MixingParameters.o \
-	IProbabilityMatrix.o \
-	DensityModels.o \
-	NeutrinoOscInVacuum.o \
-	NeutrinoOscInVarDensity.o \
-	NeutrinosInMediumPaper.o \
-	earthval.o
+	    NeutrinosInMediumPaper.o \
+	    earthval.o
 
 all : getratio.exe validate.exe earthval.exe paper01.exe
 

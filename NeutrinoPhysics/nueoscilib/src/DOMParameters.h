@@ -1,3 +1,6 @@
+#ifndef DOMPARAMETERS_H 
+#define DOMPARAMETERS_H 1
+
 #include <RootCommon.h>
 #include <TDOMParser.h>
 #include <TXMLAttr.h>
@@ -255,3 +258,5 @@ private:
   TIter * m_iter;
   
 };
+
+#endif

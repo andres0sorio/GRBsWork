@@ -37,23 +37,97 @@ void makePlots()
   tdrStyle->SetTitleFontSize(0.08);
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
+  
+  TList * v_Variation = new TList();
+  TObjString *label;
+  
+  label = new TObjString( "dCP0" );
+  v_Variation->Add( label );
+  
+  label = new TObjString( "SetI-1E17-Var1-dCP0" );
+  v_Variation->Add( label );
+  
+  label = new TObjString( "SetI-1E17-Var2-dCP0" );
+  v_Variation->Add( label );
 
-  makePlots("EarthB", "Vacuum", "alpha", "detection.root");
+  label = new TObjString( "SetI-1E17-Var3-dCP0" );
+  v_Variation->Add( label );
+  
+  makePlots(v_Variation, "EarthB", "Vacuum", "Set I", "alpha_SetI_dCP0", "detection-setI.root");
+
+  v_Variation->Clear();
+
+  label = new TObjString( "dCP1" );
+  v_Variation->Add( label );
+  
+  label = new TObjString( "SetI-1E17-Var1-dCP1" );
+  v_Variation->Add( label );
+  
+  label = new TObjString( "SetI-1E17-Var2-dCP1" );
+  v_Variation->Add( label );
+
+  label = new TObjString( "SetI-1E17-Var3-dCP1" );
+  v_Variation->Add( label );
+
+  makePlots(v_Variation, "EarthB", "Vacuum", "Set I", "alpha_SetI_dCP1", "detection-setI.root");
+
+  v_Variation->Clear();
+
+  label = new TObjString( "dCP0" );
+  v_Variation->Add( label );
+  
+  label = new TObjString( "SetII-1E17-Var1-dCP0" );
+  v_Variation->Add( label );
+  
+  label = new TObjString( "SetII-1E17-Var2-dCP0" );
+  v_Variation->Add( label );
+
+  label = new TObjString( "SetII-1E17-Var3-dCP0" );
+  v_Variation->Add( label );
+    
+  makePlots(v_Variation, "EarthB", "Vacuum", "Set II", "alpha_SetII_dCP0", "detection-setII.root");
+  
+  v_Variation->Clear();
+  
+  label = new TObjString( "dCP1" );
+  v_Variation->Add( label );
+  
+  label = new TObjString( "SetII-1E17-Var1-dCP1" );
+  v_Variation->Add( label );
+  
+  label = new TObjString( "SetII-1E17-Var2-dCP1" );
+  v_Variation->Add( label );
+
+  label = new TObjString( "SetII-1E17-Var3-dCP1" );
+  v_Variation->Add( label );
+  
+  makePlots(v_Variation, "EarthB", "Vacuum", "Set II", "alpha_SetII_dCP1", "detection-setII.root");
+  
+  v_Variation->Clear();
+  
    
 }
 
-void makePlots( const char * target, 
-                const char * src, 
-                const char * var, 
-                const char * infile) 
+
+void makePlots( TList      * variations,
+                const char * target,
+                const char * src,
+                const char * set,
+                const char * param, 
+                const char * infile ) 
 {
   
   //Output path
   TString path("./paper02-plots/ratio/");
   
   TList * v_Models = new TList();
-
+  TList * v_Labels = new TList();
+  TList * v_Trees  = new TList();
+  TList * v_Graphs = new TList();
+  
   TObjString *label;
+  
+  //Models
 
   label = new TObjString( "StdPicture" );
   v_Models->Add( label ); 
@@ -61,30 +135,37 @@ void makePlots( const char * target,
   label = new TObjString( "ModelA" );
   v_Models->Add( label ); 
 
-  label = new TObjString( "ModelB" );
+  label = new TObjString( "ModelA" );
   v_Models->Add( label ); 
 
-  label = new TObjString( "ModelC" );
+  label = new TObjString( "ModelA" );
   v_Models->Add( label ); 
 
-  TList * v_Labels = new TList();
-  TObjString *label;
+  //Labels
   
   label = new TObjString( "1:1:1" );
   v_Labels->Add( label ); 
-  label = new TObjString( "Model A" );
+  
+  TString varname = TString(set) + TString(" ") + TString("#Delta m^{2}_{32}=1.4 10^{-3} eV^{2}");
+  
+  label = new TObjString( varname.Data() );
   v_Labels->Add( label ); 
-  label = new TObjString( "Model B" );
+
+  varname = TString(set) + TString(" ") + TString("#Delta m^{2}_{32}=6.0 10^{-3} eV^{2}");
+  
+  label = new TObjString( varname.Data() );
   v_Labels->Add( label ); 
-  label = new TObjString( "Model C" );
+
+  varname = TString(set) + TString(" ") + TString("#Delta m^{2}_{32}=3.2 10^{-3} eV^{2}");
+
+  label = new TObjString( varname.Data() );
   v_Labels->Add( label ); 
-        
+    
+  //Input file
+
   TFile * f1 = new TFile(infile);
   
   f1->cd();
-
-  TList * v_Trees = new TList();
-  TList * v_Graphs = new TList();
 
   int max = v_Models->GetEntries();
   
@@ -92,30 +173,34 @@ void makePlots( const char * target,
     
     TString model = ((TObjString*)v_Models->At(k))->GetString();
     
+    TString option = ((TObjString*)variations->At(k))->GetString();
+
     TString dataPxx = TString( "Ratio_" ) + TString( model ) + TString("_") 
-      + TString( target ) + TString("_") + TString( src ) + TString("_") + TString(var) +  TString("/data");
+      + TString( target ) + TString("_") + TString( src ) + TString("_") + TString(option) +  TString("/data");
     
     std::cout << " " << dataPxx << std::endl;
     
     TTree * PxxTreeNu = (TTree*)gDirectory->Get( dataPxx.Data() );
     
     v_Trees->Add( PxxTreeNu );
-
+    
     TGraph * ProbNu = new TGraph();
     
     v_Graphs->Add( ProbNu );
     
   }
   
-    
-  TString cname = TString("Ratio") + TString("_") + TString(var);
   
-  TCanvas * c1 = new TCanvas( cname.Data(), "track/shower ratio", 206,141,722,575); 
+  TString cname = TString("Ratio") + TString("_") + TString(param);
+
+  TString ctitle = TString("track/shower ratio") + TString(" ") + TString(param);
+
+  TCanvas * c1 = new TCanvas( cname.Data(), ctitle.Data(), 206,141,722,575); 
   
-  TLegend * leg = new TLegend(0.21,0.67,0.48,0.85);
+  TLegend * leg = new TLegend(0.17,0.60,0.56,0.85);
   
   leg->SetBorderSize(0);
-  leg->SetTextSize(0.05);
+  leg->SetTextSize(0.04);
   leg->SetLineColor(1);
   leg->SetLineStyle(1);
   leg->SetLineWidth(1);
@@ -207,17 +292,19 @@ void makePlots( const char * target,
   std::stringstream saveAs;
   
   saveAs.str("");
-  saveAs << path << model << "/pdf/" << "ratio_" << target << "_" << var << "_XX" << ".pdf";
+  saveAs << path << model << "/pdf/" << "ratio_" << target << "_" << param << ".pdf";
   c1->SaveAs( saveAs.str().c_str() );
   
   saveAs.str("");
-  saveAs << path << model << "/png/" << "ratio_" << target << "_" << var << "_XX" << ".png";
+  saveAs << path << model << "/png/" << "ratio_" << target << "_" << param << ".png";
   c1->SaveAs( saveAs.str().c_str() );
-
+  
   saveAs.str("");
-  saveAs << path << model << "/eps/" << "ratio_" << target << "_" << var << "_XX" << ".eps";
+  saveAs << path << model << "/eps/" << "ratio_" << target << "_" << param << ".eps";
   c1->SaveAs( saveAs.str().c_str() );
   
   
 }
+
+
 

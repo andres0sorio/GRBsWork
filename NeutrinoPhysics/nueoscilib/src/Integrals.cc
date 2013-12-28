@@ -18,8 +18,9 @@
 
 ///Constant parameters
 const int    Integrals::SubIntervals = 1000;
-const double Integrals::AbsError = 1.e-4;
-const double Integrals::RelError = 1.e-3;
+const double Integrals::AbsError     = 1.0e-4;
+const double Integrals::RelError     = 1.0e-3;
+const double Integrals::NMFactor     = 1.0e8;
 
 Integrals::Integrals() { 
   m_debug = false;
@@ -227,16 +228,18 @@ double m_Numu_integral_dx::DoEval(double enu) const{
   float m_y_low = 0.0;
   float m_y_upp = ( enu - m_mu_Th) / enu;  
   
+  /*
   ROOT::Math::GSLIntegrator * nminteg =   new ROOT::Math::GSLIntegrator( Integrals::AbsError,
                                                                          Integrals::RelError,
                                                                          Integrals::SubIntervals);
-  
-  /*
-    new ROOT::Math::GSLIntegrator( ROOT::Math::IntegrationOneDim::kADAPTIVE,
-    ROOT::Math::Integration::kGAUSS31,
-    AbsError, RelError, SubIntervals );
   */
 
+  //kADAPTIVESINGULAR - 
+  ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( ROOT::Math::IntegrationOneDim::kADAPTIVESINGULAR,
+                                                                        ROOT::Math::Integration::kGAUSS31,
+                                                                        AbsError, RelError, SubIntervals );
+  
+  
   nminteg->SetFunction( *(ROOT::Math::IGenFunction*)ff );
   
   double result = nminteg->Integral(m_y_low , m_y_upp);
@@ -278,7 +281,10 @@ double m_Numu_integral_dxdy::DoEval(double y) const {
   
   // AO dec 2013
   // P-shadow evaluation - with interpoled data
-  m_pshadow->Eval2( m_x );
+  if ( m_input->GetPar14() > 0 ) 
+    m_pshadow->Eval2( m_x );
+  else
+    m_pshadow->Eval();
   
   double pshadow = m_pshadow->Nu_PShadow();
   
@@ -313,16 +319,18 @@ double m_Nutau_integral_dx::DoEval(double enut) const{
   float m_y_low = 0.0;
   float m_y_upp = ( enut - m_mu_Th ) / enut;
   
-  ROOT::Math::GSLIntegrator * nminteg = new ROOT::Math::GSLIntegrator( Integrals::AbsError,
-                                                                       Integrals::RelError,
-                                                                       Integrals::SubIntervals);
-  
   /*
-    new ROOT::Math::GSLIntegrator( ROOT::Math::IntegrationOneDim::kADAPTIVE,
-    ROOT::Math::Integration::kGAUSS31,
-    AbsError, RelError, SubIntervals );
+    ROOT::Math::GSLIntegrator * nminteg = new ROOT::Math::GSLIntegrator( Integrals::AbsError,
+    Integrals::RelError,
+    Integrals::SubIntervals);
   */
-
+  
+  //kADAPTIVESINGULAR
+  ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( ROOT::Math::IntegrationOneDim::kADAPTIVESINGULAR,
+                                                                        ROOT::Math::Integration::kGAUSS31,
+                                                                        AbsError, RelError, SubIntervals );
+  
+  
   nminteg->SetFunction( *(ROOT::Math::IGenFunction*)ff );
   
   double result = nminteg->Integral(m_y_low , m_y_upp);
@@ -354,17 +362,17 @@ double m_Nutau_integral_dxdy::DoEval(double y) const{
 
   float z_low = mu_Th;
   float z_upp = 0.5 * E_tau * ( 1.0 + Beta);
-    
+  
+  /*
   ROOT::Math::GSLIntegrator * nminteg = new ROOT::Math::GSLIntegrator( Integrals::AbsError,
                                                                        Integrals::RelError,
                                                                        Integrals::SubIntervals);
-  
-  /*
-    new ROOT::Math::GSLIntegrator( ROOT::Math::IntegrationOneDim::kADAPTIVE,
-    ROOT::Math::Integration::kGAUSS31,
-    AbsError, RelError, SubIntervals );
   */
-
+  
+  ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( ROOT::Math::IntegrationOneDim::kADAPTIVESINGULAR,
+                                                                        ROOT::Math::Integration::kGAUSS31,
+                                                                        AbsError, RelError, SubIntervals );
+  
   nminteg->SetFunction( *(ROOT::Math::IGenFunction*)ff );
   
   double result = nminteg->Integral(z_low , z_upp);
@@ -409,7 +417,10 @@ double m_Nutau_integral_dxdydz::DoEval(double z) const{
 
   // AO dec 2013
   // P-shadow evaluation - with interpoled data
-  m_pshadow->Eval2( m_x );
+  if ( m_input->GetPar14() > 0 ) 
+    m_pshadow->Eval2( m_x );
+  else
+    m_pshadow->Eval();
   
   double pshadow = m_pshadow->Nu_PShadow();
   
@@ -448,8 +459,11 @@ double m_NC_showers_integral_dx::DoEval(double x) const{
   
   // AO dec 2013
   // P-shadow evaluation - with interpoled data
-  m_pshadow->Eval2( x );
-
+  if ( m_input->GetPar14() > 0 ) 
+    m_pshadow->Eval2( x );
+  else
+    m_pshadow->Eval();
+ 
   double pshadow = m_pshadow->Nu_PShadow();
   
   double ff = k1 * dFnub( xx, par) * sigma_NC * pshadow ;
@@ -470,7 +484,10 @@ double m_antiNC_showers_integral_dx::DoEval(double x) const{
   
   // AO dec 2013
   // P-shadow evaluation - with interpoled data
-  m_pshadow->Eval2( x );
+  if ( m_input->GetPar14() > 0 ) 
+    m_pshadow->Eval2( x );
+  else
+    m_pshadow->Eval();
   
   double sigma_NC_log10 = antinu_xsec_interp->evaluateNC( log10(x) );
   double sigma_NC = pow( 10.0, sigma_NC_log10);
@@ -505,8 +522,11 @@ double m_CCnue_showers_integral_dx::DoEval(double x) const{
  
   // AO dec 2013
   // P-shadow evaluation - with interpoled data
-  m_pshadow->Eval2( x );
-  
+  if ( m_input->GetPar14() > 0 ) 
+    m_pshadow->Eval2( x );
+  else
+    m_pshadow->Eval();
+
   double pshadow = m_pshadow->Nu_PShadow();
   
   double ff = k1 * dFnub( xx, par) * sigma_CC * pshadow;
@@ -528,7 +548,10 @@ double m_CCantinue_showers_integral_dx::DoEval(double x) const{
   
   // AO dec 2013
   // P-shadow evaluation - with interpoled data
-  m_pshadow->Eval2( x );
+  if ( m_input->GetPar14() > 0 ) 
+    m_pshadow->Eval2( x );
+  else
+    m_pshadow->Eval();
   
   double sigma_CC_log10 = antinu_xsec_interp->evaluateCC( log10(x) );
   double sigma_CC = pow( 10.0, sigma_CC_log10);
@@ -563,8 +586,11 @@ double m_CCnutau_showers_integral_dx::DoEval(double x) const{
   
   // AO dec 2013
   // P-shadow evaluation - with interpoled data
-  m_pshadow->Eval2( x );
-  
+  if ( m_input->GetPar14() > 0 ) 
+    m_pshadow->Eval2( x );
+  else
+    m_pshadow->Eval();
+
   double pshadow = m_pshadow->Nu_PShadow();
   
   double ff = k1 * dFnub( xx, par) * sigma_CC * pshadow;
@@ -585,7 +611,10 @@ double m_CCantinutau_showers_integral_dx::DoEval(double x) const{
   
   // AO dec 2013
   // P-shadow evaluation - with interpoled data
-  m_pshadow->Eval2( x );
+  if ( m_input->GetPar14() > 0 ) 
+    m_pshadow->Eval2( x );
+  else
+    m_pshadow->Eval();
   
   double pshadow = m_pshadow->Nu_PShadow();
   

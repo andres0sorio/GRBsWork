@@ -50,22 +50,60 @@ void makePlots( const char * model,
   
   //Output path
   TString path("./paper02-plots/ratio/");
-  
-  
+    
   TList * v_Variations = new TList();
   TObjString *var;
 
   var = new TObjString("Sin2Q13-1.8-0");
   v_Variations->Add( var ); 
   var = new TObjString("Sin2Q13-1.8-180");
-  v_Variations->Add( var ); 
+  v_Variations->Add( var );
   
+  var = new TObjString("Sin2Q13-2-0");
+  v_Variations->Add( var ); 
+  var = new TObjString("Sin2Q13-2-180");
+  v_Variations->Add( var );
+
+  var = new TObjString("Sin2Q13-2.2-0");
+  v_Variations->Add( var ); 
+  var = new TObjString("Sin2Q13-2.2-180");
+  v_Variations->Add( var );
+
+  int * linewidth = new int[6];
+  int * linestyle = new int[6];
+  int * linecolor = new int[6];
+  
+  linewidth[0] = 1;
+  linewidth[1] = 2;
+  linewidth[2] = 1;
+  linewidth[3] = 2;
+  linewidth[4] = 1;
+  linewidth[5] = 2;
+
+  linecolor[0] = 2;
+  linecolor[1] = 1;
+  linecolor[2] = 2;
+  linecolor[3] = 1;
+  linecolor[4] = 2;
+  linecolor[5] = 1;
+
+  linestyle[0] = 1;
+  linestyle[1] = 1;
+  linestyle[2] = 2;
+  linestyle[3] = 2;
+  linestyle[4] = 3;
+  linestyle[5] = 3;
+
   TList * v_Labels = new TList();
   TObjString *label;
   
-  label = new TObjString( model );
+  label = new TObjString( "#alpha = 1.8" );
   v_Labels->Add( label ); 
-
+  label = new TObjString( "#alpha = 2.0" );
+  v_Labels->Add( label ); 
+  label = new TObjString( "#alpha = 2.2" );
+  v_Labels->Add( label ); 
+  
   TFile * f1 = new TFile(infile);
   f1->cd();
 
@@ -114,8 +152,17 @@ void makePlots( const char * model,
   
   TCanvas * c1 = new TCanvas( cname.Data(), "track/shower ratio", 206,141,722,575); 
     
-  TLegend * leg = new TLegend(0.39,0.71,0.66,0.87);
-  
+  TLegend * leg = new TLegend(0.18,0.71,0.44,0.87);
+  leg->SetBorderSize(0);
+  leg->SetTextFont(22);
+  leg->SetTextSize(0.064);
+  leg->SetLineColor(1);
+  leg->SetLineStyle(1);
+  leg->SetLineWidth(1);
+  leg->SetFillColor(0);
+  leg->SetFillStyle(1001);
+
+  int labelpos = 0;
   
   for( int k = 0; k < max; ++k ) 
   {
@@ -124,11 +171,13 @@ void makePlots( const char * model,
 
     gg->SetMarkerStyle(25);
     gg->SetFillColor(10);
-    gg->SetMarkerColor(1);
-    gg->SetLineColor(1);
-    gg->SetFillColor(10);
-    gg->SetMaximum(2.5);
-    gg->SetMinimum(1.5);
+
+    gg->SetLineColor(linecolor[k]);
+    gg->SetLineWidth(linewidth[k]);
+    gg->SetLineStyle(linestyle[k]);
+
+    gg->SetMaximum(3.1);
+    gg->SetMinimum(1.8);
 
     gg->GetXaxis()->SetLimits( 0.0, 0.055 );
 
@@ -152,17 +201,13 @@ void makePlots( const char * model,
     gg->GetYaxis()->SetTitleOffset(0.93);
     gg->GetYaxis()->SetTitleFont(42);
 
-    gg->SetLineWidth(2);
-
-    //leg->AddEntry( gg, "#nu");
-    //leg->SetBorderSize(0);
-    //leg->SetTextSize(0.1);
-    //leg->SetLineColor(1);
-    //leg->SetLineStyle(1);
-    //leg->SetLineWidth(1);
-    //leg->SetFillColor(0);
-    //leg->SetFillStyle(1001);
-
+    if ( ((k+1) % 2) == 0 )
+    {
+      TString alpha = ((TObjString*)v_Labels->At(labelpos))->GetString();      
+      leg->AddEntry( gg, alpha.Data(),"l");
+      labelpos+=1;
+    }
+    
     c1->cd();
 
     if( k == 0 )
@@ -170,13 +215,11 @@ void makePlots( const char * model,
     else
       gg->Draw("C");
 
-    //topTitle(var);
-  
-    //leg->DrawClone();
+    
   
   }
   
-
+  leg->Draw();
 
   c1->cd();
   

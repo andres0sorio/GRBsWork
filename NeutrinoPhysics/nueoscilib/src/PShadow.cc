@@ -105,8 +105,8 @@ PShadow::PShadow() {
   m_NA = 6.022E23;
   m_y0 = m_r0 - m_d;
   
-  m_pshadow_Nu = 0.0;
-  m_pshadow_aNu = 0.0;
+  m_pshadow_Nu = 1.0;
+  m_pshadow_aNu = 1.0;
 
   m_full_calculation = true;
     
@@ -126,8 +126,8 @@ PShadow::PShadow( const std::string & xsec1, const std::string & xsec2 ) {
   m_NA = 6.0221415E23;
   m_y0 = m_r0 - m_d;
   
-  m_pshadow_Nu = 0.0;
-  m_pshadow_aNu = 0.0;
+  m_pshadow_Nu = 1.0;
+  m_pshadow_aNu = 1.0;
 
   m_full_calculation = true;
   
@@ -176,8 +176,8 @@ PShadow::PShadow( const std::string & infile ) {
   m_interpolatorNu  = new  ROOT::Math::Interpolator( m_xx, m_nu, ROOT::Math::Interpolation::kCSPLINE);
   m_interpolatorANu = new  ROOT::Math::Interpolator( m_xx, m_anu, ROOT::Math::Interpolation::kCSPLINE);
   
-  m_pshadow_Nu = 0.0;
-  m_pshadow_aNu = 0.0;
+  m_pshadow_Nu = 1.0;
+  m_pshadow_aNu = 1.0;
 
   m_in->close();
   
@@ -297,19 +297,19 @@ void PShadow::Eval( double angle, double enu )
   
 }
 
-void PShadow::Eval( int max, double enu) 
+void PShadow::Eval2( double max, double enu) 
 {
 
   //PShadow as a Step function
   
-  if ( enu < double(max) ) {
+  if ( enu < max ) {
     m_pshadow_Nu = 1.0;
     m_pshadow_aNu = 1.0;
   } else {
     m_pshadow_Nu = 0.0;
     m_pshadow_aNu = 0.0;
   }
-    
+  
 }
 
 void PShadow::Validate() 

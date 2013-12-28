@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE MixingParameterList PUBLIC "" "matrix_config.dtd" []>
+<MixingParameterList>
+  <MixingParameters Id="1">
+    <Par1 Name="theta_12">
+      33.83
+    </Par1>
+    <Par2 Name="theta_13">
+      8.8
+    </Par2>
+    <Par3 Name="theta_23">
+      45.0
+    </Par3>
+    <Par4 Name="Dm23sq">
+      0.0032
+    </Par4>
+    <Par5 Name="L[m]">
+      1.0e5
+    </Par5>
+    <Par6 Name="Enu">
+      5.0e6
+    </Par6>
+    <Par7 Name="Ve">
+      5.32e-13
+    </Par7>
+    <Par8 Name="Dm21sq">
+      0.00008
+    </Par8>
+    <Par9 Name="dCP">
+      0.0
+    </Par9>
+  </MixingParameters>
+</MixingParameterList>

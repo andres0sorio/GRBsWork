@@ -57,7 +57,9 @@ private:
   std::string pshadow_data;
   
   float m_phi_nu[3];
-  
+
+  double m_sfactor;
+    
 };
 
 #endif // MUTRACKEVENTS
