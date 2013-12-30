@@ -93,10 +93,14 @@ void makePlots()
 
   v_Variation->Clear();
 
-
-
   
-
+  label = new TObjString( "dCP1" );
+  v_Variation->Add( label );
+  
+  label = new TObjString( "dCP2" );
+  v_Variation->Add( label );
+  
+  makePlots(v_Variation, "ModelA", "EarthB", "Vacuum", "detection.root");
 
    
 }

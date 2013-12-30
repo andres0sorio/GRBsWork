@@ -17,12 +17,11 @@
 //=============================================================================
 NeutrinosDetectionPaper::NeutrinosDetectionPaper( Parameters * pars ) : Graphics() {
   
-  m_config = pars;
-  
-  m_output_file = new TFile("detection.root","RECREATE");
-  
   m_debug = true;
 
+  m_config = pars;
+  m_output_file = new TFile("detection.root","RECREATE");
+  
   ///Set energy bins
 
   m_e_min  = m_config->GetPar1() * 1.0E9;
@@ -63,11 +62,9 @@ NeutrinosDetectionPaper::NeutrinosDetectionPaper( Parameters * pars ) : Graphics
   m_e_bins = ( m_energy_bin.size() - 1); //Array has to have nbins+1 size
   
   for( int i = 0; i <= m_e_bins; ++ i )
-  {
     std::cout << "NeutrinosDetectionPaper> Bins lower edges data: " << m_vbins[i] << " " << m_energy_bin[i] << std::endl;
-  }
   
-  std::cout << "NeutrinosDetectionPaper> Total bins set " << m_e_bins << std::endl;
+  std::cout << "NeutrinosDetectionPaper> Total bins set " << m_e_bins << " - " << (m_energy_bin.size()-1) << std::endl;
   
   
 }
@@ -120,6 +117,8 @@ void NeutrinosDetectionPaper::MakeVariation01(const char * model, const char * t
   
   int max_bins = m_energy_bin.size();
   
+  std::cout << " max_bins " << max_bins << std::endl;
+  
   for( itr = xsecConvolve.begin(); itr != xsecConvolve.end(); ++itr) 
   {
     
@@ -155,7 +154,7 @@ void NeutrinosDetectionPaper::MakeVariation01(const char * model, const char * t
       
       h1C->SetBinContent( k, phi*result );
       
-      std::cout << " convolve: x0 " << x0 << " " << phi*result << std::endl;
+      //std::cout << " convolve: x0 " << x0 << " " << phi*result << std::endl;
       
       delete nminteg;
       
@@ -204,7 +203,7 @@ void NeutrinosDetectionPaper::MakeVariation01(const char * model, const char * t
       
       h1C->SetBinContent( k, phi * result );
       
-      std::cout << " convolve-bar: x0 " << x0 << " " << phi*result << std::endl;
+      //std::cout << " convolve-bar: x0 " << x0 << " " << phi*result << std::endl;
       
       delete nminteg;
       
@@ -230,8 +229,11 @@ void NeutrinosDetectionPaper::MakeVariation01(const char * model, const char * t
   
   Shw->Divide( Tks );
   
-  for( int k = 1; k < max_bins; ++k) {
+  std::cout << " max_bins " << max_bins << std::endl;
+  
 
+  for( int k = 1; k < max_bins; ++k) {
+    
     m_Xx       = Shw->GetBinLowEdge(k);
     m_MuTks    = Tks->GetBinContent(k);
     m_HadShw   = 1.0;
@@ -255,10 +257,26 @@ void NeutrinosDetectionPaper::MakeVariation01(const char * model, const char * t
   
   m_tree->Write();
   
-  m_output_file->cd("../");
+  //// clean up memory
   
-  ///Todo - clean up memory
-
+  xsecConvolve.clear();
+  xsecbarConvolve.clear();
+  
+  std::map<std::string, TH1F*>::iterator histoItr;
+  
+  for( histoItr = xsecConv_histos.begin(); histoItr != xsecConv_histos.end(); ++histoItr)
+    delete histoItr->second;
+  
+  for( histoItr = xsecbarConv_histos.begin(); histoItr != xsecbarConv_histos.end(); ++histoItr)
+    delete histoItr->second;
+  
+  xsecConv_histos.clear();
+  xsecbarConv_histos.clear();
+  
+  ////
+  
+  m_output_file->cd("../");
+    
 }
 
 void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target, 
@@ -760,6 +778,8 @@ void NeutrinosDetectionPaper::SetFluxHistograms(TFile * infile,
       
     m_input_tree->GetEntry(i);
 
+    std::cout << "SetFluxHistograms> " << i << " " << m_Ex_in << " " << bin_pos<< " " << m_energy_bin[bin_pos] << '\n';
+    
     if ( m_Ex_in < m_energy_bin[bin_pos] ) 
     {
       
@@ -794,9 +814,11 @@ void NeutrinosDetectionPaper::SetFluxHistograms(TFile * infile,
       bin_pos += 1;
       
     }
-
-    if ( i == (nentries-1) ) 
-    {
+    
+    if ( bin_pos > m_e_bins ) break;
+  
+    /*
+      if ( i == (nentries-1) ) {
       // Get the averages
       sum["phi_e"] = sum["phi_e"] / kval;
       sum["phi_m"] = sum["phi_m"] / kval;
@@ -809,15 +831,18 @@ void NeutrinosDetectionPaper::SetFluxHistograms(TFile * infile,
       m_flux_histos["phi_mu"]->SetBinContent(bin_pos, sum["phi_m"]);
       m_flux_histos["phi_tau"]->SetBinContent(bin_pos, sum["phi_t"]);
       
-    }
+      }
+    */
+    
     
     
   }
-
-
+  
+  std::cout << "SetFluxHistograms> bin_pos " << bin_pos << std::endl;
+  
   bin_pos = 1;
   kval = 0.0;
-
+  
   valid = Init ( target, source, input[1].c_str() );
   if( !valid ) return;
   
@@ -828,14 +853,14 @@ void NeutrinosDetectionPaper::SetFluxHistograms(TFile * infile,
   for (Long64_t i=0;i<nentries;i++) {
     
     m_input_tree->GetEntry(i);
-
+    
     if ( m_Ex_in < m_energy_bin[bin_pos] ) 
     {
       
       sum["phi_e"] += m_Phi_e_in;
       sum["phi_m"] += m_Phi_m_in;
       sum["phi_t"] += m_Phi_t_in;
-
+      
       kval += 1.0;
       
     } else {
@@ -847,7 +872,7 @@ void NeutrinosDetectionPaper::SetFluxHistograms(TFile * infile,
       
       //Store the info in the histograms
       //std::cout << bin_pos << " " << sum["phi_e"] << '\t' << sum["phi_m"] << '\t' << sum["phi_t"] << std::endl; 
-
+      
       m_flux_histos["phi_ae"]->SetBinContent(bin_pos, sum["phi_e"]);
       m_flux_histos["phi_amu"]->SetBinContent(bin_pos, sum["phi_m"]);
       m_flux_histos["phi_atau"]->SetBinContent(bin_pos, sum["phi_t"]);
@@ -864,8 +889,11 @@ void NeutrinosDetectionPaper::SetFluxHistograms(TFile * infile,
       
     }
 
-    if ( i == (nentries-1) ) 
-    {
+    if ( bin_pos > m_e_bins ) break;
+
+    /*
+      if ( i == (nentries-1) ) 
+      {
       // Get the averages
       sum["phi_e"] = sum["phi_e"] / kval;
       sum["phi_m"] = sum["phi_m"] / kval;
@@ -877,8 +905,8 @@ void NeutrinosDetectionPaper::SetFluxHistograms(TFile * infile,
       m_flux_histos["phi_ae"]->SetBinContent(bin_pos, sum["phi_e"]);
       m_flux_histos["phi_amu"]->SetBinContent(bin_pos, sum["phi_m"]);
       m_flux_histos["phi_atau"]->SetBinContent(bin_pos, sum["phi_t"]);
-      
-    }
+      }
+    */
     
   }
   
@@ -897,6 +925,9 @@ void NeutrinosDetectionPaper::SetFluxHistograms(TFile * infile,
   m_output_file->Write();
   
   m_output_file->cd("../");
+  
+  std::cout << "SetFluxHistograms " << m_energy_bin.size() << std::endl;
+  
 
 }
 
