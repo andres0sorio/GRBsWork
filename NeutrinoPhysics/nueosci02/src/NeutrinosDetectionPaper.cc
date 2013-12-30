@@ -90,67 +90,175 @@ void NeutrinosDetectionPaper::MakeVariation01(const char * model, const char * t
 {
  
   // source ----> (progragation) -----> target
-  
+  //
+  // This method reproduces Olga Mena's reference Figure 5 - the shower-to-muon ratio
+  //
+
   TString variation = TString("RvsEv") + TString("_") + TString(var);
   
   InitOutput(model, target, source, variation.Data() );
-    
-  //Here is the loop for the parameter variation
   
-  for( int i = 1; i <= m_e_bins; ++i ) {
-        
-    ///
-    // Set N_betas 
-  
-    m_Xx = m_energy_bin[i];
-    
-    m_config->SetPar("N_e", m_flux_histos["phi_e"]->GetBinContent(i) );
-    m_config->SetPar("N_mu", m_flux_histos["phi_mu"]->GetBinContent(i) );
-    m_config->SetPar("N_tau", m_flux_histos["phi_tau"]->GetBinContent(i) );
-    
-    m_config->SetPar("N_ae", m_flux_histos["phi_ae"]->GetBinContent(i) );
-    m_config->SetPar("N_amu", m_flux_histos["phi_amu"]->GetBinContent(i) );
-    m_config->SetPar("N_atau", m_flux_histos["phi_atau"]->GetBinContent(i) );
-    
-    MuTrackEvents * mu1 = new MuTrackEvents("../data/XSec_neut.dat", "../data/XSec_anti.dat", 
-                                            "../data/pshadow-at-180.dat", m_config );
-    
-    double TkSum = mu1->Evaluate( );
-    
-    m_MuTks  = mu1->m_NuMuTracks;
-    m_TauTks = mu1->m_NuTauTracks;
-    
-    ShowerEvents * sh1 =  new ShowerEvents("../data/XSec_neut.dat", "../data/XSec_anti.dat", 
-                                           "../data/pshadow-at-180.dat", m_config );
-    
-    m_HadShw = sh1->Evaluate( );
+  //.........................................................................................
 
-    m_HadShwE = sh1->m_CCNuShower;
+  // Run the convolution
     
-    m_HadShwT = sh1->m_CCNutauShower;
+  std::map<std::string, TH1F*> xsecConv_histos;
+  std::map<std::string, TH1F*> xsecbarConv_histos;
+  
+  std::map<std::string,std::string> xsecConvolve;
+  std::map<std::string,std::string> xsecbarConvolve;
+  
+  xsecConvolve["phi_e"]       = std::string("phi_e_conv");
+  xsecConvolve["phi_mu"]      = std::string("phi_mu_conv");
+  xsecConvolve["phi_tau"]     = std::string("phi_tau_conv");
+  
+  xsecbarConvolve["phi_ae"]   = std::string("phi_ae_conv");
+  xsecbarConvolve["phi_amu"]  = std::string("phi_amu_conv");
+  xsecbarConvolve["phi_atau"] = std::string("phi_atau_conv");
+  
+  std::map<std::string,std::string>::iterator itr;
+  
+  int max_bins = m_energy_bin.size();
+  
+  for( itr = xsecConvolve.begin(); itr != xsecConvolve.end(); ++itr) 
+  {
     
-    m_HadShwNC = sh1->m_NCShower;
-        
-    m_Ratio  = TkSum  / m_HadShw; 
+    convolveXsec * ff = new convolveXsec();
+    
+    ff->SetData("../data/XSec_neut.dat", "../data/XSec_anti.dat", "../data/pshadow-at-180.dat");
+    ff->SetParameters( m_config );
+    
+    TH1F * h1C = (TH1F*)m_flux_histos[ itr->first ]->Clone( itr->second.c_str() );
+    
+    xsecConv_histos[itr->second] = h1C;
+            
+    for( int k = 1; k < max_bins; ++k) {
+      
+      double x0 = m_flux_histos[itr->first]->GetBinCenter(k)/1.0e9;
+      
+      ff->SetPoint( x0 );
+      
+      double xmin = m_flux_histos[itr->first]->GetBinLowEdge(k)/1.0E9;
+      double xmax =  x0;
+      
+      ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( ROOT::Math::IntegrationOneDim::kADAPTIVESINGULAR,
+                                                                            ROOT::Math::Integration::kGAUSS61,
+                                                                            Integrals::AbsError, 
+                                                                            Integrals::RelError, 
+                                                                            Integrals::SubIntervals );
+      
+      nminteg->SetFunction( *(ROOT::Math::IGenFunction*)ff );
+      
+      double result = nminteg->Integral( xmin, xmax );
+      
+      double phi = m_flux_histos[itr->first]->GetBinContent(k);
+      
+      h1C->SetBinContent( k, phi*result );
+      
+      std::cout << " convolve: x0 " << x0 << " " << phi*result << std::endl;
+      
+      delete nminteg;
+      
+    }
+    
+    ff->DestroyInterpolator();
+    
+    delete ff;
+    
+  }
+    
+  //
+  
+  for( itr = xsecbarConvolve.begin(); itr != xsecbarConvolve.end(); ++itr) 
+  {
+    
+    convolveXsecbar * ff = new convolveXsecbar();
+    
+    ff->SetData("../data/XSec_neut.dat", "../data/XSec_anti.dat", "../data/pshadow-at-180.dat");
+    ff->SetParameters( m_config );
+    
+    TH1F * h1C = (TH1F*)m_flux_histos[ itr->first ]->Clone( itr->second.c_str() );
+    
+    xsecbarConv_histos[itr->second] = h1C;
+    
+    for( int k = 1; k < max_bins; ++k) {
+      
+      double x0 = m_flux_histos[itr->first]->GetBinCenter(k)/1.0e9; 
+      
+      ff->SetPoint( x0 );
+      
+      double xmin = m_flux_histos[itr->first]->GetBinLowEdge(k)/1.0E9;
+      double xmax =  x0;
+      
+      ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( ROOT::Math::IntegrationOneDim::kADAPTIVESINGULAR,
+                                                                            ROOT::Math::Integration::kGAUSS61,
+                                                                            Integrals::AbsError, 
+                                                                            Integrals::RelError, 
+                                                                            Integrals::SubIntervals );
+      
+      nminteg->SetFunction( *(ROOT::Math::IGenFunction*)ff );
+      
+      double result = nminteg->Integral( xmin, xmax );
+
+      double phi = m_flux_histos[itr->first]->GetBinContent(k);
+      
+      h1C->SetBinContent( k, phi * result );
+      
+      std::cout << " convolve-bar: x0 " << x0 << " " << phi*result << std::endl;
+      
+      delete nminteg;
+      
+    }
+    
+    ff->DestroyInterpolator();
+    
+    delete ff;
+    
+  }
+  
+  //.........................................................................................
+    
+  TH1F * Shw = (TH1F*)xsecConv_histos["phi_e_conv"]->Clone("Showers");
+  
+  Shw->Add( xsecbarConv_histos["phi_ae_conv"] );
+  Shw->Add( xsecConv_histos["phi_tau_conv"] );
+  Shw->Add( xsecbarConv_histos["phi_atau_conv"] );
+  
+  TH1F * Tks = (TH1F*)xsecConv_histos["phi_mu_conv"]->Clone("Tracks");
+  
+  Tks->Add ( xsecbarConv_histos["phi_amu_conv"] );
+  
+  Shw->Divide( Tks );
+  
+  for( int k = 1; k < max_bins; ++k) {
+
+    m_Xx       = Shw->GetBinLowEdge(k);
+    m_MuTks    = Tks->GetBinContent(k);
+    m_HadShw   = 1.0;
+    m_HadShwE  = 1.0;
+    m_HadShwT  = 1.0;
+    m_HadShwNC = 1.0;
+    
+    m_Ratio  =  Shw->GetBinContent(k);
     
     std::cout << "NeutrinosDetectionPaper> "
-              << "Ev "   << m_Xx     << '\t'
-              << "muTrk "   << m_MuTks  << '\t' 
-              << "tauTrk "  << m_TauTks << '\t'
-              << "hadShow " << m_HadShw << '\t'
-              << "R "       << m_Ratio  << std::endl;
-    
+              << "Ev "      << m_Xx       << '\t'
+              << "muTrk "   << m_MuTks    << '\t' 
+              << "tauTrk "  << m_TauTks   << '\t'
+              << "hadShow " << m_HadShw   << '\t'
+              << "R "       << m_Ratio    << '\n';
+        
     m_tree->Fill();
     
-    delete mu1;
-    delete sh1;
-
+    
   }
-
+  
   m_tree->Write();
   
   m_output_file->cd("../");
-        
+  
+  ///Todo - clean up memory
+
 }
 
 void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target, 

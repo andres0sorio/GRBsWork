@@ -271,7 +271,7 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
       
       if ( eval_flux ) {
         
-        m_Phi_e = m_Physics->Propagate( 0, 1.0, 2.0, 0.0 ); 
+        m_Phi_e = m_Physics->Propagate( 0, 1.0, 2.0, 0.0 ); //This is a common assumption 1:2:0
         m_Phi_m = m_Physics->Propagate( 1, 1.0, 2.0, 0.0 ); 
         m_Phi_t = m_Physics->Propagate( 2, 1.0, 2.0, 0.0 ); 
               

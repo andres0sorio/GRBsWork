@@ -335,4 +335,64 @@ private:
 
 //=============================================================================
 
+//Convolution Integrals - Olga Mena's reference - Eq. 18
+//
+class convolveXsec : public ROOT::Math::IBaseFunctionOneDim, public Integrals {
+  
+public:
+  
+  convolveXsec(): Integrals() {};
+  
+  convolveXsec( Integrals & base ) : Integrals( base ) {};
+  
+  virtual ~convolveXsec() {};
+  
+  ROOT::Math::IBaseFunctionOneDim* Clone() const;
+  
+  double DoEval(double x) const;
+
+  void SetPoint( double x0 ) { m_x0 = x0;};
+
+  //void SetPhi( TH1F * h1 ) { m_phi = h1; };
+    
+  double EvalBox( double ) const;
+  
+private:
+  
+  double m_x0;
+  
+  //TH1F * m_phi;
+      
+};
+
+class convolveXsecbar : public ROOT::Math::IBaseFunctionOneDim, public Integrals {
+  
+public:
+  
+  convolveXsecbar(): Integrals() {};
+  
+  convolveXsecbar( Integrals & base ) : Integrals( base ) {};
+  
+  virtual ~convolveXsecbar() {};
+  
+  ROOT::Math::IBaseFunctionOneDim* Clone() const;
+  
+  double DoEval(double x) const;
+
+  void SetPoint( double x0 ) { m_x0 = x0;};
+
+  //void SetPhi( TH1F * h1 ) { m_phi = h1; };
+
+  double EvalBox( double ) const;
+
+private:
+  
+  double m_x0;
+  
+  //TH1F * m_phi;
+      
+};
+
+
+
 #endif // INTEGRALS_H

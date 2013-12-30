@@ -38,40 +38,47 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  makePlots("ModelA", "EarthB", "Vacuum", "detection.root");
+  TList * v_Variations = new TList();
+
+  TObjString *var;
+  var = new TObjString("RvsEv_dCP1");
+  v_Variations->Add( var );
+
+  var = new TObjString("RvsEv_dCP2");
+  v_Variations->Add( var );
   
+  makePlots(v_Variations, "ModelA", "EarthB", "Vacuum", "detection.root");
+  
+  v_Variations->Clear();
+
 }
 
-void makePlots( const char * model,
-                const char * target, 
-                const char * src, 
-                const char * infile) 
+void makePlots(TList      * variation, 
+               const char * model,
+               const char * target, 
+               const char * src,
+               const char * infile) 
 {
   
   //Output path
   TString path("./paper02-plots/ratio/");
-   
-  TList * v_Variations = new TList();
-  TObjString *var;
-
-  //var = new TObjString("RvsEv_dCP1");
-  //v_Variations->Add( var );
-
-  var = new TObjString("RvsEv_dCP2");
-  v_Variations->Add( var );
-
+    
   TList * v_Labels = new TList();
-  TObjString *label;
+  TList * v_Graphs = new TList();
   
-  label = new TObjString( model );
+  TObjString *label;
+  label = new TObjString( "#delta=0" );
   v_Labels->Add( label ); 
+  
+  label = new TObjString( "#delta=#pi" );
+  v_Labels->Add( label ); 
+  
+  //
 
   TFile * f1 = new TFile(infile);
   f1->cd();
 
-  TList * v_Graphs = new TList();
-
-  int max = v_Variations->GetEntries();
+  int max = variation->GetEntries();
 
   //////////////////////////////////////////////
   // Set the binning
@@ -109,7 +116,7 @@ void makePlots( const char * model,
   for( int k = 0; k < max; ++k ) 
   {
     
-    TString current = ((TObjString*)v_Variations->At(k))->GetString();
+    TString current = ((TObjString*)variation->At(k))->GetString();
     
     TString dataPxx = TString( "Ratio_" ) 
       + TString( model )  + TString("_")
@@ -151,25 +158,31 @@ void makePlots( const char * model,
       
       InputTree->GetEntry(i);
 
-      //g1->SetBinContent(i+1, yy);
+      g1->SetBinContent(i+1, yy);
 
       double R_Mena = muTrks / ( CCeHadShw + CCtauHadShw + NCHadShw );
      
-      g1->SetBinContent(i+1, R_Mena);
-      
- 
+      //g1->SetBinContent(i+1, R_Mena);
+  
     }
     
     v_Graphs->Add( g1 );
     
   }
   
-  TString cname = TString("Ratio") + TString("_") + TString(var);
+  TString cname = TString("Ratio") + TString("_") + TString(model);
   
   TCanvas * c1 = new TCanvas( cname.Data(), "track/shower ratio", 206,141,722,575); 
     
-  TLegend * leg = new TLegend(0.39,0.71,0.66,0.87);
+  TLegend * leg = new TLegend(0.18,0.70,0.45,0.86);
   
+  leg->SetBorderSize(0);
+  leg->SetTextSize(0.05);
+  leg->SetLineColor(1);
+  leg->SetLineStyle(1);
+  leg->SetLineWidth(1);
+  leg->SetFillColor(0);
+  leg->SetFillStyle(1001);
   
   for( int k = 0; k < max; ++k ) 
   {
@@ -184,8 +197,8 @@ void makePlots( const char * model,
     gg->SetMaximum(2.4);
     gg->SetMinimum(1.6);
 
-    int pos1 = gg->FindBin( 3.0E11 );
-    int pos2 = gg->FindBin( 3.0E16 );
+    int pos1 = gg->FindBin( 1.0E11 );
+    int pos2 = gg->FindBin( 1.0E16 );
     
     gg->GetXaxis()->SetRange( pos1, pos2 );
 
@@ -211,15 +224,10 @@ void makePlots( const char * model,
 
     gg->SetLineWidth(2);
 
-    //leg->AddEntry( gg, "#nu");
-    //leg->SetBorderSize(0);
-    //leg->SetTextSize(0.1);
-    //leg->SetLineColor(1);
-    //leg->SetLineStyle(1);
-    //leg->SetLineWidth(1);
-    //leg->SetFillColor(0);
-    //leg->SetFillStyle(1001);
+    TString current = ((TObjString*)v_Labels->At(k))->GetString();
 
+    leg->AddEntry( gg, current.Data(), "L");
+    
     c1->cd();
 
     if( k == 0 )
@@ -235,15 +243,14 @@ void makePlots( const char * model,
       gg->Draw("SAME");
     }
     
-    //topTitle(var);
-  
-    //leg->DrawClone();
+    
   
   }
   
+  leg->Draw();
+
   c1->SetLogx();
   
-
   c1->cd();
   
   std::stringstream saveAs;

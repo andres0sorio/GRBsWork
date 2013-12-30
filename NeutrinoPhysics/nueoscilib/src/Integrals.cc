@@ -215,6 +215,24 @@ ROOT::Math::IBaseFunctionOneDim* m_CCantinutau_showers_integral_dx::Clone() cons
   
 }
 
+//.............................................................................
+
+// Convolution integrals
+
+ROOT::Math::IBaseFunctionOneDim* convolveXsec::Clone() const{
+  
+  convolveXsec * f1 = new convolveXsec();
+  return f1;
+  
+};
+
+ROOT::Math::IBaseFunctionOneDim* convolveXsecbar::Clone() const{
+  
+  convolveXsecbar * f1 = new convolveXsecbar();
+  return f1;
+  
+}
+
 //=============================================================================
 // N.1
 double m_Numu_integral_dx::DoEval(double enu) const{
@@ -633,3 +651,53 @@ double m_CCantinutau_showers_integral_dx::DoEval(double x) const{
 }
 
 //=============================================================================
+//AO dec 2013
+
+double convolveXsec::DoEval(double x) const{
+
+  double sigma_CC = EvalBox( m_x0 - x );
+  double result = 1.0 * sigma_CC;
+  return result;
+    
+};
+
+double convolveXsec::EvalBox(double x) const
+{
+  
+  if( x < 10.0 || x > 1.0E12 ) return 0.0; //Range in GeV
+  else {
+    
+    double sigma_CC_log10 = nu_xsec_interp->evaluateCC( log10( x ));
+    double sigma_CC = pow( 10.0, sigma_CC_log10);
+
+    return sigma_CC;
+    
+  }
+  
+}
+
+//=============================================================================
+//AO dec 2013
+
+double convolveXsecbar::DoEval(double x) const{
+
+  double sigma_CC = EvalBox( m_x0 - x ); // in GeV
+  double result = 1.0 * sigma_CC;
+  return result;
+    
+}
+
+double convolveXsecbar::EvalBox(double x) const
+{
+  
+  if( x < 10.0 || x > 1.0E12) return 0.0; // range is in GeV
+  else {
+    
+    double sigma_CC_log10 = antinu_xsec_interp->evaluateCC( log10( x ) );
+    double sigma_CC = pow( 10.0, sigma_CC_log10);
+    
+    return sigma_CC;
+    
+  }
+  
+}
