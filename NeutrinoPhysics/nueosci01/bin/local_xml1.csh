@@ -8,6 +8,10 @@ setenv XMLF  $5
 
 
 
+set CURRENTDIR=${PWD}
+
+setenv LD_LIBRARY_PATH ${CURRENTDIR}:${LD_LIBRARY_PATH}
+
 ### setenv CMD  "./paper01.exe --model "$MODEL" --prob Pee,aPee,Pem,aPem,Pet,aPet,Pmt,aPmt --erange "$EMIN","$EMAX" --step "$STEP" --modfile "$XMLF" --angles "$ANGS" --dmass2 "$DM2S
 
 setenv CMD  "./paper01.exe --model "$MODEL" --prob Pee,aPee --erange "$EMIN","$EMAX" --step "$STEP" --modfile "$XMLF

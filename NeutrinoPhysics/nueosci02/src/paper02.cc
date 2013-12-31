@@ -287,6 +287,12 @@ int main(int iargv, char **argv) {
     std::string model;
     std::string var;
     
+    double *dCP = new double[10];
+    dCP[0] = 0.0;
+    dCP[1] = 180.0;
+    
+    int k = 0;
+    
     for( itr = dataset.begin(); itr != dataset.end(); ++itr) 
     {
      
@@ -308,12 +314,14 @@ int main(int iargv, char **argv) {
 
       nudet->SetFluxHistograms(infile, model.c_str(), "EarthB", "Vacuum", var.c_str() );
       
-      nudet->MakeVariation01(model.c_str(), "EarthB", "Vacuum", var.c_str() ); //
-      
+      nudet->MakeVariation01(model.c_str(), "EarthB", "Vacuum", var.c_str(), dCP[k] ); //
+
       nudet->ResetFluxHistograms();
       
       infile->Close();
-   
+
+      ++k;
+      
     }
     
   }

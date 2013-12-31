@@ -72,7 +72,7 @@ void makePlots()
   ///
   //... R (ratio muon+tau / showers) vs fraction of phi_e
   
-  makePlots("StdPicture", "EarthB", "Vacuum", "phi_nue", "detection.root");
+  makePlots("StdPicture", "EarthB", "Vacuum", "phi_nue", "detection-Rphiefrac.root");
   
 }
 

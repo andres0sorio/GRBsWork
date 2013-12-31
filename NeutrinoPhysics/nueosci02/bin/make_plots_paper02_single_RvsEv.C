@@ -41,14 +41,19 @@ void makePlots()
   TList * v_Variations = new TList();
 
   TObjString *var;
+  //var = new TObjString("RvsEv_1E17");
   var = new TObjString("RvsEv_dCP1");
   v_Variations->Add( var );
 
   var = new TObjString("RvsEv_dCP2");
   v_Variations->Add( var );
   
-  makePlots(v_Variations, "ModelA", "EarthB", "Vacuum", "detection-RvsEv.root");
-  
+  //makePlots(v_Variations, "ModelA", "EarthB", "Vacuum", "detection-RvsEv.root");
+
+  //makePlots(v_Variations, "ModelA", "ModelA", "0", "detection.root");
+
+  makePlots(v_Variations, "ModelA", "EarthB", "Vacuum", "detection.root");
+
   v_Variations->Clear();
 
 }
@@ -243,9 +248,7 @@ void makePlots(TList      * variation,
       gg->Draw("SAME");
     }
     
-    break;
     
-  
   }
   
   leg->Draw();

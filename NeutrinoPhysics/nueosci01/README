@@ -7,6 +7,11 @@ added classes: NeutrinoOscInVarDensity
 nueosci14: this is the base starting point for development (copy from code14)
 objective: to make it into a production version for other people to use
 
+AO: dec 2013
+
+nueosci01: specific code (scripts/excecutables) used for paper 01
+-> most of the important and generic code, such as NeutrinoOscInVarDensity has been moved to a library nueoscilib.
+
 
 
 

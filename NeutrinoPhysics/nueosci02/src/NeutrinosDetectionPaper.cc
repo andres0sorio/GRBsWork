@@ -83,7 +83,8 @@ NeutrinosDetectionPaper::~NeutrinosDetectionPaper() {
 
 //=============================================================================
 
-void NeutrinosDetectionPaper::MakeVariation01(const char * model, const char * target, const char * source, const char * var)
+void NeutrinosDetectionPaper::MakeVariation01(const char * model, const char * target, const char * source, const char * var
+                                              , double dCP)
 {
  
   // source ----> (progragation) -----> target
@@ -216,17 +217,27 @@ void NeutrinosDetectionPaper::MakeVariation01(const char * model, const char * t
   }
   
   //.........................................................................................
-    
+  TH1F * Tks;
   TH1F * Shw = (TH1F*)xsecConv_histos["phi_e_conv"]->Clone("Showers");
   
   Shw->Add( xsecbarConv_histos["phi_ae_conv"] );
-  Shw->Add( xsecConv_histos["phi_tau_conv"] );
-  Shw->Add( xsecbarConv_histos["phi_atau_conv"] );
-  
-  TH1F * Tks = (TH1F*)xsecConv_histos["phi_mu_conv"]->Clone("Tracks");
-  
-  Tks->Add ( xsecbarConv_histos["phi_amu_conv"] );
-  
+
+  if( dCP == 0 ) 
+  {
+    Shw->Add( xsecConv_histos["phi_tau_conv"] );
+    Shw->Add( xsecbarConv_histos["phi_atau_conv"] );
+    Tks = (TH1F*)xsecConv_histos["phi_mu_conv"]->Clone("Tracks");
+    Tks->Add ( xsecbarConv_histos["phi_amu_conv"] );
+  } 
+  else if ( dCP == 180.0 ) 
+  {
+    Shw->Add( xsecConv_histos["phi_mu_conv"] );
+    Shw->Add( xsecbarConv_histos["phi_amu_conv"] );
+    Tks = (TH1F*)xsecConv_histos["phi_tau_conv"]->Clone("Tracks");
+    Tks->Add ( xsecbarConv_histos["phi_atau_conv"] );
+  } 
+  else { } 
+    
   Shw->Divide( Tks );
   
   std::cout << " max_bins " << max_bins << std::endl;

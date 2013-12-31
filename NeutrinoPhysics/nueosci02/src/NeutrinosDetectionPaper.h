@@ -29,7 +29,7 @@ public:
   
   virtual ~NeutrinosDetectionPaper( ); ///< Destructor
   
-  void MakeVariation01( const char *, const char *, const char *, const char *);
+  void MakeVariation01( const char *, const char *, const char *, const char *, double );
   
   void MakeVariation02( const char *, const char *, const char *, const char *, double, double, double);
 

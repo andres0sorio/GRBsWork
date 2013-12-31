@@ -20,7 +20,8 @@ input_sandbox = ['matrix_config.xml',
                  'matrix_config.dtd',
                  'model_config.xml',
                  'model_config.dtd',
-                 'paper01.exe']
+                 'paper01.exe',
+                 '../../nueoscilib/lib/libnueosci.so']
 
 script = './local.csh'
 output = 'output.root'
