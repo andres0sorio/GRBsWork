@@ -112,7 +112,7 @@ void NeutrinoOscInVarDensity::initializeAngles()
     setPhase( m_input->GetPar9() );  //angle enters in deg
 
     std::cout << "NeutrinoOscInVarDensity> ** dCP=" << m_dCP << std::endl; 
-
+    
   }
   
 }
@@ -220,6 +220,8 @@ void NeutrinoOscInVarDensity::updateMixingMatrix( )
   
   std::cout << "NeutrinoOscInVarDensity::updateMixingMatrix> " << UxinvU << std::endl;
   
+  std::cout << "NeutrinoOscInVarDensity::updateMixingMatrix> cos(m_dCP)=" <<  cos(m_dCP) << std::endl;
+    
 }
 
 void NeutrinoOscInVarDensity::Eval_TnuT(  long double x ) 

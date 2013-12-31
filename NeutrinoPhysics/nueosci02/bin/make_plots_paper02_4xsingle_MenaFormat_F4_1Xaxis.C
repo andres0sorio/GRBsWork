@@ -44,10 +44,10 @@ void makePlots()
             "./root_files/ModelB/output_ModelB_SetI.root", 
             "./root_files/ZeroPt/output_ZeroPt_SetI.root");
 
-  //makePlots("EarthB", "SetII",
-  //          "./root_files/ModelA/output_ModelA_SetII.root", 
-  //          "./root_files/ModelB/output_ModelB_SetII.root", 
-  //          "./root_files/ZeroPt/output_ZeroPt_SetII.root");
+  makePlots("EarthB", "SetII",
+            "./root_files/ModelA/output_ModelA_SetII.root", 
+            "./root_files/ModelB/output_ModelB_SetII.root", 
+            "./root_files/ZeroPt/output_ZeroPt_SetII.root");
 
   
 }

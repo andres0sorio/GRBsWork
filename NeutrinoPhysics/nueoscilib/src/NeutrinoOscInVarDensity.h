@@ -93,6 +93,10 @@ public:
   matrix<  long double > * m_Ur; // Re( U_CKM )
   
   matrix<  long double > * m_invUr; // Re( U_CKM )^-1
+
+  matrix<  long double > * m_Ui; // Im( U_CKM )
+  
+  matrix<  long double > * m_invUi; // Im( U_CKM )^-1
   
   matrix<  long double > * m_UTU; // (T~)
   

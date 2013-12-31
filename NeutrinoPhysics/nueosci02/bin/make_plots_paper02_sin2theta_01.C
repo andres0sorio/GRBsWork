@@ -38,7 +38,7 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  makePlots("StdPicture", "EarthB", "Vacuum", "detection.root");
+  makePlots("StdPicture", "EarthB", "Vacuum", "detection-sin2theta.root");
   
 }
 

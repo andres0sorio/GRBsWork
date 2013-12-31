@@ -47,7 +47,7 @@ void makePlots()
   var = new TObjString("RvsEv_dCP2");
   v_Variations->Add( var );
   
-  makePlots(v_Variations, "ModelA", "EarthB", "Vacuum", "detection.root");
+  makePlots(v_Variations, "ModelA", "EarthB", "Vacuum", "detection-RvsEv.root");
   
   v_Variations->Clear();
 
@@ -243,6 +243,7 @@ void makePlots(TList      * variation,
       gg->Draw("SAME");
     }
     
+    break;
     
   
   }

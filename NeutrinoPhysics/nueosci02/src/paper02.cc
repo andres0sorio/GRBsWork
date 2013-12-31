@@ -17,6 +17,14 @@ int main(int iargv, char **argv) {
   std::string neuosc;
   std::string steps;
 
+  std::vector<std::string> avsteps;
+  
+  avsteps.push_back("1. R vs the spectral index alpha for the standard picture" );
+  avsteps.push_back("2. R vs the spectral index alpha for different star models - needs step 1" );
+  avsteps.push_back("3. R vs phi_e fraction - standard picture" );
+  avsteps.push_back("4. R as a function of sin2(theta_13) - for different dCP values - standard picture" );
+  avsteps.push_back("5. R vs Ev energy - as in Olga Mena reference" );
+
   bool no_dataset = false;
     
   try {
@@ -35,9 +43,15 @@ int main(int iargv, char **argv) {
     po::store(po::parse_command_line(iargv, argv, desc), vm);
     po::notify(vm);
     
+
+
     if (vm.count("help")) 
     {
-      std::cout << desc << "\n";
+      std::cout << desc;
+      std::cout << "Available steps (studies):" << std::endl;
+      std::vector<std::string>::iterator txtItr;
+      for( txtItr = avsteps.begin(); txtItr != avsteps.end(); ++txtItr)
+        std::cout << (*txtItr) << std::endl;
       return 0;
     }
         

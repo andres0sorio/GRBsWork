@@ -32,7 +32,8 @@ input_sandbox = [ xmlfi,
                   'matrix_config.xml',
                   'matrix_config.dtd',
                   'model_config.dtd',
-                  'paper01.exe']
+                  'paper01.exe',
+                  '../../nueoscilib/lib/libnueosci.so']
 
 script = './local_xml1.csh'
 output = 'output.root'

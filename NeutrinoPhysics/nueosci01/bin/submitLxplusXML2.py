@@ -6,9 +6,11 @@ arguments = []
 
 #DM32 = '0.0014'
 #DM32 = '0.0060'
+
 DM32 = '0.0032'
 
-use_file = 2
+use_file = 1
+
 model = 'ModelA'
 
 xmlfi = ''
@@ -21,7 +23,7 @@ else:
     print 'No configuration available'
     sys.exit()
 
-xmax  = 1.0e17
+xmax  = 1.0e12
 x0    = 1.0e11
 dx    = 10.0
 
@@ -59,7 +61,8 @@ input_sandbox = [ xmlfi,
                   'matrix_config.xml',
                   'matrix_config.dtd',
                   'model_config.dtd',
-                  'paper01.exe']
+                  'paper01.exe',
+                  '../../nueoscilib/lib/libnueosci.so']
 
 script = './local_xml0.csh'
 output = 'output.root'

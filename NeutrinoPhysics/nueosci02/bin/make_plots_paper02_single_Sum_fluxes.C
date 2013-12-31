@@ -47,6 +47,12 @@ void makePlots()
             "./root_files/ModelA/output_ModelA_SetI-1E17.root",
             "Model A (at Detector)");
 
+   makePlots("EarthB",
+            "Vacuum",
+            "ModelA_SetupII",
+            "./root_files/ModelA/output_ModelA_SetII-1E17.root",
+            "Model A (at Detector)");
+
   /*
 
   makePlots("EarthB",
@@ -82,6 +88,7 @@ void makePlots()
   */
 
   // with dCP = 180
+  /*
   makePlots("EarthB",
             "Vacuum",
             "ModelA_SetupI",
@@ -95,6 +102,9 @@ void makePlots()
             "ModelA_SetupI",
             "./root_files/ModelA/output_ModelA_SetI-1E17-dCP1.root",
             "Model A #delta = 90 (at Detector)");
+
+  */
+
 
 }
 
@@ -299,22 +309,26 @@ void makePlots( const char * modelA,
     g1->GetYaxis()->CenterTitle(true); 
     g1->GetXaxis()->CenterTitle(true); 
     g1->GetXaxis()->SetLabelOffset(0.007);
-    g1->GetXaxis()->SetLabelSize(0.08);
-    g1->GetXaxis()->SetTitleSize(0.09);
-    g1->GetXaxis()->SetTitleOffset(0.85);
+    g1->GetXaxis()->SetLabelSize(0.07);
+    g1->GetXaxis()->SetTitleSize(0.07);
+    g1->GetXaxis()->SetTitleOffset(1.05);
     g1->GetXaxis()->SetLabelFont(22);
     g1->GetXaxis()->SetTitleFont(22);
 
     g1->GetYaxis()->SetLabelOffset(0.007);
     g1->GetYaxis()->SetLabelSize(0.07);
-    g1->GetYaxis()->SetTitleSize(0.08);
-    g1->GetYaxis()->SetTitleOffset(0.81);
+    g1->GetYaxis()->SetTitleSize(0.07);
+    g1->GetYaxis()->SetTitleOffset(0.90);
 
     g1->GetYaxis()->SetTitleFont(22);
     g1->GetYaxis()->SetLabelFont(22);
 
-    if ( k == 6 )
+    if ( k == 6 ) 
+    {
+      g1->GetXaxis()->SetLimits(0.99E11,1.0E14);
       g1->Draw("AL");
+    }
+    
     else 
       g1->Draw("L");
 

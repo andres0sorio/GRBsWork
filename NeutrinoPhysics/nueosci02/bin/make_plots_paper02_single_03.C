@@ -18,6 +18,37 @@ void topTitle(const char *title)
   latex.DrawLatex(0.18,0.92,"Preliminary");
 }
 
+TGraph * readTypeFour( const char * fname) 
+{
+
+  ifstream in;
+  in.open(fname); //
+  
+  double en, flux;
+  
+  TGraph * graphT4 = new TGraph(); 
+
+  int i = 0;
+  
+  while ( in.good() ) 
+  {
+    
+    in >> en >> flux; //we read 2 columns of data
+    
+    graphT4->SetPoint( i , en, flux);
+    
+    ++i;
+    
+  }
+
+  std::cout << "Total points read: " << i << std::endl; 
+    
+  in.close();
+  
+  return graphT4;
+  
+}
+
 void makePlots() 
 {
   gROOT->SetStyle("Plain");
@@ -38,6 +69,9 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
+  ///
+  //... R (ratio muon+tau / showers) vs fraction of phi_e
+  
   makePlots("StdPicture", "EarthB", "Vacuum", "phi_nue", "detection.root");
   
 }
@@ -85,7 +119,15 @@ void makePlots( const char * model,
   ProbNu[1] = new TGraph();
   
   TLegend * leg = new TLegend(0.39,0.71,0.66,0.87);
-  
+
+  leg->SetBorderSize(0);
+  leg->SetTextSize(0.05);
+  leg->SetLineColor(1);
+  leg->SetLineStyle(1);
+  leg->SetLineWidth(1);
+  leg->SetFillColor(0);
+  leg->SetFillStyle(1001);
+
   PxxTreeNu->SetBranchAddress("Xx",&xx);
   PxxTreeNu->SetBranchAddress("Ratio",&yy);
   PxxTreeNu->SetBranchAddress("MuTks",&y1);
@@ -104,7 +146,7 @@ void makePlots( const char * model,
   ProbNu[0]->SetMarkerColor(1);
   ProbNu[0]->SetLineColor(1);
   ProbNu[0]->SetFillColor(10);
-  ProbNu[0]->SetMaximum(6.0);
+  ProbNu[0]->SetMaximum(8.0);
   ProbNu[0]->SetMinimum(0.0);
 
   ProbNu[0]->GetXaxis()->SetLimits( 0.0, 1.0 );
@@ -130,40 +172,46 @@ void makePlots( const char * model,
 
   ProbNu[0]->SetLineWidth(2);
 
-  //leg->AddEntry( ProbNu[0], "#nu");
-  //leg->SetBorderSize(0);
-  //leg->SetTextSize(0.1);
-  //leg->SetLineColor(1);
-  //leg->SetLineStyle(1);
-  //leg->SetLineWidth(1);
-  //leg->SetFillColor(0);
-  //leg->SetFillStyle(1001);
+  leg->AddEntry( ProbNu[0], "#mu + #tau tracks","L");
+  leg->AddEntry( ProbNu[1], "#mu tracks","L");
 
   c1->cd();
 
-  //gPad->SetGridx();
-  //gPad->SetGridy();
-  
   ProbNu[0]->Draw("AC");
   ProbNu[1]->Draw("C");
-  topTitle(var);
   
-  //leg->DrawClone();
+  //
+
+  if( 1 ) {
+    
+    TGraph * graphT4 = readTypeFour("../data/beacom-fig-3-100GeVmuTh-R-phie_frac.csv");
+    
+    graphT4->SetMarkerColor(2);
+    graphT4->SetLineColor(2);
+    graphT4->SetLineWidth(2);
+    
+    graphT4->Draw("L");
+    
+    leg->AddEntry(graphT4, "Beacom [*]","L");
+    
+  }
   
+  leg->Draw();
+    
   c1->cd();
   
   std::stringstream saveAs;
   
   saveAs.str("");
-  saveAs << path << model << "/pdf/" << "ratio_" << target << "_" << var << "_XX" << ".pdf";
+  saveAs << path << model << "/pdf/" << "ratio_" << target << "_" << var << "_fraction" << ".pdf";
   c1->SaveAs( saveAs.str().c_str() );
   
   saveAs.str("");
-  saveAs << path << model << "/png/" << "ratio_" << target << "_" << var << "_XX" << ".png";
+  saveAs << path << model << "/png/" << "ratio_" << target << "_" << var << "_fraction" << ".png";
   c1->SaveAs( saveAs.str().c_str() );
 
   saveAs.str("");
-  saveAs << path << model << "/eps/" << "ratio_" << target << "_" << var << "_XX" << ".eps";
+  saveAs << path << model << "/eps/" << "ratio_" << target << "_" << var << "_fraction" << ".eps";
   c1->SaveAs( saveAs.str().c_str() );
   
   

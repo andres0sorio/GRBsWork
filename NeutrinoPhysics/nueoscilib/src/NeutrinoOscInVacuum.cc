@@ -73,7 +73,7 @@ void NeutrinoOscInVacuum::initializeAngles()
 
     setPhase( m_input->GetPar9() ); //AO ok fixed dec 2013
     
-    //std::cout << "NeutrinoOscInVacuum> ** dCP=" << m_dCP << std::endl; 
+    std::cout << "NeutrinoOscInVacuum> ** dCP=" << m_dCP << std::endl; 
 
   }
     

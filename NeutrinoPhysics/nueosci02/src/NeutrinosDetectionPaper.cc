@@ -231,11 +231,11 @@ void NeutrinosDetectionPaper::MakeVariation01(const char * model, const char * t
   
   std::cout << " max_bins " << max_bins << std::endl;
   
-
   for( int k = 1; k < max_bins; ++k) {
     
     m_Xx       = Shw->GetBinLowEdge(k);
     m_MuTks    = Tks->GetBinContent(k);
+    m_TauTks   = 1.0;
     m_HadShw   = 1.0;
     m_HadShwE  = 1.0;
     m_HadShwT  = 1.0;
@@ -703,9 +703,8 @@ bool NeutrinosDetectionPaper::InitOutput(const char * model,
                         + TString(option))->cd();
   
   m_tree = new TTree("data","Data points");
-                        
-  m_tree->Branch("Xx",        &m_Xx,         "Xx/d");
 
+  m_tree->Branch("Xx",        &m_Xx,         "Xx/d");
   m_tree->Branch("MuTks",     &m_MuTks,      "MuTks/d");
   m_tree->Branch("TauTks",    &m_TauTks,     "TauTks/d");
   m_tree->Branch("HadShw",    &m_HadShw,     "HadShw/d");
@@ -715,6 +714,13 @@ bool NeutrinosDetectionPaper::InitOutput(const char * model,
 
   m_tree->Branch("Ratio",     &m_Ratio,      "Ratio/d");
 
+  m_Xx       = -1.0;
+  m_MuTks    = -1.0;
+  m_HadShw   = -1.0;
+  m_HadShwE  = -1.0;
+  m_HadShwT  = -1.0;
+  m_HadShwNC = -1.0;
+  
   std::cout << "InitOutput> done" << std::endl;
   
   return true;
@@ -778,7 +784,7 @@ void NeutrinosDetectionPaper::SetFluxHistograms(TFile * infile,
       
     m_input_tree->GetEntry(i);
 
-    std::cout << "SetFluxHistograms> " << i << " " << m_Ex_in << " " << bin_pos<< " " << m_energy_bin[bin_pos] << '\n';
+    //std::cout << "SetFluxHistograms> " << i << " " << m_Ex_in << " " << bin_pos<< " " << m_energy_bin[bin_pos] << '\n';
     
     if ( m_Ex_in < m_energy_bin[bin_pos] ) 
     {
@@ -838,7 +844,7 @@ void NeutrinosDetectionPaper::SetFluxHistograms(TFile * infile,
     
   }
   
-  std::cout << "SetFluxHistograms> bin_pos " << bin_pos << std::endl;
+  //std::cout << "SetFluxHistograms> bin_pos " << bin_pos << std::endl;
   
   bin_pos = 1;
   kval = 0.0;
