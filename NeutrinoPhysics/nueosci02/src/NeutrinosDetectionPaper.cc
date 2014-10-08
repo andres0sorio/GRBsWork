@@ -306,10 +306,9 @@ void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target,
   NeutrinoOscInVacuum * m_Physics_Vacuum =  new NeutrinoOscInVacuum( m_mixpars );
   
   m_Physics_Vacuum->use_default_pars = false; // read parameters from file
-
+  
   m_Physics_Vacuum->setPhase( phase );
   
-  m_Physics_Vacuum->initializeAngles();
   m_Physics_Vacuum->updateMixingMatrix();
   m_Physics_Vacuum->calcProbabilities();
   m_Physics_Vacuum->Propagate( 1.0, 2.0, 0.0 );
@@ -337,12 +336,13 @@ void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target,
   
   this->SetModelParameters( modpars );
   
-  this->PropagateThroughEarth( "StdPicture", "Pee", option, 1.0, 1.0, 1.0 );
+  this->PropagateThroughEarth( "EarthB", "Vacuum" , option, "Pee" ,  1.0, 1.0, 1.0, phase );
+  this->PropagateThroughEarth( "EarthB", "Vacuum" , option, "aPee",  1.0, 1.0, 1.0, phase );
   
-  this->PropagateThroughEarth( "StdPicture", "aPee", option, 1.0, 1.0, 1.0 );
+  TString Source = TString("Vacuum") + TString("_") + TString(option);
   
-  this->SetFluxHistograms(m_outfile, "", "EarthB", "Vacuum", var.c_str() );
-
+  this->SetFluxHistograms( m_output_file, "StdPicture", "EarthB", Source.Data(), "RvsAlpha" );
+  
   ///
   // Set N_betas 
   /*
@@ -357,7 +357,6 @@ void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target,
     m_config->SetPar("N_ae", N1bar );
     m_config->SetPar("N_amu", N2bar );
     m_config->SetPar("N_atau", N3bar );
-    
   */
   
   // Loop over the parameter
@@ -604,8 +603,6 @@ void NeutrinosDetectionPaper::MakeVariation04(const char * model,
   
   double Xx = Xmin;
 
-  m_Physics_Vacuum->initializeAngles();
-
   m_Physics_Vacuum->setPhase( phase );
   
   m_config->SetPar3( alpha );
@@ -702,7 +699,7 @@ void NeutrinosDetectionPaper::MakeVariation05(const char * model,
   /// Variation of R as a function of theta13 - for any model
   /// Work in progress
   ///
-  ///
+
 
   std::stringstream Var;
   
@@ -1175,22 +1172,29 @@ void NeutrinosDetectionPaper::SetFluxAverages(TFile      * infile,
 
 //====================================================================================================
 
-void NeutrinosDetectionPaper::PropagateThroughEarth( const char * entry_model,
-                                                     const char * probability,
-                                                     const char * option,
-                                                     double f1, double f2, double f3 ){
+void NeutrinosDetectionPaper::PropagateThroughEarth(const char * target, 
+                                                    const char * source,
+                                                    const char * option,
+                                                    const char * probability,
+                                                    double f1, 
+                                                    double f2, 
+                                                    double f3,
+                                                    double phase ) {
   
-
+  if( m_debug ) std::cout << "PropagateThroughEarth> Starts!" << std::endl;
+  
   NeutrinoOscInVarDensity * m_Physics = new NeutrinoOscInVarDensity( m_mixpars );
   
   m_Physics->use_default_pars = false;
-  
+
+  m_Physics->setPhase( phase );
+    
   bool  anti_nu   = false;
   
-  m_output_file->mkdir(TString("EarthB") + TString("_") 
-                       + TString(entry_model) + ("_") 
-                       + TString(probability) + ("_") 
-                       + TString(option) )->cd(); //
+  m_output_file->mkdir( TString(target)       + TString("_") 
+                        + TString(source)     + TString("_")
+                        + TString(option)     + TString("_")
+                        + TString(probability) )->cd(); //
    
   std::map<std::string, std::pair<int,int> > m_ProbIndex;
   
@@ -1261,8 +1265,6 @@ void NeutrinosDetectionPaper::PropagateThroughEarth( const char * entry_model,
     profA->SetParameter( ( i-1 ), (m_modelpars->GetPar(i))  );
     std::cout << "PropagateThroughEarth> * par: " << (m_modelpars->GetPar(i)) << std::endl;
   }
-  
-  m_Physics->initializeAngles();
   
   m_Physics->updateMixingMatrix();
   

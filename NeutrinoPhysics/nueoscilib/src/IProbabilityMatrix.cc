@@ -71,6 +71,7 @@ void IProbabilityMatrix::setPhase( long double angle )
 {
 
   m_dCP = (angle * M_PIl)/180.0L;
+  std::cout << "IProbabilityMatrix> setting dCP to " << angle << " " << m_dCP << std::endl;
   
 }
 

@@ -111,7 +111,7 @@ void NeutrinoOscInVarDensity::initializeAngles()
     //AO - dec 2013
     setPhase( m_input->GetPar9() );  //angle enters in deg
 
-    std::cout << "NeutrinoOscInVarDensity> ** dCP=" << m_dCP << std::endl; 
+    std::cout << "NeutrinoOscInVarDensity> ** dCP (from file) = " << m_dCP << std::endl; 
     
   }
   

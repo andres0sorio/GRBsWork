@@ -51,7 +51,7 @@ public:
   
   void SetModelParameters( ModelParameters * modelpars) { m_modelpars = modelpars; };
   
-  void PropagateThroughEarth( const char *, const char *, const char *, double f1, double f2, double f3);
+  void PropagateThroughEarth( const char *, const char *, const char *, const char *, double, double, double, double);
   
 
 protected:

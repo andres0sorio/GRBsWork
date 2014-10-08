@@ -21,7 +21,7 @@
       6.4750e+13
     </Par>
     <Par Id="6" Name="Emin">
-      1.0e9
+      1.0e11
     </Par>
     <Par Id="7" Name="Emax">
       1.0e17
