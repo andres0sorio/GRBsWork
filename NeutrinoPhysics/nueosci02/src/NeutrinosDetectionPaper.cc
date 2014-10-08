@@ -295,18 +295,15 @@ void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target,
                                                       const char * option,
                                                       double Xmin, 
                                                       double Xmax, 
-                                                      double Dx,
-                                                      double phase)
+                                                      double Dx)
 {
   
   // Make the variation for the Standard Picture 1:1:1
-   
+  
   NeutrinoOscInVacuum * m_Physics_Vacuum =  new NeutrinoOscInVacuum( m_mixpars );
   
   m_Physics_Vacuum->use_default_pars = false; // -> read parameters from xml file
-  
-  m_Physics_Vacuum->setPhase( phase );
-  
+  m_Physics_Vacuum->initializeAngles();
   m_Physics_Vacuum->updateMixingMatrix();
   m_Physics_Vacuum->calcProbabilities();
   m_Physics_Vacuum->Propagate( 1.0, 2.0, 0.0 );
@@ -334,8 +331,8 @@ void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target,
   
   this->SetModelParameters( modpars );
   
-  this->PropagateThroughEarth( "EarthB", "Vacuum" , option, "Pee" ,  1.0, 1.0, 1.0, phase );
-  this->PropagateThroughEarth( "EarthB", "Vacuum" , option, "aPee",  1.0, 1.0, 1.0, phase );
+  this->PropagateThroughEarth( "EarthB", "Vacuum" , option, "Pee" ,  1.0, 1.0, 1.0 );
+  this->PropagateThroughEarth( "EarthB", "Vacuum" , option, "aPee",  1.0, 1.0, 1.0 );
   
   TString Source = TString("Vacuum") + TString("_") + TString(option);
   
@@ -572,8 +569,7 @@ void NeutrinosDetectionPaper::MakeVariation04(const char * model,
                                               double Xmin,
                                               double Xmax, 
                                               double Dx,
-                                              double alpha,
-                                              double phase )
+                                              double alpha)
 {
   
   ///
@@ -583,17 +579,17 @@ void NeutrinosDetectionPaper::MakeVariation04(const char * model,
   NeutrinoOscInVacuum * m_Physics_Vacuum =  new NeutrinoOscInVacuum( m_mixpars );
   
   m_Physics_Vacuum->use_default_pars = false; // read parameters from file
-
+  m_Physics_Vacuum->initializeAngles();
+  
   std::stringstream Var;
-
+  double phase = m_mixpars->GetPar9();
+  
   Var << "Sin2Q13-" << alpha << "-" << phase;
-    
+  
   InitOutput(model, target, source, Var.str().c_str() );
   
   double Xx = Xmin;
 
-  m_Physics_Vacuum->setPhase( phase );
-  
   m_config->SetPar3( alpha );
 
   std::cout << "MakeVariation04> alpha: " << m_config->GetPar3() << " dCP: " << m_Physics_Vacuum->m_dCP << std::endl;
@@ -1167,17 +1163,16 @@ void NeutrinosDetectionPaper::PropagateThroughEarth(const char * target,
                                                     const char * probability,
                                                     double f1, 
                                                     double f2, 
-                                                    double f3,
-                                                    double phase ) {
+                                                    double f3 )
+{
   
   if( m_debug ) std::cout << "PropagateThroughEarth> Starts!" << std::endl;
   
   NeutrinoOscInVarDensity * m_Physics = new NeutrinoOscInVarDensity( m_mixpars );
   
   m_Physics->use_default_pars = false;
-
-  m_Physics->setPhase( phase );
-    
+  m_Physics->initializeAngles();
+  
   bool  anti_nu   = false;
   
   m_output_file->mkdir( TString(target)       + TString("_") 

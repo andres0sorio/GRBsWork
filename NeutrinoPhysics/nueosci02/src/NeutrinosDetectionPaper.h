@@ -37,21 +37,21 @@ public:
 
   void MakeVariation03( const char *, const char *, const char *, double, double, double);
 
-  void MakeVariation04( const char *, const char *, const char *, double, double, double, double, double);
+  void MakeVariation04( const char *, const char *, const char *, double, double, double, double);
 
   void MakeVariation05( const char *, const char *, const char *, double, double, double, double, double);
   
-  void MakeVariationStdPicture( const char *, const char *, const char *, double, double, double, double);
+  void MakeVariationStdPicture( const char *, const char *, const char *, double, double, double);
   
   void SetFluxHistograms( TFile *, const char *, const char *, const char *, const char *);
   
   void ResetFluxHistograms( );
-
+  
   void SetMixingParameters( MixingParameters * mixing) { m_mixpars = mixing; };
   
   void SetModelParameters( ModelParameters * modelpars) { m_modelpars = modelpars; };
   
-  void PropagateThroughEarth( const char *, const char *, const char *, const char *, double, double, double, double);
+  void PropagateThroughEarth( const char *, const char *, const char *, const char *, double, double, double );
   
 
 protected:

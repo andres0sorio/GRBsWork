@@ -16,6 +16,8 @@ int main(int iargv, char **argv) {
   std::string config;
   std::string neuosc;
   std::string steps;
+  std::string dmass;
+  std::string dCP;
 
   std::vector<std::string> avsteps;
   
@@ -43,6 +45,8 @@ int main(int iargv, char **argv) {
       ("config"   , po::value<std::string>(), "model configuration file (.xml)")
       ("neuosc"   , po::value<std::string>(), "neutrino oscillation data & input constants (.xml)")
       ("steps"    , po::value<std::string>(), "excecution steps ( 1,2,3,... )")
+      ("dCP"      , po::value<std::string>(), "dCP phase ( 0.0, 180.0 , ... )")
+      ("dmass2"   , po::value<std::string>(), "use the following delta masses square ( = dm2(Dm23sq),dM2(Dm21sq) )")
       ;
     
     po::variables_map vm;
@@ -86,6 +90,23 @@ int main(int iargv, char **argv) {
     } 
     else {
       std::cout << "using the default step 1  \n";
+    }
+
+    if (vm.count("dCP")) {
+      dCP = vm["dCP"].as<std::string>();
+      std::cout << "dCP value fixed to " << dCP << std::endl;
+    } 
+    else {
+      dCP.append("0");
+      std::cout << "using the default value of dCP (as read in xml config) \n";
+    }
+
+    if (vm.count("dmass2")) {
+      dmass = vm["dmass2"].as<std::string>();
+      std::cout << "dm2 and dM2 will be set to " <<  dmass << std::endl;
+    } 
+    else {
+      std::cout << "using dm2 and dM2 read from the configuration file \n";
     }
     
   }
@@ -191,9 +212,35 @@ int main(int iargv, char **argv) {
     }
       
   }
-    
-  //............................................................................................
 
+  //............................................................................................
+  
+  std::string dCPtxt ("dCP");
+  
+  if( dCP.size() != 0 )
+  {
+    mixpars->SetPar9( atof( dCP.c_str() ) ); // dCP
+    dCPtxt.append(dCP);
+  }
+  
+  if( dmass.size() != 0 )
+  {
+    std::vector<std::string> dmasses;
+    boost::split(dmasses, dmass, boost::is_any_of(","));
+    if( dmasses.size() != 2 ) {
+      std::cout << " you need to provide both mass differences. Type --help" << std::endl;
+      return 1;
+    }
+    else 
+    {
+      mixpars->SetPar4( atof( dmasses[0].c_str() ) ); // DM2 = DM(32)
+      mixpars->SetPar8( atof( dmasses[1].c_str() ) ); // Dm2 = DM(12)
+    }
+    std::cout << (*mixpars) << std::endl;
+  }
+
+  //............................................................................................
+  
   // Variation 1 ( IceCube! -> R calculation as a function of alpha )
   // 
   // -- (Start from the output of paper01 which contains the fluxes at the detector for
@@ -212,10 +259,8 @@ int main(int iargv, char **argv) {
 
     nudet->SetMixingParameters (  mixpars );
 
-    nudet->MakeVariationStdPicture("EarthB","Vacuum", "dCP0", 2.0, 3.1, 0.05, 0.0); // 
-
-    //nudet->MakeVariationStdPicture("EarthB","Vacuum", "dCP1", 2.0, 3.1, 0.05, 180.0); // 
-        
+    nudet->MakeVariationStdPicture("EarthB","Vacuum", dCPtxt.c_str(), 2.0, 3.1, 0.05); //
+    
   }
   
   // (EarthB,Vacuum) == Model X ---> Vaccuum ---> Earth ---> Detector
@@ -273,17 +318,11 @@ int main(int iargv, char **argv) {
     
     nudet->SetMixingParameters (  mixpars );
     
-    nudet->MakeVariation04("StdPicture", "EarthB", "Vacuum", 0.0, 15.0, 1.0, 1.8, 0.0); //
+    nudet->MakeVariation04("StdPicture", "EarthB", "Vacuum", 0.0, 15.0, 1.0, 1.8 ); //
     
-    nudet->MakeVariation04("StdPicture", "EarthB", "Vacuum", 0.0, 15.0, 1.0, 1.8, 180.0); //
-
-    nudet->MakeVariation04("StdPicture", "EarthB", "Vacuum", 0.0, 15.0, 1.0, 2.0, 0.0); //
-
-    nudet->MakeVariation04("StdPicture", "EarthB", "Vacuum", 0.0, 15.0, 1.0, 2.0, 180.0); //
-
-    nudet->MakeVariation04("StdPicture", "EarthB", "Vacuum", 0.0, 15.0, 1.0, 2.2, 0.0); //
-
-    nudet->MakeVariation04("StdPicture", "EarthB", "Vacuum", 0.0, 15.0, 1.0, 2.2, 180.0); //
+    nudet->MakeVariation04("StdPicture", "EarthB", "Vacuum", 0.0, 15.0, 1.0, 2.0 ); //
+    
+    nudet->MakeVariation04("StdPicture", "EarthB", "Vacuum", 0.0, 15.0, 1.0, 2.2 ); //
     
   }
   
@@ -340,6 +379,8 @@ int main(int iargv, char **argv) {
     //Work in progress
 
   }
+
+  //... Added Oct/2014 - AO
 
   if( execSteps["7"] ) {
     
