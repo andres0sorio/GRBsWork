@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE ModelParameterList PUBLIC "" "model_config.dtd" []>
+<ModelParameterList>
+  <ModelParameters Id="EarthB">
+    <Par Id="0" Name="MaxPars">
+      3.0
+    </Par>
+    <Par Id="1" Name="Diameter">
+      6.4750e+13
+    </Par>
+    <Par Id="2" Name="cFact1">
+      4.2951e+18
+    </Par>
+    <Par Id="3" Name="cFact2">
+      1.76e-32
+    </Par>
+    <Par Id="4" Name="LMIN">
+      0.0
+    </Par>
+    <Par Id="5" Name="LMAX">
+      6.4750e+13
+    </Par>
+    <Par Id="6" Name="Emin">
+      1.0e9
+    </Par>
+    <Par Id="7" Name="Emax">
+      1.0e17
+    </Par>
+    <Par Id="8" Name="Dx">
+      1.0e10
+    </Par>
+    <Par Id="9" Name="De">
+      1.0e9
+    </Par>
+  </ModelParameters>
+  <ModelParameters Id="ZeroPt">
+    <Par Id="0" Name="MaxPars">
+      0.0
+    </Par>
+    <Par Id="2" Name="LMAX">
+      1.61e+17
+    </Par>
+    <Par Id="3" Name="LMIN">
+      3.20e+15
+    </Par>
+    <Par Id="4" Name="Emin">
+      1.0e11
+    </Par>
+    <Par Id="5" Name="Emax">
+      1.0e14
+    </Par>
+    <Par Id="6" Name="Dx">
+      0.5e14
+    </Par>
+    <Par Id="7" Name="De">
+      1.0e9
+    </Par>
+  </ModelParameters>
+ </ModelParameterList>
