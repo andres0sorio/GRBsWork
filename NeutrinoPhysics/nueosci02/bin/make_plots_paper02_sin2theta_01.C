@@ -18,6 +18,37 @@ void topTitle(const char *title)
   latex.DrawLatex(0.18,0.92,"Preliminary");
 }
 
+TGraph * readTypeFour( const char * fname) 
+{
+
+  ifstream in;
+  in.open(fname); //
+  
+  double xx, yy;
+  
+  TGraph * graphT4 = new TGraph(); 
+
+  int i = 0;
+  
+  while ( in.good() ) 
+  {
+    
+    in >> xx >> yy; //we read 2 columns of data
+    
+    graphT4->SetPoint( i , xx, yy);
+    
+    ++i;
+    
+  }
+
+  std::cout << "Total points read: " << i << std::endl; 
+    
+  in.close();
+  
+  return graphT4;
+  
+}
+
 void makePlots() 
 {
   gROOT->SetStyle("Plain");
@@ -152,10 +183,11 @@ void makePlots( const char * model,
   
   TCanvas * c1 = new TCanvas( cname.Data(), "track/shower ratio", 206,141,722,575); 
     
-  TLegend * leg = new TLegend(0.18,0.71,0.44,0.87);
+  TLegend * leg = new TLegend(0.18,0.64,0.44,0.87);
+  
   leg->SetBorderSize(0);
   leg->SetTextFont(22);
-  leg->SetTextSize(0.064);
+  leg->SetTextSize(0.062);
   leg->SetLineColor(1);
   leg->SetLineStyle(1);
   leg->SetLineWidth(1);
@@ -214,9 +246,28 @@ void makePlots( const char * model,
       gg->Draw("AC");
     else
       gg->Draw("C");
-
-    
   
+  }
+
+
+  if( 1 ) 
+  {
+
+    TGraph * g1 = readTypeFour("../data/esmaili-figure-1-a1.8-dCP0.csv");
+    TGraph * g2 = readTypeFour("../data/esmaili-figure-1-a1.8-dCPpi.csv");
+    
+    g1->SetLineColor(4);
+    g2->SetLineColor(4);
+    g1->SetLineWidth(2);
+    g2->SetLineWidth(2);
+    g1->SetLineStyle(2);
+    g2->SetLineStyle(2);
+    
+    g1->Draw("C");
+    g2->Draw("C");
+        
+    leg->AddEntry( g1, "Esmaili[*]","l");
+
   }
   
   leg->Draw();

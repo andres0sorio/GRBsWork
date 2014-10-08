@@ -134,11 +134,11 @@ void NeutrinosDetectionPaper::MakeVariation01(const char * model, const char * t
             
     for( int k = 1; k < max_bins; ++k) {
       
-      double x0 = m_flux_histos[itr->first]->GetBinCenter(k)/1.0e9;
+      double x0 = m_flux_histos[itr->first]->GetBinCenter(k)/1.0e9; // In GeV
       
       ff->SetPoint( x0 );
       
-      double xmin = m_flux_histos[itr->first]->GetBinLowEdge(k)/1.0E9;
+      double xmin = m_flux_histos[itr->first]->GetBinLowEdge(k)/1.0E9; // In GeV
       double xmax =  x0;
       
       ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( ROOT::Math::IntegrationOneDim::kADAPTIVESINGULAR,
@@ -314,25 +314,57 @@ void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target,
   m_Physics_Vacuum->calcProbabilities();
   m_Physics_Vacuum->Propagate( 1.0, 2.0, 0.0 );
   
-  std::cout << "MakeVariation04> alpha: " << m_config->GetPar3() << " dCP: " << m_Physics_Vacuum->m_dCP << std::endl;
+  std::cout << "MakeVariationStdPicture> alpha: " << m_config->GetPar3() << " dCP: " << m_Physics_Vacuum->m_dCP << std::endl;
+  
+  //
+  // -- Propagation through Earth -- (Oscillations in var density is energy dependent).
+  // 06/Oct/2014 - AO
+  // Added propragation through Earth
+  //
+  
+  ModelParameterList modparlist;
+  
+  std::cout << " ---ModelParameterList---" << '\n';
+  
+  if (modparlist.ParseFile( "model_config_Earth.xml" ) == 0)
+    std::cout << modparlist;
+  else {
+    std::cout << "ModelParameterList> Problem opening model config.";
+    return;
+  }
+  
+  ModelParameters *modpars =  modparlist.GetParameters(target);
+  
+  this->SetModelParameters( modpars );
+  
+  this->PropagateThroughEarth( "StdPicture", "Pee", option, 1.0, 1.0, 1.0 );
+  
+  this->PropagateThroughEarth( "StdPicture", "aPee", option, 1.0, 1.0, 1.0 );
+  
+  this->SetFluxHistograms(m_outfile, "", "EarthB", "Vacuum", var.c_str() );
 
+  ///
   // Set N_betas 
-  
-  m_config->SetPar("N_e", (m_Physics_Vacuum->m_phi_e_f) );
-  m_config->SetPar("N_mu", (m_Physics_Vacuum->m_phi_mu_f) );
-  m_config->SetPar("N_tau", (m_Physics_Vacuum->m_phi_tau_f) );
-  
-  double N1bar = (m_Physics_Vacuum->m_phi_e_f);
-  double N2bar = (m_Physics_Vacuum->m_phi_mu_f);
-  double N3bar = (m_Physics_Vacuum->m_phi_tau_f);
-  
-  m_config->SetPar("N_ae", N1bar );
-  m_config->SetPar("N_amu", N2bar );
-  m_config->SetPar("N_atau", N3bar );
+  /*
+    m_config->SetPar("N_e", (m_Physics_Vacuum->m_phi_e_f) );
+    m_config->SetPar("N_mu", (m_Physics_Vacuum->m_phi_mu_f) );
+    m_config->SetPar("N_tau", (m_Physics_Vacuum->m_phi_tau_f) );
+    
+    double N1bar = (m_Physics_Vacuum->m_phi_e_f);
+    double N2bar = (m_Physics_Vacuum->m_phi_mu_f);
+    double N3bar = (m_Physics_Vacuum->m_phi_tau_f);
+    
+    m_config->SetPar("N_ae", N1bar );
+    m_config->SetPar("N_amu", N2bar );
+    m_config->SetPar("N_atau", N3bar );
+    
+  */
   
   // Loop over the parameter
   m_Xx = Xmin;
   
+  m_config->UseVaryingNbeta( true );
+
   while ( 1 ) {
     
     if ( m_Xx >= Xmax ) break;
@@ -357,7 +389,7 @@ void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target,
     m_HadShwT  = sh1->m_CCNutauShower;
     
     m_HadShwNC = sh1->m_NCShower;
-
+    
     m_Ratio    = TkSum / m_HadShw;
     
     std::cout << "NeutrinosDetectionPaper> "
@@ -369,10 +401,10 @@ void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target,
     
     m_tree->Fill();
     
+    m_Xx = m_Xx + Dx;
+    
     delete mu1;
     delete sh1;
-
-    m_Xx = m_Xx + Dx;
     
   }
   
@@ -462,7 +494,10 @@ void NeutrinosDetectionPaper::MakeVariation03(const char * model,
 {
   
   InitOutput(model, target, source, "phi_nue");
-  
+
+  //
+  // This is the method for calculating R as function of the neutrino fraction phi_nue
+  //
   // Here is the loop for the parameter variation
   
   float phi_nue = 0.0;
@@ -553,8 +588,10 @@ void NeutrinosDetectionPaper::MakeVariation04(const char * model,
                                               double phase )
 {
   
-  /// Variation of R as a function of theta13
-  
+  ///
+  /// Variation of R as a function of theta13 - for the Standard Picture
+  ///
+
   NeutrinoOscInVacuum * m_Physics_Vacuum =  new NeutrinoOscInVacuum( m_mixpars );
   
   m_Physics_Vacuum->use_default_pars = false; // read parameters from file
@@ -647,6 +684,91 @@ void NeutrinosDetectionPaper::MakeVariation04(const char * model,
   
   delete m_Physics_Vacuum;
 
+}
+
+void NeutrinosDetectionPaper::MakeVariation05(const char * model,
+                                              const char * target, 
+                                              const char * source, 
+                                              double Xmin,
+                                              double Xmax, 
+                                              double Dx,
+                                              double alpha,
+                                              double phase )
+{
+
+  ///
+  /// October 06 2014 - AO
+  /// Adding - 
+  /// Variation of R as a function of theta13 - for any model
+  /// Work in progress
+  ///
+  ///
+
+  std::stringstream Var;
+  
+  Var << "Sin2Q13-" << alpha << "-" << phase;
+    
+  InitOutput(model, target, source, Var.str().c_str() );
+  
+  double Xx = Xmin;
+  
+  // Here is the loop for the parameter variation
+  
+  m_config->UseVaryingNbeta( true );
+  
+  std::cout << (*m_config) << std::endl;
+
+  std::cout << "MakeVariation05> alpha: " << m_config->GetPar3() << " dCP: " << std::endl;
+
+  while ( 1 ) {
+    
+    if( Xx >= Xmax ) break;
+    
+    double sin2theta = pow ( sin( Xx * M_PI / 180.0), 2.0 );
+
+    MuTrackEvents * mu1 = new MuTrackEvents("../data/XSec_neut.dat", "../data/XSec_anti.dat", 
+                                            "../data/pshadow-at-180.dat", m_config );
+    
+    double TkSum = mu1->Evaluate( );
+    
+    m_MuTks  = mu1->m_NuMuTracks;
+    m_TauTks = mu1->m_NuTauTracks;
+    
+    ShowerEvents * sh1 =  new ShowerEvents("../data/XSec_neut.dat", "../data/XSec_anti.dat", 
+                                           "../data/pshadow-at-180.dat", m_config );
+    
+    m_HadShw = sh1->Evaluate( );
+    
+    m_HadShwE = sh1->m_CCNuShower;
+    
+    m_HadShwT = sh1->m_CCNutauShower;
+    
+    m_HadShwNC = sh1->m_NCShower;
+    
+    m_Ratio  = TkSum / m_HadShw;
+
+    m_Xx = sin2theta;
+    
+    std::cout << "NeutrinosDetectionPaper> "
+              << "sin(theta13) "   << m_Xx     << '\t'
+              << "muTrk "          << m_MuTks  << '\t' 
+              << "tauTrk "         << m_TauTks << '\t'
+              << "hadShow "        << m_HadShw << '\t'
+              << "R "              << m_Ratio  << std::endl;
+    
+    m_tree->Fill();
+    
+    Xx = Xx + Dx;
+    
+    delete mu1;
+    delete sh1;
+
+  }
+  
+  m_tree->Write();
+  
+  m_output_file->cd("../");
+    
 }
 
 //====================================================================================================
@@ -1053,3 +1175,189 @@ void NeutrinosDetectionPaper::SetFluxAverages(TFile      * infile,
 
 //====================================================================================================
 
+void NeutrinosDetectionPaper::PropagateThroughEarth( const char * entry_model,
+                                                     const char * probability,
+                                                     const char * option,
+                                                     double f1, double f2, double f3 ){
+  
+
+  NeutrinoOscInVarDensity * m_Physics = new NeutrinoOscInVarDensity( m_mixpars );
+  
+  m_Physics->use_default_pars = false;
+  
+  bool  anti_nu   = false;
+  
+  m_output_file->mkdir(TString("EarthB") + TString("_") 
+                       + TString(entry_model) + ("_") 
+                       + TString(probability) + ("_") 
+                       + TString(option) )->cd(); //
+   
+  std::map<std::string, std::pair<int,int> > m_ProbIndex;
+  
+  m_ProbIndex["Pee"] = std::make_pair( 0, 0);
+  
+  // Argument "probability" tells if we are working with neutrinos (default) or anti-neutrinos ("a" in front)
+  
+  std::string Pxx( probability );
+  
+  unsigned found = Pxx.find("a");
+  
+  if ( found == 0 ) {
+    anti_nu  = true;
+    Pxx.erase(0,1);
+    std::cout << "PropagateThroughEarth> Will treat for anit-nu: " << Pxx << '\n';
+  } 
+
+  double m_Ex;
+  double m_Pb;
+  double m_PbV;
+  double m_Phi_e;
+  double m_Phi_m;
+  double m_Phi_t;
+
+  m_tree = new TTree("data","Data points");
+  
+  m_tree->Branch("Ex" , &m_Ex , "Ex/d");
+  m_tree->Branch("Pb" , &m_Pb , "Pb/d");
+  m_tree->Branch("PbV", &m_PbV, "PbV/d");
+  m_tree->Branch("Phi_e", &m_Phi_e, "Phi_e/d");
+  m_tree->Branch("Phi_m", &m_Phi_m, "Phi_m/d");
+  m_tree->Branch("Phi_t", &m_Phi_t, "Phi_t/d");
+    
+  DensityModels * density_Mod = (DensityModels*) new rhoEarthB(); 
+  
+  if ( anti_nu ) 
+    density_Mod->treat_as_AntiNu();
+  else 
+    density_Mod->treat_as_Nu();
+  
+  if( m_debug ) std::cout << "PropagateThroughEarth> checking sign in front of the out_model: " << density_Mod->m_sign << std::endl;
+  
+  double LMIN      = m_modelpars->GetPar("LMIN");
+  
+  double LMAX      = m_modelpars->GetPar("LMAX");
+
+  long double Ex   = (long double) m_modelpars->GetPar("Emin");
+  long double Emax = (long double) m_modelpars->GetPar("Emax");
+  long double dx   = (long double) m_modelpars->GetPar("Dx");  //this is the distance step
+  long double dE   = (long double) m_modelpars->GetPar("De");  //this is the energy step
+  
+  if (m_debug) std::cout << "PropagateThroughEarth> Constants: "   << '\n'
+                         << "LMIN " << LMIN << '\n'
+                         << "LMAX " << LMAX << std::endl;
+  
+  if (m_debug) std::cout << "PropagateThroughEarth> Mixing parameters: " 
+                         << "theta1 "   <<  m_Physics->m_input->GetPar1() << '\t'
+                         << "theta2 "   <<  m_Physics->m_input->GetPar2() << '\t'
+                         << "theta3 "   <<  m_Physics->m_input->GetPar3() << '\t'
+                         << "DM2 (32) " <<  m_Physics->m_input->GetPar4() << '\t'
+                         << "Dm2 (21) " <<  m_Physics->m_input->GetPar8() << '\n';
+  
+  int maxpars = (int)m_modelpars->GetPar(0);
+  
+  TF1 * profA = new TF1("profA", density_Mod, LMIN, LMAX, maxpars);
+  
+  for( int i=1; i <= maxpars; ++i) {
+    profA->SetParameter( ( i-1 ), (m_modelpars->GetPar(i))  );
+    std::cout << "PropagateThroughEarth> * par: " << (m_modelpars->GetPar(i)) << std::endl;
+  }
+  
+  m_Physics->initializeAngles();
+  
+  m_Physics->updateMixingMatrix();
+  
+  m_Physics->setPotential( profA );
+  
+  int k = 0;
+  
+  while ( Ex <= Emax ) {
+    
+    m_Physics->m_Ev = Ex;
+    
+    m_Physics->updateEab();
+    
+    matrix <std::complex< long double> >  * tmp;
+    tmp = new matrix<std::complex< long double> >(3,3);
+    
+    double long x1 = LMIN;
+    double long x2 = x1 + dx;
+    
+    int i = 0;
+    
+    while ( x2 <= LMAX ) {
+      
+      m_Physics->Eval_UFlavour( x2, x1 );
+      
+      if( i == 0) {
+        (*tmp) = (*m_Physics->m_Uf); 
+      } else
+        (*tmp) = prod( (*m_Physics->m_Uf), (*tmp) );
+      
+      x1  = x2;
+      x2 += dx;
+      
+      i += 1;
+      
+    }
+    
+    (*m_Physics->m_Uf) = (*tmp);
+    (*m_Physics->m_Ufd) = conj ( (*m_Physics->m_Uf) );
+    
+    m_Physics->calcProbabilities();
+    m_Physics->calcVacProbabilities( (LMAX-LMIN) );
+
+    //get the Transition probability A->B
+    
+    double d1 = (*m_Physics->m_Prob_AtoB)( m_ProbIndex[Pxx].first , m_ProbIndex[Pxx].second );
+    double d2 = (*m_Physics->m_VacProb_AtoB)( m_ProbIndex[Pxx].first , m_ProbIndex[Pxx].second );
+    
+    if ( ! (boost::math::isnan)(d1) ) {
+      
+      m_Ex  = Ex;
+      m_Pb  = d1;
+      m_PbV = d2;
+      
+      // Fluxes at entry point: f1, f2, f3
+      
+      m_Phi_e = m_Physics->Propagate( 0, f1, f2, f3 ); 
+      m_Phi_m = m_Physics->Propagate( 1, f1, f2, f3 ); 
+      m_Phi_t = m_Physics->Propagate( 2, f1, f2, f3 ); 
+      
+      m_tree->Fill();
+      
+    }     
+    
+    k += 1; 
+    
+    if ( Ex < 1.0E12 )
+      Ex += dE; // step in energy
+    else if ( Ex >=1.0E12 && Ex < 1.0E13 )
+      Ex += (dE*10.0); //step in energy
+    else if ( Ex >=1.0E13 && Ex < 1.0E14 )
+      Ex += (dE*100.0); //step in energy
+    else if ( Ex >=1.0E14 && Ex < 1.0E15 )
+      Ex += (dE*1000.0); //step in energy
+    else if ( Ex >=1.0E15 && Ex < 1.0E16 )
+      Ex += (dE*10000.0); //step in energy
+    else if ( Ex >=1.0E16 && Ex < 1.0E17 )
+      Ex += (dE*100000.0); //step in energy
+    else
+      Ex += (dE*1000000.0);
+    
+    delete tmp;
+    
+  }
+  
+  std::cout << "PropagateThroughEarth> max pts: " << k << std::endl;
+  
+  m_tree->Write();
+  
+  m_output_file->cd("../");
+  
+  delete profA;
+  delete density_Mod;
+  delete m_Physics;
+  
+  std::cout << "PropagateThroughEarth> all done " << std::endl;
+
+}

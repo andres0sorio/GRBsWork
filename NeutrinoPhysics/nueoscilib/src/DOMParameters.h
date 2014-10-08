@@ -248,7 +248,7 @@ class ParameterList {
   
   Parameters * Next() 
   {
-    return (Parameters*)(*m_iter)();
+    return (Parameters*)(*m_iter)(); //AO April 2014: Be carefull if the iteration steps at the last item
   }
   
 private:

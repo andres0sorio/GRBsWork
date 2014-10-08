@@ -25,25 +25,29 @@ int main(int iargv, char **argv) {
   avsteps.push_back("4. R as a function of sin2(theta_13) - for different dCP values - standard picture" );
   avsteps.push_back("5. R vs Ev energy - as in Olga Mena reference" );
 
+  //... Added Oct/2014 - AO
+  
+  avsteps.push_back("6. R vs phi_e fraction - standard picture - Form diff. star models" );
+  
+  avsteps.push_back("7. R vs a function of sin2(theta_13) - Form diff. star models" );
+  
   bool no_dataset = false;
-    
+  
   try {
     
     po::options_description desc("Allowed options");
     
     desc.add_options()
       ("help"     , "produce help message")
-      ("input"    , po::value<std::string>(), "input file")
-      ("config"   , po::value<std::string>(), "configuration file (.xml)")
+      ("input"    , po::value<std::string>(), "input file (.root) containing fluxes through diff. media")
+      ("config"   , po::value<std::string>(), "model configuration file (.xml)")
       ("neuosc"   , po::value<std::string>(), "neutrino oscillation data & input constants (.xml)")
-      ("steps"    , po::value<std::string>(), "excecute steps ( 1,2,3,... )")
+      ("steps"    , po::value<std::string>(), "excecution steps ( 1,2,3,... )")
       ;
     
     po::variables_map vm;
     po::store(po::parse_command_line(iargv, argv, desc), vm);
     po::notify(vm);
-    
-
 
     if (vm.count("help")) 
     {
@@ -106,7 +110,10 @@ int main(int iargv, char **argv) {
     return 1;
   
   Parameters *pars = parlist.Next();
-  
+
+  //pars = parlist.Next();
+  //pars = parlist.Next();
+
   //............................................................................................
 
   MixingParameterList mixparlist;
@@ -129,6 +136,10 @@ int main(int iargv, char **argv) {
   execSteps["3"] = false;
   execSteps["4"] = false;
   execSteps["5"] = false;
+
+  //... Added Oct/2014 - AO
+  execSteps["6"] = false;
+  execSteps["7"] = false;
   
   if( steps.size() != 0 )
   {
@@ -223,7 +234,7 @@ int main(int iargv, char **argv) {
     for( itr = dataset.begin(); itr != dataset.end(); ++itr) 
     {
      
-      //This is R vs the spectral index alpha for different models
+      //... This is R vs the spectral index alpha for different models
  
       std::cout << (*itr) << std::endl;
       
@@ -239,8 +250,6 @@ int main(int iargv, char **argv) {
 
       var   = (*itr).substr(pos1+1, (pos2-pos1-1) );
       
-      //std::cout << " option: " << var << std::endl;
-      
       nudet->SetFluxHistograms(infile, model.c_str(), "EarthB", "Vacuum", var.c_str() );
       
       nudet->MakeVariation02(model.c_str(), "EarthB","Vacuum", var.c_str(), 2.0, 3.1, 0.05); //
@@ -255,20 +264,20 @@ int main(int iargv, char **argv) {
   
   if( execSteps["3"] ) {
     
-    //This is R vs phi_e fraction
+    //This is R vs phi_e fraction - Standard picture
 
-    nudet->MakeVariation03("StdPicture", "EarthB","Vacuum", 0.0, 1000.0, 1.0); //
+    nudet->MakeVariation03("StdPicture", "EarthB", "Vacuum", 0.0, 1000.0, 1.0); //
   
   }
 
   if( execSteps["4"] ) {
 
-    // This is R as a function of sin2(theta_13) - for different dCP values
+    // This is R as a function of sin2(theta_13) - for different dCP values - Standard picture
     
     nudet->SetMixingParameters (  mixpars );
     
     nudet->MakeVariation04("StdPicture", "EarthB", "Vacuum", 0.0, 15.0, 1.0, 1.8, 0.0); //
-
+    
     nudet->MakeVariation04("StdPicture", "EarthB", "Vacuum", 0.0, 15.0, 1.0, 1.8, 180.0); //
 
     nudet->MakeVariation04("StdPicture", "EarthB", "Vacuum", 0.0, 15.0, 1.0, 2.0, 0.0); //
@@ -325,9 +334,23 @@ int main(int iargv, char **argv) {
     }
     
   }
+
+  //... Added Oct/2014 - AO
+
+  if( execSteps["6"] ) {
+    
+    //This is R vs phi_e fraction - for different star models
+    //Work in progress
+
+  }
+
+  if( execSteps["7"] ) {
+    
+    //This is R vs sin(theta13) - for different star models
+    //Work in progress
+    
+  }
   
-
-
   //
   
   delete nudet;
@@ -336,9 +359,9 @@ int main(int iargv, char **argv) {
   
   
   //............................................................................................
-
+  
   return 0;
   
 }
-  
+
 

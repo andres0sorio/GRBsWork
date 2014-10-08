@@ -8,10 +8,12 @@
 #include <MuTrackEvents.h>
 #include <ShowerEvents.h>
 #include <DensityModels.h>
+#include <ModelParameters.h>
 #include <TTree.h>
 #include <TFile.h>
 #include <TH1F.h>
 #include <NeutrinoOscInVacuum.h>
+#include <NeutrinoOscInVarDensity.h>
 
 /** @class NeutrinosDetectionPaper NeutrinosDetectionPaper.h
  *  
@@ -36,6 +38,8 @@ public:
   void MakeVariation03( const char *, const char *, const char *, double, double, double);
 
   void MakeVariation04( const char *, const char *, const char *, double, double, double, double, double);
+
+  void MakeVariation05( const char *, const char *, const char *, double, double, double, double, double);
   
   void MakeVariationStdPicture( const char *, const char *, const char *, double, double, double, double);
   
@@ -44,6 +48,10 @@ public:
   void ResetFluxHistograms( );
 
   void SetMixingParameters( MixingParameters * mixing) { m_mixpars = mixing; };
+  
+  void SetModelParameters( ModelParameters * modelpars) { m_modelpars = modelpars; };
+  
+  void PropagateThroughEarth( const char *, const char *, const char *, double f1, double f2, double f3);
   
 
 protected:
@@ -60,6 +68,7 @@ private:
   
   Parameters * m_config;
   MixingParameters * m_mixpars;
+  ModelParameters * m_modelpars;
   
   TFile * m_file;
   TFile * m_output_file;

@@ -106,19 +106,56 @@ double fBLimOne( double * x )
 
 }
 
-double dsigmady( double * x ) 
+double dsigmady( double * vars ) 
 {
 
-  double y = x[0];
+  //... AO april 2014 - fit made by Juan Carlos
+
+  if( 1 ) {
+     
+    double y  = vars[0];
+    double x  = log10( vars[1] ); // this takes into account the energy dependent factors( E in GeV )
+    
+    double a1 = -0.0163*pow(x,2.0) + 0.3877*x - 1.1905;
+    double a2 = -0.0222*pow(x,2.0) + 0.4222*x - 0.9833;
+    double b1 =  0.0168*pow(x,2.0) - 0.3683*x + 2.0038;
+    double b2 =  0.0139*pow(x,2.0) - 0.2739*x + 1.4233;
+    
+    double Ycut = exp((log(b1) - log(b2))/(a1 - a2));
+    
+    double Norm = b1*pow(Ycut,(1.0 - a1))/(1.0 -a1);
+    
+    Norm += b2*(1.0 - pow(Ycut,(1.0 - a2)))/(1.0 - a2);
+    
+    b1 = b1/Norm;
+    b2 = b2/Norm;
+    
+    double dsdy = 0.0;
+    
+    if ( y < Ycut )
+      dsdy = b1*pow(y,-a1);
+    else
+      dsdy = b2*pow(y,-a2);
+    
+    return dsdy;
+    
+  }
   
+  //... AO april 2014 - function used in Karla's thesis
+  if( 0 ) 
+  {
+    
+    double y = vars[0];
+    double a = -0.932537;
+    double b = 0.4231082;
+    double corr = 1.0 / 0.99284; // so integral = 1.0 x sigmaCC
+    return ( exp( a*y + b ) ) * corr;
+    
+  }
   
-  double a = -0.932537;
-  double b = 0.4231082;
-  double corr = 1.0 / 0.99284; // so integral = 1.0 x sigmaCC
-  return ( exp( a*y + b ) ) * corr;
-  
-  
-  //return ( 5.47 * exp (-y) );
+
+  //... AO preliminary version - not in use
+  // return ( 5.47 * exp (-y) );
   
 }
 
@@ -275,7 +312,7 @@ double m_Numu_integral_dxdy::DoEval(double y) const {
   
   double x1[2];
   double x2[1];
-  double x3[1];
+  double x3[2];
   
   double par[2];
   
@@ -293,7 +330,8 @@ double m_Numu_integral_dxdy::DoEval(double y) const {
   x2[0] = m_x;
 
   x3[0] = y;
-    
+  x3[1] = m_x; // energy in GeV
+      
   par[0] = m_input->GetPar3(); // alfa
   par[1] = m_input->GetPar("N_mu", m_x ); // N_beta = phi_mu
   
@@ -409,12 +447,13 @@ double m_Nutau_integral_dxdydz::DoEval(double z) const{
   double xx[2];
   double yy[2];
   double x2[1];
-  double x3[1];
+  double x3[2];
   
   double par[2];
   
   x3[0] = m_y;
-  
+  x3[1] = m_x;
+
   float E_tau = m_x * ( 1.0 - m_y );
   
   double sigma_CC_log10 = nu_xsec_interp->evaluateCC( log10( m_x ) );

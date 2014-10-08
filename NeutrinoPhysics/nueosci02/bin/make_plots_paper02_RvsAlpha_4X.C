@@ -73,37 +73,43 @@ void makePlots()
 
   v_Variation->Clear();
 
-  label = new TObjString( "dCP0" );
-  v_Variation->Add( label );
-  
-  label = new TObjString( "SetII-1E17-Var1-dCP0" );
-  v_Variation->Add( label );
-  
-  label = new TObjString( "SetII-1E17-Var2-dCP0" );
-  v_Variation->Add( label );
-
-  label = new TObjString( "SetII-1E17-Var3-dCP0" );
-  v_Variation->Add( label );
+  if( 1 ) 
+  {
     
-  makePlots(v_Variation, "EarthB", "Vacuum", "Set II", "alpha_SetII_dCP0", "detection-setII.root");
+    
+    label = new TObjString( "dCP0" );
+    v_Variation->Add( label );
+    
+    label = new TObjString( "SetII-1E17-Var1-dCP0" );
+    v_Variation->Add( label );
+    
+    label = new TObjString( "SetII-1E17-Var2-dCP0" );
+    v_Variation->Add( label );
+    
+    label = new TObjString( "SetII-1E17-Var3-dCP0" );
+    v_Variation->Add( label );
+    
+    makePlots(v_Variation, "EarthB", "Vacuum", "Set II", "alpha_SetII_dCP0", "detection-setII.root");
+    
+    v_Variation->Clear();
+    
+    label = new TObjString( "dCP1" );
+    v_Variation->Add( label );
+    
+    label = new TObjString( "SetII-1E17-Var1-dCP1" );
+    v_Variation->Add( label );
+    
+    label = new TObjString( "SetII-1E17-Var2-dCP1" );
+    v_Variation->Add( label );
+    
+    label = new TObjString( "SetII-1E17-Var3-dCP1" );
+    v_Variation->Add( label );
+    
+    makePlots(v_Variation, "EarthB", "Vacuum", "Set II", "alpha_SetII_dCP1", "detection-setII.root");
+    
+    v_Variation->Clear();
   
-  v_Variation->Clear();
-  
-  label = new TObjString( "dCP1" );
-  v_Variation->Add( label );
-  
-  label = new TObjString( "SetII-1E17-Var1-dCP1" );
-  v_Variation->Add( label );
-  
-  label = new TObjString( "SetII-1E17-Var2-dCP1" );
-  v_Variation->Add( label );
-
-  label = new TObjString( "SetII-1E17-Var3-dCP1" );
-  v_Variation->Add( label );
-  
-  makePlots(v_Variation, "EarthB", "Vacuum", "Set II", "alpha_SetII_dCP1", "detection-setII.root");
-  
-  v_Variation->Clear();
+  }
   
    
 }
@@ -243,8 +249,8 @@ void makePlots( TList      * variations,
     gg->SetMarkerColor(1);
     gg->SetFillColor(10);
 
-    gg->SetMaximum(2.5);
-    gg->SetMinimum(1.6);
+    gg->SetMaximum(2.2);
+    gg->SetMinimum(1.4);
     
     gg->GetXaxis()->SetLimits( 2.0, 3.1);
     

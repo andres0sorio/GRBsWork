@@ -48,7 +48,11 @@ NeutrinosInMediumPaper::NeutrinosInMediumPaper( MixingParameters * mixpars ) {
   m_Models["LinearFig4"]  = (DensityModels*) new linearPotencial(); // 
   m_Models["Linear1TeV"]  = (DensityModels*) new linearPotencial(); // 
   m_Models["Linear10TeV"] = (DensityModels*) new linearPotencial(); // 
-  
+
+  //AO added april 201
+  m_Models["SolarValidation"] = (DensityModels*) new solarPotencial();  // 
+  m_Models["StepValidationn"] = (DensityModels*) new stepPotencial();   // 
+
   m_file = new TFile("output.root","RECREATE");
   m_file->cd();
   

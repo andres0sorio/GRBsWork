@@ -32,7 +32,7 @@ int main(int iargv, char **argv) {
   
   //............................................................................................
 
-  std::string models("solar,linear");
+  std::string models("SolarValidation");
   
   NeutrinosInMediumPaper * neuOsc = new NeutrinosInMediumPaper( mixpars );
   
@@ -56,8 +56,6 @@ int main(int iargv, char **argv) {
   delete neuOsc;
   
   strs.clear();
-
-
 
   return 0;
   

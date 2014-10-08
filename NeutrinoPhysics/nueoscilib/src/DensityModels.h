@@ -295,7 +295,7 @@ public:
   virtual double operator() (double *x, double *p) {
 
     double xx = x[0]; // distance
-    double L1 = 2885.E3 * InveV;
+    double L1 = 2885.E3 * DensityModels::InveV;
       
     double A1 = p[0];
     double A2 = p[1];
@@ -320,7 +320,7 @@ public:
   virtual double operator() (double *x, double *p) {
     
     double p0 = p[0]; // A0
-    double p1 = p[1]*InveV; //r0 1/eV units
+    double p1 = p[1] * DensityModels::InveV; //r0 1/eV units
     double xx = x[0];
     
     return m_sign* ( p0*TMath::Exp(- xx / p1) );

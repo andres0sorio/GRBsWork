@@ -139,7 +139,7 @@
       1.0e13
     </Par>
   </ModelParameters>
-  <ModelParameters Id="Solar">
+  <ModelParameters Id="SolarValidation">
     <Par Id="0" Name="MaxPars">
       2.0
     </Par>

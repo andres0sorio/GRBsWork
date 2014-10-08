@@ -27,7 +27,7 @@ double GetEarthDensity( double x )
   double xxx = pow(x,3);
   
   if( x < 0.192 )
-    value = 13.0885 - 8.8381*x*x;
+    value = 13.0885 - 8.8381*xx; /// AO dec 2013: corrected should be 8.8381*x^2
   else if( x > 0.192 && x < 0.546 )
     value = 12.5815 - 1.2638 * x - 3.6426 * xx - 5.5281 * xxx;
   else if( x > 0.546 && x < 0.895 ) 
@@ -68,8 +68,8 @@ void m_rho_dt::SetParameters( double v_, double y0_, double r0_, double phi_)
   
   m_v = v_;
   m_y0 = y0_;
-   m_phi = (3.0*PI/2.0) - phi_;
-   m_r0 = r0_;
+  m_phi = (3.0*PI/2.0) - phi_;
+  m_r0 = r0_;
    
 }
 
@@ -98,7 +98,8 @@ PShadow::PShadow() {
   
   nu_xsec_interp = new Interpolation( "XSec_neut.dat" );
   antinu_xsec_interp = new Interpolation ( "XSec_anti.dat");
-  
+
+  // From Ref[] Physics Reports 458 (2008) 173-246
   m_d  = 2.0E5;
   m_r0 = 6378.0E5;
   m_C  = 3.0E10;
@@ -184,7 +185,14 @@ PShadow::PShadow( const std::string & infile ) {
   delete m_in;
 
   m_full_calculation = false;
-      
+
+  // From Ref[] Physics Reports 458 (2008) 173-246
+  m_d  = 2.0E5;
+  m_r0 = 6378.0E5; 
+  m_C  = 3.0E10;
+  m_NA = 6.0221415E23;
+  m_y0 = m_r0 - m_d;
+ 
 }
 
 
