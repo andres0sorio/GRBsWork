@@ -355,17 +355,14 @@ void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target,
     MuTrackEvents * mu1 = new MuTrackEvents("../data/XSec_neut.dat", "../data/XSec_anti.dat", 
                                             "../data/pshadow-at-180.dat", m_config );
     
-    /*
     double TkSum = mu1->Evaluate( );
 
     m_MuTks  = mu1->m_NuMuTracks;
     m_TauTks = mu1->m_NuTauTracks;
-    */
-
+    
     ShowerEvents * sh1 =  new ShowerEvents("../data/XSec_neut.dat", "../data/XSec_anti.dat", 
                                            "../data/pshadow-at-180.dat", m_config );
-
-    /*
+    
     m_HadShw   = sh1->Evaluate( );
     
     m_HadShwE  = sh1->m_CCNuShower;
@@ -375,7 +372,6 @@ void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target,
     m_HadShwNC = sh1->m_NCShower;
     
     m_Ratio    = TkSum / m_HadShw;
-    */
 
     std::cout << "NeutrinosDetectionPaper> "
               << m_Xx     << '\t'
