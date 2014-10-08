@@ -30,7 +30,7 @@
       1.0e10
     </Par>
     <Par Id="9" Name="De">
-      1.0e9
+      1.0e10
     </Par>
   </ModelParameters>
   <ModelParameters Id="ZeroPt">

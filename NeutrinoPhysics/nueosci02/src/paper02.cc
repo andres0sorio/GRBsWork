@@ -102,7 +102,7 @@ int main(int iargv, char **argv) {
 
   //............................................................................................
   
-  ParameterList parlist;
+  ParameterList parlist; // This configures the integration 
   
   if (parlist.ParseFile( config.c_str() ) == 0) 
     std::cout << "ParameterList> opened file: " << config << '\n';
@@ -111,12 +111,9 @@ int main(int iargv, char **argv) {
   
   Parameters *pars = parlist.Next();
 
-  //pars = parlist.Next();
-  //pars = parlist.Next();
-
   //............................................................................................
 
-  MixingParameterList mixparlist;
+  MixingParameterList mixparlist; // This configures mixing angles / masses parameters
   
   if (mixparlist.ParseFile( neuosc.c_str() ) == 0) 
     std::cout << "MixingParameterList> opened file: " << neuosc << '\n';
@@ -217,7 +214,7 @@ int main(int iargv, char **argv) {
 
     nudet->MakeVariationStdPicture("EarthB","Vacuum", "dCP0", 2.0, 3.1, 0.05, 0.0); // 
 
-    nudet->MakeVariationStdPicture("EarthB","Vacuum", "dCP1", 2.0, 3.1, 0.05, 180.0); // 
+    //nudet->MakeVariationStdPicture("EarthB","Vacuum", "dCP1", 2.0, 3.1, 0.05, 180.0); // 
         
   }
   

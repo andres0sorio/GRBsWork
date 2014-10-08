@@ -299,13 +299,11 @@ void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target,
                                                       double phase)
 {
   
-  //Make the variation for the Standard Picture 1:1:1
-  
-  InitOutput("StdPicture", target, source, option);
-  
+  // Make the variation for the Standard Picture 1:1:1
+   
   NeutrinoOscInVacuum * m_Physics_Vacuum =  new NeutrinoOscInVacuum( m_mixpars );
   
-  m_Physics_Vacuum->use_default_pars = false; // read parameters from file
+  m_Physics_Vacuum->use_default_pars = false; // -> read parameters from xml file
   
   m_Physics_Vacuum->setPhase( phase );
   
@@ -342,24 +340,11 @@ void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target,
   TString Source = TString("Vacuum") + TString("_") + TString(option);
   
   this->SetFluxHistograms( m_output_file, "StdPicture", "EarthB", Source.Data(), "RvsAlpha" );
+
+  InitOutput("StdPicture", target, source, option);
   
-  ///
-  // Set N_betas 
-  /*
-    m_config->SetPar("N_e", (m_Physics_Vacuum->m_phi_e_f) );
-    m_config->SetPar("N_mu", (m_Physics_Vacuum->m_phi_mu_f) );
-    m_config->SetPar("N_tau", (m_Physics_Vacuum->m_phi_tau_f) );
-    
-    double N1bar = (m_Physics_Vacuum->m_phi_e_f);
-    double N2bar = (m_Physics_Vacuum->m_phi_mu_f);
-    double N3bar = (m_Physics_Vacuum->m_phi_tau_f);
-    
-    m_config->SetPar("N_ae", N1bar );
-    m_config->SetPar("N_amu", N2bar );
-    m_config->SetPar("N_atau", N3bar );
-  */
-  
-  // Loop over the parameter
+  // Loop over the varying parameter
+
   m_Xx = Xmin;
   
   m_config->UseVaryingNbeta( true );
@@ -373,14 +358,17 @@ void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target,
     MuTrackEvents * mu1 = new MuTrackEvents("../data/XSec_neut.dat", "../data/XSec_anti.dat", 
                                             "../data/pshadow-at-180.dat", m_config );
     
+    /*
     double TkSum = mu1->Evaluate( );
-    
+
     m_MuTks  = mu1->m_NuMuTracks;
     m_TauTks = mu1->m_NuTauTracks;
-    
+    */
+
     ShowerEvents * sh1 =  new ShowerEvents("../data/XSec_neut.dat", "../data/XSec_anti.dat", 
                                            "../data/pshadow-at-180.dat", m_config );
-    
+
+    /*
     m_HadShw   = sh1->Evaluate( );
     
     m_HadShwE  = sh1->m_CCNuShower;
@@ -390,7 +378,8 @@ void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target,
     m_HadShwNC = sh1->m_NCShower;
     
     m_Ratio    = TkSum / m_HadShw;
-    
+    */
+
     std::cout << "NeutrinosDetectionPaper> "
               << m_Xx     << '\t'
               << m_MuTks  << '\t' 
