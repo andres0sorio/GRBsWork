@@ -5,6 +5,7 @@
 
 // local
 #include "NeutrinosDetectionPaper.h"
+#include <stdlib.h>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : NeutrinosDetectionPaper
@@ -21,6 +22,26 @@ NeutrinosDetectionPaper::NeutrinosDetectionPaper( Parameters * pars ) : Graphics
 
   m_config = pars;
   m_output_file = new TFile("detection.root","RECREATE");
+
+  char* pPath;
+  pPath = getenv ("PAPER_DATA");
+
+  if ( pPath != NULL) {
+    m_data_path = std::string( pPath );
+    std::cout << "NeutrinosDetectionPaper> Paper data path set to: " << m_data_path << std::endl;
+  }
+  else {
+    std::cout << "NeutrinosDetectionPaper> PAPER_DATA envirnoment variable not found! " << std::endl;
+    exit(1);
+  }
+
+  m_data_pshadow   = m_data_path;
+  m_data_xsec_neut = m_data_path;
+  m_data_xsec_anti = m_data_path;
+  
+  m_data_pshadow.append("/pshadow-at-180.dat");
+  m_data_xsec_neut.append("/XSec_neut.dat");
+  m_data_xsec_anti.append("/XSec_anti.dat" );
   
   ///Set energy bins
 
@@ -125,7 +146,7 @@ void NeutrinosDetectionPaper::MakeVariation01(const char * model, const char * t
     
     convolveXsec * ff = new convolveXsec();
     
-    ff->SetData("../data/XSec_neut.dat", "../data/XSec_anti.dat", "../data/pshadow-at-180.dat");
+    ff->SetData(m_data_xsec_neut.c_str(), m_data_xsec_anti.c_str(), m_data_pshadow.c_str());
     ff->SetParameters( m_config );
     
     TH1F * h1C = (TH1F*)m_flux_histos[ itr->first ]->Clone( itr->second.c_str() );
@@ -174,7 +195,7 @@ void NeutrinosDetectionPaper::MakeVariation01(const char * model, const char * t
     
     convolveXsecbar * ff = new convolveXsecbar();
     
-    ff->SetData("../data/XSec_neut.dat", "../data/XSec_anti.dat", "../data/pshadow-at-180.dat");
+    ff->SetData(m_data_xsec_neut.c_str(), m_data_xsec_anti.c_str(), m_data_pshadow.c_str());
     ff->SetParameters( m_config );
     
     TH1F * h1C = (TH1F*)m_flux_histos[ itr->first ]->Clone( itr->second.c_str() );
@@ -356,16 +377,16 @@ void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target,
     
     m_config->SetPar3( m_Xx ); // par3 == alpha
     
-    MuTrackEvents * mu1 = new MuTrackEvents("../data/XSec_neut.dat", "../data/XSec_anti.dat", 
-                                            "../data/pshadow-at-180.dat", m_config );
+    MuTrackEvents * mu1 = new MuTrackEvents(m_data_xsec_neut.c_str(), m_data_xsec_anti.c_str(), 
+                                            m_data_pshadow.c_str(), m_config );
     
     double TkSum = mu1->Evaluate( );
 
     m_MuTks  = mu1->m_NuMuTracks;
     m_TauTks = mu1->m_NuTauTracks;
 
-    ShowerEvents * sh1 =  new ShowerEvents("../data/XSec_neut.dat", "../data/XSec_anti.dat", 
-                                           "../data/pshadow-at-180.dat", m_config );
+    ShowerEvents * sh1 =  new ShowerEvents(m_data_xsec_neut.c_str(), m_data_xsec_anti.c_str(), 
+                                           m_data_pshadow.c_str(), m_config );
     
     m_HadShw   = sh1->Evaluate( );
     
@@ -432,16 +453,16 @@ void NeutrinosDetectionPaper::MakeVariation02(const char * model,
     
     m_config->SetPar3( m_Xx ); // Par3 == alpha
     
-    MuTrackEvents * mu1 = new MuTrackEvents("../data/XSec_neut.dat", "../data/XSec_anti.dat", 
-                                            "../data/pshadow-at-180.dat", m_config );
+    MuTrackEvents * mu1 = new MuTrackEvents(m_data_xsec_neut.c_str(), m_data_xsec_anti.c_str(), 
+                                            m_data_pshadow.c_str(), m_config );
     
     double TkSum = mu1->Evaluate( );
     
     m_MuTks  = mu1->m_NuMuTracks;
     m_TauTks = mu1->m_NuTauTracks;
     
-    ShowerEvents * sh1 =  new ShowerEvents("../data/XSec_neut.dat", "../data/XSec_anti.dat", 
-                                           "../data/pshadow-at-180.dat", m_config );
+    ShowerEvents * sh1 =  new ShowerEvents(m_data_xsec_neut.c_str(), m_data_xsec_anti.c_str(), 
+                                           m_data_pshadow.c_str(), m_config );
     
     m_HadShw = sh1->Evaluate( );
     
@@ -520,16 +541,16 @@ void NeutrinosDetectionPaper::MakeVariation03(const char * model,
     m_config->SetPar("N_amu", phi_nmu_fr );
     m_config->SetPar("N_atau", phi_ntau_fr );
   
-    MuTrackEvents * mu1 = new MuTrackEvents("../data/XSec_neut.dat", "../data/XSec_anti.dat", 
-                                            "../data/pshadow-at-180.dat", m_config );
+    MuTrackEvents * mu1 = new MuTrackEvents(m_data_xsec_neut.c_str(), m_data_xsec_anti.c_str(), 
+                                            m_data_pshadow.c_str(), m_config );
     
     double TkSum = mu1->Evaluate( );
     
     m_MuTks  = mu1->m_NuMuTracks;
     m_TauTks = mu1->m_NuTauTracks;
     
-    ShowerEvents * sh1 =  new ShowerEvents("../data/XSec_neut.dat", "../data/XSec_anti.dat", 
-                                           "../data/pshadow-at-180.dat", m_config );
+    ShowerEvents * sh1 =  new ShowerEvents(m_data_xsec_neut.c_str(), m_data_xsec_anti.c_str(), 
+                                           m_data_pshadow.c_str(), m_config );
     
     m_HadShw = sh1->Evaluate( );
     
@@ -628,16 +649,16 @@ void NeutrinosDetectionPaper::MakeVariation04(const char * model,
     m_config->SetPar("N_amu", N2bar );
     m_config->SetPar("N_atau", N3bar );
     
-    MuTrackEvents * mu1 = new MuTrackEvents("../data/XSec_neut.dat", "../data/XSec_anti.dat", 
-                                            "../data/pshadow-at-180.dat", m_config );
+    MuTrackEvents * mu1 = new MuTrackEvents(m_data_xsec_neut.c_str(), m_data_xsec_anti.c_str(), 
+                                            m_data_pshadow.c_str(), m_config );
     
     double TkSum = mu1->Evaluate( );
     
     m_MuTks  = mu1->m_NuMuTracks;
     m_TauTks = mu1->m_NuTauTracks;
     
-    ShowerEvents  * sh1 = new ShowerEvents("../data/XSec_neut.dat", "../data/XSec_anti.dat",
-                                           "../data/pshadow-at-180.dat", m_config );
+    ShowerEvents  * sh1 = new ShowerEvents(m_data_xsec_neut.c_str(), m_data_xsec_anti.c_str(),
+                                           m_data_pshadow.c_str(), m_config );
     
     m_HadShw = sh1->Evaluate( );
     

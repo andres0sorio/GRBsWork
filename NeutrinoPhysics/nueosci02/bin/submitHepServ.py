@@ -24,7 +24,10 @@ input_sandbox = ['matrix_config_SetI.xml',
                  'config.xml',
                  'config.dtd',
                  'paper02.exe',
-                 '../../nueoscilib/lib/libnueosci.so']
+                 '../../nueoscilib/lib/libnueosci.so',
+                 '../data/XSec_neut.dat',
+                 '../data/XSec_anti.dat',
+                 '../data/pshadow-at-180.dat']
 
 script = './local.csh'
 output = 'detection.root'

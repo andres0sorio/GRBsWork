@@ -143,9 +143,9 @@ PShadow::PShadow( const std::string & infile ) {
   m_in = new std::ifstream(infile.c_str(), ifstream::in);
   
   if(!m_in->is_open()) {
-    //std::cout << "Data> cannot open file" << std::endl;
+    std::cout << "PShadow> cannot open file " << infile << std::endl;
   } else { 
-    //std::cout << "Data> file is now open" << std::endl;
+    std::cout << "PShadow> file is now open " << infile << std::endl;
   }
   
   m_xx.clear();

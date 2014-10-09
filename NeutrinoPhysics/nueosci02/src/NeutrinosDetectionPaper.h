@@ -105,6 +105,12 @@ private:
   float m_e_max;
   float m_e_min;
   
+  std::string m_data_path;
+
+  std::string m_data_pshadow;
+  std::string m_data_xsec_neut;
+  std::string m_data_xsec_anti;
+  
   std::map<int,double> m_energy_bin;
   
   std::map<std::string,TH1F*> m_flux_histos;
