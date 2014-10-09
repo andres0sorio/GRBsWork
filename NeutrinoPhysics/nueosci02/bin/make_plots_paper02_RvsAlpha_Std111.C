@@ -44,10 +44,10 @@ void makePlots()
   label = new TObjString( "dCP0" );
   v_Variation->Add( label );
   
-  label = new TObjString( "SetI-1E17-Var1-dCP0" );
+  label = new TObjString( "dCP180" );
   v_Variation->Add( label );
   
-  makePlots(v_Variation, "EarthB", "Vacuum", "Set I", "alpha_SetI_dCP0", "detection.root");
+  makePlots(v_Variation, "EarthB", "Vacuum", "Set I", "RvsAlfa_SetI", "detection-RvsAlfa-Std111.root");
 
   v_Variation->Clear();
 
