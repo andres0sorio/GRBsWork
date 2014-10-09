@@ -6,7 +6,7 @@
       100.0
     </Par1>
     <Par2 Name="E_mu_Cut">
-      1.0E7
+      1.0E6
     </Par2>
     <Par3 Name="alfa">
       2.0
@@ -42,10 +42,9 @@
       1.0
     </Par13>
     <Par14 Name="PShadow switch">
-      1.0
+      0.0
     </Par14>
   </Parameters>
-
   <Parameters Id="2">
     <Par1 Name="E_mu_Th">
       1000.0
@@ -90,7 +89,6 @@
       1.0
     </Par14>
   </Parameters>
-
   <Parameters Id="3">
     <Par1 Name="E_mu_Th">
       5000.0

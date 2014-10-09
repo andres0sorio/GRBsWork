@@ -297,8 +297,9 @@ void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target,
                                                       double Xmax, 
                                                       double Dx)
 {
-  
-  // Make the variation for the Standard Picture 1:1:1
+ 
+  //.......................................................................................................................
+  // Make the variation of R vs Alpha for the Standard Picture 1:1:1
   
   NeutrinoOscInVacuum * m_Physics_Vacuum =  new NeutrinoOscInVacuum( m_mixpars );
   
@@ -310,8 +311,9 @@ void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target,
   
   std::cout << "MakeVariationStdPicture> alpha: " << m_config->GetPar3() << " dCP: " << m_Physics_Vacuum->m_dCP << std::endl;
   
+  //.......................................................................................................................
   //
-  // -- Propagation through Earth -- (Oscillations in var density is energy dependent).
+  // Propagation through Earth -- (Oscillations in var density is energy dependent).
   // 06/Oct/2014 - AO
   // Added propragation through Earth
   //
@@ -329,14 +331,16 @@ void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target,
   
   ModelParameters *modpars =  modparlist.GetParameters(target);
   
+  //.......................................................................................................................
+
+  TString Source = TString("Vacuum") + TString("_") + TString(option);
+
   this->SetModelParameters( modpars );
-  
   this->PropagateThroughEarth( "EarthB", "Vacuum" , option, "Pee" ,  1.0, 1.0, 1.0 );
   this->PropagateThroughEarth( "EarthB", "Vacuum" , option, "aPee",  1.0, 1.0, 1.0 );
-  
-  TString Source = TString("Vacuum") + TString("_") + TString(option);
-  
   this->SetFluxHistograms( m_output_file, "StdPicture", "EarthB", Source.Data(), "RvsAlpha" );
+
+  //.......................................................................................................................
 
   InitOutput("StdPicture", target, source, option);
   
@@ -359,7 +363,7 @@ void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target,
 
     m_MuTks  = mu1->m_NuMuTracks;
     m_TauTks = mu1->m_NuTauTracks;
-    
+
     ShowerEvents * sh1 =  new ShowerEvents("../data/XSec_neut.dat", "../data/XSec_anti.dat", 
                                            "../data/pshadow-at-180.dat", m_config );
     
@@ -384,8 +388,9 @@ void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target,
     
     m_Xx = m_Xx + Dx;
     
-    delete mu1;
     delete sh1;
+    delete mu1;
+    
     
   }
   
@@ -406,7 +411,11 @@ void NeutrinosDetectionPaper::MakeVariation02(const char * model,
                                               double Xmax, 
                                               double Dx)
 {
-  
+
+  //.......................................................................................................................
+  // This Code should produce a graph of R vs Alpha for the Models A,B,C
+  // You need to pass the generated files with fluxes up to Earth
+
   InitOutput(model, target, source, option);
   
   // Here is the loop for the parameter variation
@@ -474,13 +483,13 @@ void NeutrinosDetectionPaper::MakeVariation03(const char * model,
                                               double Dx)
 {
   
-  InitOutput(model, target, source, "phi_nue");
-
   //
   // This is the method for calculating R as function of the neutrino fraction phi_nue
+  // StdPicture - reproduces results as in literature
   //
-  // Here is the loop for the parameter variation
-  
+
+  InitOutput(model, target, source, "phi_nue");
+
   float phi_nue = 0.0;
   float phi_ne_fr = 0.0;
   float phi_nmu_fr = 0.0;
@@ -489,6 +498,8 @@ void NeutrinosDetectionPaper::MakeVariation03(const char * model,
   m_config->SetPar3( 2.0 );
 
   phi_nue = Xmin;
+
+  // Here is the loop for the parameter variation
   
   while ( 1 ) {
     
@@ -674,78 +685,10 @@ void NeutrinosDetectionPaper::MakeVariation05(const char * model,
                                               double phase )
 {
 
-  ///
   /// October 06 2014 - AO
   /// Adding - 
   /// Variation of R as a function of theta13 - for any model
   /// Work in progress
-  ///
-
-
-  std::stringstream Var;
-  
-  Var << "Sin2Q13-" << alpha << "-" << phase;
-    
-  InitOutput(model, target, source, Var.str().c_str() );
-  
-  double Xx = Xmin;
-  
-  // Here is the loop for the parameter variation
-  
-  m_config->UseVaryingNbeta( true );
-  
-  std::cout << (*m_config) << std::endl;
-
-  std::cout << "MakeVariation05> alpha: " << m_config->GetPar3() << " dCP: " << std::endl;
-
-  while ( 1 ) {
-    
-    if( Xx >= Xmax ) break;
-    
-    double sin2theta = pow ( sin( Xx * M_PI / 180.0), 2.0 );
-
-    MuTrackEvents * mu1 = new MuTrackEvents("../data/XSec_neut.dat", "../data/XSec_anti.dat", 
-                                            "../data/pshadow-at-180.dat", m_config );
-    
-    double TkSum = mu1->Evaluate( );
-    
-    m_MuTks  = mu1->m_NuMuTracks;
-    m_TauTks = mu1->m_NuTauTracks;
-    
-    ShowerEvents * sh1 =  new ShowerEvents("../data/XSec_neut.dat", "../data/XSec_anti.dat", 
-                                           "../data/pshadow-at-180.dat", m_config );
-    
-    m_HadShw = sh1->Evaluate( );
-    
-    m_HadShwE = sh1->m_CCNuShower;
-    
-    m_HadShwT = sh1->m_CCNutauShower;
-    
-    m_HadShwNC = sh1->m_NCShower;
-    
-    m_Ratio  = TkSum / m_HadShw;
-
-    m_Xx = sin2theta;
-    
-    std::cout << "NeutrinosDetectionPaper> "
-              << "sin(theta13) "   << m_Xx     << '\t'
-              << "muTrk "          << m_MuTks  << '\t' 
-              << "tauTrk "         << m_TauTks << '\t'
-              << "hadShow "        << m_HadShw << '\t'
-              << "R "              << m_Ratio  << std::endl;
-    
-    m_tree->Fill();
-    
-    Xx = Xx + Dx;
-    
-    delete mu1;
-    delete sh1;
-
-  }
-  
-  m_tree->Write();
-  
-  m_output_file->cd("../");
     
 }
 

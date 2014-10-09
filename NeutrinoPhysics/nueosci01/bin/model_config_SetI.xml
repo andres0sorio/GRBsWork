@@ -41,7 +41,7 @@
       1.0e12
     </Par>
     <Par Id="4" Name="Rmin">
-      3.202e+15
+      3.2027e+15
     </Par>
     <Par Id="5" Name="CM.to.invEV">
       5.076e+4
@@ -50,7 +50,7 @@
       1.52280e+17
     </Par>
     <Par Id="7" Name="LMIN">
-      3.20270e+15
+      3.2027e+15
     </Par>
     <Par Id="8" Name="Emin">
       1.0E11
@@ -59,7 +59,7 @@
       1.0E17
     </Par>
     <Par Id="10" Name="Dx">
-      1.00e14
+      0.5e14
     </Par>
     <Par Id="11" Name="De">
       1.0e9
@@ -109,7 +109,7 @@
       1.0e17
     </Par>
     <Par Id="14" Name="Dx">
-      1.00e14
+      0.5e14
     </Par>
     <Par Id="15" Name="De">
       1.0e9
@@ -164,7 +164,7 @@
       1.0e17
     </Par>
     <Par Id="5" Name="Dx">
-      1.00e14
+      0.5e14
     </Par>
     <Par Id="6" Name="De">
       1.0e9
