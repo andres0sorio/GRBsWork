@@ -243,7 +243,7 @@ int main(int iargv, char **argv) {
   
   // Variation 1 ( IceCube! -> R calculation as a function of alpha )
   // 
-  // -- (Start from the output of paper01 which contains the fluxes at the detector for
+  // (Start from the output of paper01 which contains the fluxes at the detector for
   //     a specific model )
   //
   

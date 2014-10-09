@@ -27,7 +27,7 @@
       0.00008
     </Par8>
     <Par9 Name="dCP">
-      180.0
+      0.0
     </Par9>
   </MixingParameters>
 </MixingParameterList>

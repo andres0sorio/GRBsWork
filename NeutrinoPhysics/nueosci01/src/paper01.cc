@@ -21,7 +21,8 @@ int main(int iargv, char **argv) {
   std::string steps;
   std::string earth;
   std::string antinu;
-    
+  std::string dCP;
+  
   try {
     
     po::options_description desc("Allowed options");
@@ -37,7 +38,7 @@ int main(int iargv, char **argv) {
       ("steps"    , po::value<std::string>(), "excecute steps ( 1,2,3,... )")
       ("earth"    , po::value<std::string>(), "select earth model (EarthA, EarthB)")
       ("antinu"   , po::value<std::string>(), "select if you want to study with antinu ( Ax = -1.0*Ax : step4)")
-      
+      ("dCP"      , po::value<std::string>(), "dCP phase in degrees ( 0.0, 180.0 , ... )")
       ;
     
     po::variables_map vm;
@@ -84,6 +85,14 @@ int main(int iargv, char **argv) {
     } 
     else {
       std::cout << "using dm2 and dM2 read from the configuration file \n";
+    }
+    
+    if (vm.count("dCP")) {
+      dCP = vm["dCP"].as<std::string>();
+      std::cout << "dCP value fixed to " << dCP << std::endl;
+    } 
+    else {
+      std::cout << "using the default value of dCP (as read in xml config) \n";
     }
     
     if (vm.count("modfile")) {
@@ -156,7 +165,6 @@ int main(int iargv, char **argv) {
       mixpars->SetPar2( atof( theta[1].c_str() ) );
       mixpars->SetPar3( atof( theta[2].c_str() ) );
     }
-    std::cout << (*mixpars) << std::endl;
   }
   
   if( dmass.size() != 0 )
@@ -172,11 +180,19 @@ int main(int iargv, char **argv) {
       mixpars->SetPar4( atof( dmasses[0].c_str() ) ); // DM2 = DM(32)
       mixpars->SetPar8( atof( dmasses[1].c_str() ) ); // Dm2 = DM(12)
     }
-    std::cout << (*mixpars) << std::endl;
   }
   
-  std::cout << " ---MixingParameterList: read ---" << '\n';
+  if( dCP.size() != 0 )
+  {
+    mixpars->SetPar9( atof( dCP.c_str() ) ); // dCP
+  }
 
+  std::cout << " ---MixingParameterList: after manual modification ---" << '\n';
+  
+  std::cout << (*mixpars) << std::endl;
+  
+  std::cout << " ---MixingParameterList: done ---" << '\n';
+  
   //............................................................................................
 
   ModelParameterList modparlist;
@@ -212,7 +228,7 @@ int main(int iargv, char **argv) {
     std::cout << (*modpars) << std::endl;
   }
 
-  std::cout << " ---ModelParameterList: read ---" << '\n';
+  std::cout << " ---ModelParameterList: done ---" << '\n';
   
   //............................................................................................
 
