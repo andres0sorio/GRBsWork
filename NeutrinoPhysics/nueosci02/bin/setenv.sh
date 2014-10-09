@@ -1,7 +1,7 @@
 
-GRBWORKPATH=/scratch/Exploration/GIT/GRBsWork/NeutrinoPhysics
+GRBWORKPATH=${PWD%"/nue"*}
 
-PAPER_DATA=/scratch/Exploration/GIT/GRBsWork/NeutrinoPhysics/nueosci02/data
+PAPER_DATA=$GRBWORKPATH/nueosci02/data
 
 export LD_LIBRARY_PATH=$GRBWORKPATH/nueoscilib/lib:$LD_LIBRARY_PATH
 
