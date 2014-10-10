@@ -233,12 +233,6 @@ int main(int iargv, char **argv) {
   } else 
     execSteps["1"] = true; 
   
-  // AO - Oct 2014 
-  // if( execSteps["2"] && ( !execSteps["0"] ) )  { 
-  //  execSteps["1"] = true; // special case 1&2 have to be done
-  //  std::cout << "Both steps 1&2 will be executed" << std::endl;
-  // }
-  
   //............................................................................................
   
   //Setup dataset to run over
@@ -330,9 +324,9 @@ int main(int iargv, char **argv) {
       pos2  = (*itr).rfind(".");
       pos1  = (*itr).rfind("Var", pos2-1);
 
-      var   = (*itr).substr(pos1, (pos2-pos1-1) );
+      var   = (*itr).substr(pos1, (pos2-pos1) );
       
-      std::cout << "paper02> MakeVariation02 with option " << var << std::endl;
+      std::cout << "paper02> MakeVariation02 with option " << var << " Model " << model << std::endl;
       
       nudet->SetFluxHistograms(infile, model.c_str(), "EarthB", "Vacuum", var.c_str() );
       

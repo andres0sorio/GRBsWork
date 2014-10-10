@@ -20,6 +20,8 @@ for data in datasets:
 
 input_sandbox = ['config.xml',
                  'config.dtd',
+ 		 'matrix_config.dtd',
+		 'matrix_config.xml',
                  'paper02.exe',
                  '../../nueoscilib/lib/libnueosci.so',
                  '../data/XSec_neut.dat',
@@ -46,7 +48,7 @@ mg.ignorefailed = True
 
 #Job declaration and initialisation:
 myjob = Job( application = app, backend = 'Local' )
-myjob.name = 'nueosc.StdPicture'
+myjob.name = 'Paper2.All.RvsAlfa'
 myjob.splitter = sp
 myjob.merger = mg
 
