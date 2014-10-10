@@ -140,7 +140,7 @@ int main(int iargv, char **argv) {
   else
     return 1;
   
-  Parameters *pars = parlist.Next();
+  Parameters *integ_pars = parlist.Next();
 
   //............................................................................................
 
@@ -216,6 +216,7 @@ int main(int iargv, char **argv) {
   execSteps["5"] = false;
 
   //... Added Oct/2014 - AO
+
   execSteps["6"] = false;
   execSteps["7"] = false;
   
@@ -232,11 +233,11 @@ int main(int iargv, char **argv) {
   } else 
     execSteps["1"] = true; 
   
-  if( execSteps["2"] && ( !execSteps["0"] ) )  { 
-    execSteps["1"] = true; // special case 1&2 have to be done
-    std::cout << "Both steps 1&2 will be executed" << std::endl;
-  }
-  
+  // AO - Oct 2014 
+  // if( execSteps["2"] && ( !execSteps["0"] ) )  { 
+  //  execSteps["1"] = true; // special case 1&2 have to be done
+  //  std::cout << "Both steps 1&2 will be executed" << std::endl;
+  // }
   
   //............................................................................................
   
@@ -272,7 +273,6 @@ int main(int iargv, char **argv) {
     }
       
   }
-
   
   //............................................................................................
   
@@ -284,7 +284,7 @@ int main(int iargv, char **argv) {
   
   NeutrinosDetectionPaper * nudet;
     
-  nudet = new NeutrinosDetectionPaper( pars );
+  nudet = new NeutrinosDetectionPaper( integ_pars );
   
   //Work out first the standard picture
   
@@ -297,7 +297,7 @@ int main(int iargv, char **argv) {
 
     std::cout << "paper02> MakeVariationStdPicture with option " << Option << std::endl;
         
-    nudet->SetMixingParameters (  mixpars );
+    nudet->SetMixingParameters ( mixpars );
 
     nudet->MakeVariationStdPicture("EarthB","Vacuum", Option.c_str(), 2.0, 3.1, 0.05); //
     
@@ -328,9 +328,11 @@ int main(int iargv, char **argv) {
       model = (*itr).substr(pos1+1, (pos2-pos1-1) );
       
       pos2  = (*itr).rfind(".");
-      pos1  = (*itr).rfind("_", pos2-1);
+      pos1  = (*itr).rfind("Var", pos2-1);
 
-      var   = (*itr).substr(pos1+1, (pos2-pos1-1) );
+      var   = (*itr).substr(pos1, (pos2-pos1-1) );
+      
+      std::cout << "paper02> MakeVariation02 with option " << var << std::endl;
       
       nudet->SetFluxHistograms(infile, model.c_str(), "EarthB", "Vacuum", var.c_str() );
       

@@ -1,42 +1,24 @@
 import sys, os, stat, shutil
 #--------------------------------------------------------
 # submitting to HEP Server / Ganga / R vs alpha variation
-# StdPicture
+# All star models
 #--------------------------------------------------------
 
-dcp = ''
-xmlfi = ''
+datasets = []
 arguments = []
 
-use_file = 1 
+infile = open('all_datasets_models.dat','r')
 
-if   use_file == 1:
-    xmlfi = 'matrix_config_SetI.xml'
-elif use_file == 2:
-    xmlfi = 'matrix_config_SetII.xml'
-else:
-    print 'No configuration available'
-    sys.exit()
+for line in infile:
+    datasets.append(line[:-1])
+infile.close()
 
-dcp_vars = ['0','180']
-
-dmass_vars = ['0.0014','0.006','0.0032']
-
-for dcp in dcp_vars:
-    for dmass in dmass_vars:
-        dmasses = dmass + ',' + '0.00008'
+for data in datasets:
         values = []
-        values.append( xmlfi )
-        values.append( dmasses )
-        values.append( dcp )
+        values.append( data )
         arguments.append( values )
 
-input_sandbox = ['matrix_config_SetI.xml',
-                 'matrix_config_SetII.xml',
-                 'matrix_config.dtd',
-                 'model_config_Earth.xml',
-                 'model_config.dtd',
-                 'config.xml',
+input_sandbox = ['config.xml',
                  'config.dtd',
                  'paper02.exe',
                  '../../nueoscilib/lib/libnueosci.so',
@@ -44,8 +26,13 @@ input_sandbox = ['matrix_config_SetI.xml',
                  '../data/XSec_anti.dat',
                  '../data/pshadow-at-180.dat']
 
-script = './local-RvsAlfa.csh'
+for data in datasets:
+    input_sandbox.append( data )
+
+script = './local-RvsAlfa-Models.csh'
+
 output = 'detection.root'
+
 #--------------------------------------------------------
 
 app = Executable( exe=File( script ) )
@@ -63,7 +50,7 @@ myjob.name = 'nueosc.StdPicture'
 myjob.splitter = sp
 myjob.merger = mg
 
-myjob.outputsandbox = [output]
+# myjob.outputsandbox = [output]
 
 for input in input_sandbox:
     myjob.inputsandbox.append( File ( input ) )
