@@ -47,7 +47,13 @@ for model in models:
 					
 
 for dataset in datasets:
-	dataset.seek(-1, os.SEEK_END)
+	
+	if sys.version_info < (2,7):
+		dataset.seek(-1,2)
+	else:
+		dataset.seek(-1, os.SEEK_END)
+		
 	dataset.truncate()
 	dataset.close()
+
 
