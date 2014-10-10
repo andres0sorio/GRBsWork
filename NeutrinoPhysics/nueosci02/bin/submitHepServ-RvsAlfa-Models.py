@@ -52,7 +52,7 @@ myjob.name = 'Paper2.All.RvsAlfa'
 myjob.splitter = sp
 myjob.merger = mg
 
-# myjob.outputsandbox = [output]
+myjob.outputsandbox = [output]
 
 for input in input_sandbox:
     myjob.inputsandbox.append( File ( input ) )
