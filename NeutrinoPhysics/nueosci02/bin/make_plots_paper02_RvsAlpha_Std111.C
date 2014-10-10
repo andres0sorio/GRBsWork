@@ -57,7 +57,7 @@ void makePlots()
 void makePlots( TList      * variations,
                 const char * target,
                 const char * src,
-                const char * set,
+                const char * config,
                 const char * param, 
                 const char * infile ) 
 {
@@ -72,30 +72,36 @@ void makePlots( TList      * variations,
   
   TObjString *label;
   
-  //Models
+  // Setup depends on the number of variations
 
-  label = new TObjString( "StdPicture" );
-  v_Models->Add( label ); 
-
-  //Labels
+  int max = variations->GetEntries();
   
-  label = new TObjString( "1:1:1" );
-  v_Labels->Add( label ); 
+  std::cout << "Variations: " << max << std::endl;
+  
+  for( int k = 0; k < max; ++k ) {
+    
+    label = new TObjString( "StdPicture" );
+    v_Models->Add( label ); 
+    
+    //Labels
+    
+    label = new TObjString( "1:1:1" );
+    v_Labels->Add( label ); 
+    
+  }
   
   //Input file
 
   TFile * f1 = new TFile(infile);
   
   f1->cd();
-
-  int max = v_Models->GetEntries();
   
   for( int k = 0; k < max; ++k ) {
     
     TString model = ((TObjString*)v_Models->At(k))->GetString();
     
     TString option = ((TObjString*)variations->At(k))->GetString();
-
+    
     TString dataPxx = TString( "Ratio_" ) + TString( model ) + TString("_") 
       + TString( target ) + TString("_") + TString( src ) + TString("_") + TString(option) +  TString("/data");
     
@@ -115,17 +121,12 @@ void makePlots( TList      * variations,
 
   TString ctitle = TString("track/shower ratio") + TString(" ") + TString(param);
 
-  TCanvas * c1 = new TCanvas( cname.Data(), ctitle.Data(), 206,141,722,575); 
+  TCanvas * c1 = new TCanvas( cname.Data(), ctitle.Data(), 207,169,925,517);
   
-  TLegend * leg = new TLegend(0.17,0.60,0.56,0.85);
+  c1->Divide(2,1);
+  c1->Draw();
   
-  leg->SetBorderSize(0);
-  leg->SetTextSize(0.04);
-  leg->SetLineColor(1);
-  leg->SetLineStyle(1);
-  leg->SetLineWidth(1);
-  leg->SetFillColor(0);
-  leg->SetFillStyle(1001);
+  
   
   //... Branches
   double xx = 0.0;
@@ -147,6 +148,8 @@ void makePlots( TList      * variations,
       ProbNu->SetPoint( i, xx, yy);
     }
 
+    std::cout << " Graph : " << k << " ready"<< std::endl;
+       
   }
 
   int linecolor[5] = { 1, 2, 2, 2, 2};
@@ -184,29 +187,42 @@ void makePlots( TList      * variations,
     gg->GetYaxis()->SetLabelOffset(0.007);
     gg->GetYaxis()->SetLabelSize(0.06);
     gg->GetYaxis()->SetTitleSize(0.06);
-    gg->GetYaxis()->SetTitleOffset(0.93);
+    gg->GetYaxis()->SetTitleOffset(1.18);
     gg->GetYaxis()->SetTitleFont(42);
     
     gg->SetLineColor( linecolor[k] );
     gg->SetLineStyle( linestyle[k] );
     gg->SetLineWidth( linewidth[k] );
-    
+  
+    leg = new TLegend(0.17,0.60,0.56,0.85);
+  
+    leg->SetBorderSize(0);
+    leg->SetTextSize(0.04);
+    leg->SetLineColor(1);
+    leg->SetLineStyle(1);
+    leg->SetLineWidth(1);
+    leg->SetFillColor(0);
+    leg->SetFillStyle(1001);
+      
     TString alpha = ((TObjString*)v_Labels->At(k))->GetString();      
     leg->AddEntry( gg, alpha.Data(),"l");
     
-    c1->cd();
+    c1->cd(k+1);
+    gg->Draw("AL");
+    leg->Draw();
     
-    if ( k == 0 ) {
-      
-      gg->Draw("AL");
-      
-    } else 
-      gg->Draw("L");
+    TString cfg(config);
+    TString option = ((TObjString*)variations->At(k))->GetString();
+
+    TString title = cfg + TString(" , ") + option;
+
+    TLatex *   tex = new TLatex(2.30,3.98, title.Data());
+    tex->SetLineWidth(2);
+    tex->Draw();
     
   }
   
-  leg->Draw();
-  
+      
   c1->cd();
   
   std::stringstream saveAs;

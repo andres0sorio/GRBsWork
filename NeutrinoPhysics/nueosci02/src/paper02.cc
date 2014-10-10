@@ -17,6 +17,7 @@ int main(int iargv, char **argv) {
   std::string neuosc;
   std::string steps;
   std::string dmass;
+  std::string angles;
   std::string dCP;
 
   std::vector<std::string> avsteps;
@@ -47,6 +48,7 @@ int main(int iargv, char **argv) {
       ("steps"    , po::value<std::string>(), "excecution steps ( 1,2,3,... )")
       ("dCP"      , po::value<std::string>(), "dCP phase ( 0.0, 180.0 , ... )")
       ("dmass2"   , po::value<std::string>(), "use the following delta masses square ( = dm2(Dm23sq),dM2(Dm21sq) )")
+      ("angles"   , po::value<std::string>(), "use the following mixing angles ( = theta_1(12),theta_2(13),theta3(23) )")
       ;
     
     po::variables_map vm;
@@ -108,6 +110,14 @@ int main(int iargv, char **argv) {
     else {
       std::cout << "using dm2 and dM2 read from the configuration file \n";
     }
+
+    if (vm.count("angles")) {
+      angles = vm["angles"].as<std::string>();
+      std::cout << "mixing will be set to " <<  angles << std::endl;
+    } 
+    else {
+      std::cout << "using the mixing angles as in the configuration file \n";
+    }
     
   }
   
@@ -142,6 +152,48 @@ int main(int iargv, char **argv) {
     return 1;
     
   MixingParameters *mixpars =  mixparlist.GetParameters(0);
+
+  //............................................................................................
+  
+  std::string dCPtxt ("dCP");
+  
+  if( dCP.size() != 0 )
+  {
+    mixpars->SetPar9( atof( dCP.c_str() ) ); // dCP
+    dCPtxt.append(dCP);
+  }
+  
+  if( dmass.size() != 0 )
+  {
+    std::vector<std::string> dmasses;
+    boost::split(dmasses, dmass, boost::is_any_of(","));
+    if( dmasses.size() != 2 ) {
+      std::cout << " you need to provide both mass differences. Type --help" << std::endl;
+      return 1;
+    }
+    else 
+    {
+      mixpars->SetPar4( atof( dmasses[0].c_str() ) ); // DM2 = DM(32)
+      mixpars->SetPar8( atof( dmasses[1].c_str() ) ); // Dm2 = DM(12)
+    }
+    std::cout << (*mixpars) << std::endl;
+  }
+
+  if( angles.size() != 0 )
+  {
+    std::vector<std::string> theta;
+    boost::split(theta, angles, boost::is_any_of(","));
+    if( theta.size() != 3 ) {
+      std::cout << " you need to provide all three angles in the correct order. Type --help" << std::endl;
+      return 1;
+    }
+    else
+    {
+      mixpars->SetPar1( atof( theta[0].c_str() ) );
+      mixpars->SetPar2( atof( theta[1].c_str() ) );
+      mixpars->SetPar3( atof( theta[2].c_str() ) );
+    }
+  }
   
   //............................................................................................
   
@@ -213,32 +265,7 @@ int main(int iargv, char **argv) {
       
   }
 
-  //............................................................................................
   
-  std::string dCPtxt ("dCP");
-  
-  if( dCP.size() != 0 )
-  {
-    mixpars->SetPar9( atof( dCP.c_str() ) ); // dCP
-    dCPtxt.append(dCP);
-  }
-  
-  if( dmass.size() != 0 )
-  {
-    std::vector<std::string> dmasses;
-    boost::split(dmasses, dmass, boost::is_any_of(","));
-    if( dmasses.size() != 2 ) {
-      std::cout << " you need to provide both mass differences. Type --help" << std::endl;
-      return 1;
-    }
-    else 
-    {
-      mixpars->SetPar4( atof( dmasses[0].c_str() ) ); // DM2 = DM(32)
-      mixpars->SetPar8( atof( dmasses[1].c_str() ) ); // Dm2 = DM(12)
-    }
-    std::cout << (*mixpars) << std::endl;
-  }
-
   //............................................................................................
   
   // Variation 1 ( IceCube! -> R calculation as a function of alpha )
