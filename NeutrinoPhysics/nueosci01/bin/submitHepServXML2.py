@@ -2,8 +2,9 @@ import sys, os, stat, shutil
 #--------------------------------------------------------
 #--------------------------------------------------------
 
-use_file = 2 
-use_mass = 3
+dcp = '0'
+use_file = 1 
+use_mass = 1 
 
 dmass_vars = ['0.0014','0.006','0.0032']
 
@@ -62,6 +63,7 @@ for model in models:
         values.append( xmlfi )
         values.append( angles )
         values.append( dmasses )
+        values.append( dcp )
         arguments.append( values )
         x0 = x1
 

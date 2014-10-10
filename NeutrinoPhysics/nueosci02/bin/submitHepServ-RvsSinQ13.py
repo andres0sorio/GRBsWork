@@ -14,8 +14,8 @@ deltavalues = str(0) + ',' + matrix_config + ',' + config
 arguments.append( deltavalues.split(',') )
 
 ## dCP = 180
-#deltavalues = str(180) + ',' + matrix_config + ',' + config
-#arguments.append( deltavalues.split(',') )
+deltavalues = str(180) + ',' + matrix_config + ',' + config
+arguments.append( deltavalues.split(',') )
 
 print arguments
 
@@ -24,7 +24,10 @@ input_sandbox = ['matrix_config.dtd',
                  matrix_config,
 		 config, 
                  'paper02.exe',
-                 '../../nueoscilib/lib/libnueosci.so']
+                 '../../nueoscilib/lib/libnueosci.so',
+                 '../data/XSec_neut.dat',
+                 '../data/XSec_anti.dat',
+                 '../data/pshadow-at-180.dat']
 
 script = './local-RvsSinQ13.csh'
 output = 'detection.root'

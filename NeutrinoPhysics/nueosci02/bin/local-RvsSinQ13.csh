@@ -8,12 +8,11 @@ set CURRENTDIR=${PWD}
 
 setenv LD_LIBRARY_PATH ${CURRENTDIR}:${LD_LIBRARY_PATH}
 
+setenv PAPER_DATA ${PWD}
+
 setenv CMD  "./paper02.exe --steps=4 --dCP="$LOCAL_DCP" --neuosc="$LOCAL_MIXPARS" --config="$LOCAL_CONFIG
 
 echo INFO:  launching command: $CMD
-echo $GSLPATH
-echo $ROOTSYS
-echo $LD_LIBRARY_PATH
 
 $CMD
 echo DONE

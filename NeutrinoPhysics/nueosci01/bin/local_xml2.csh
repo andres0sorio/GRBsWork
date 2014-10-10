@@ -9,12 +9,13 @@ setenv STEP  $4
 setenv XMLF  $5
 setenv ANGS  $6
 setenv DM2S  $7
+setenv DCP   $8
 
 set CURRENTDIR=${PWD}
 
 setenv LD_LIBRARY_PATH ${CURRENTDIR}:${LD_LIBRARY_PATH}
 
-setenv CMD  "./paper01.exe --model "$MODEL" --prob Pee,aPee --erange "$EMIN","$EMAX" --step "$STEP" --modfile "$XMLF" --angles "$ANGS" --dmass2 "$DM2S
+setenv CMD  "./paper01.exe --model "$MODEL" --prob Pee,aPee --erange "$EMIN","$EMAX" --step "$STEP" --modfile "$XMLF" --angles "$ANGS" --dmass2 "$DM2S" --dCP "$DCP
 
 echo INFO:  launching command: $CMD
 
