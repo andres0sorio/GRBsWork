@@ -156,6 +156,13 @@ int main(int iargv, char **argv) {
   //............................................................................................
   
   std::string dCPtxt ("dCP");
+  std::string Option ("Var0");
+  
+  std::map<std::string,std::string> v_Vars;
+  
+  v_Vars["0.0014"] = std::string("Var1");
+  v_Vars["0.006"]  = std::string("Var2");
+  v_Vars["0.0032"] = std::string("Var3");
   
   if( dCP.size() != 0 )
   {
@@ -175,6 +182,7 @@ int main(int iargv, char **argv) {
     {
       mixpars->SetPar4( atof( dmasses[0].c_str() ) ); // DM2 = DM(32)
       mixpars->SetPar8( atof( dmasses[1].c_str() ) ); // Dm2 = DM(12)
+      Option = v_Vars[dmasses[0]];
     }
     std::cout << (*mixpars) << std::endl;
   }
@@ -283,10 +291,15 @@ int main(int iargv, char **argv) {
   if( execSteps["1"] ) {
     
     //This is R vs the spectral index alpha for the standard picture
+    
+    Option.append("_");
+    Option.append(dCPtxt);
 
+    std::cout << "paper02> MakeVariationStdPicture with option " << Option << std::endl;
+        
     nudet->SetMixingParameters (  mixpars );
 
-    nudet->MakeVariationStdPicture("EarthB","Vacuum", dCPtxt.c_str(), 2.0, 3.1, 0.05); //
+    nudet->MakeVariationStdPicture("EarthB","Vacuum", Option.c_str(), 2.0, 3.1, 0.05); //
     
   }
   
