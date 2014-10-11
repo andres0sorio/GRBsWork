@@ -696,21 +696,72 @@ void NeutrinosDetectionPaper::MakeVariation04(const char * model,
 
 }
 
-void NeutrinosDetectionPaper::MakeVariation05(const char * model,
-                                              const char * target, 
-                                              const char * source, 
-                                              double Xmin,
-                                              double Xmax, 
-                                              double Dx,
-                                              double alpha,
-                                              double phase )
+void NeutrinosDetectionPaper::EvaluateR(const char * model,
+                                        const char * target, 
+                                        const char * source, 
+                                        const char * option,
+                                        double pointX,
+                                        double alpha)
 {
+  
+  // October 10 2014 - AO
+  // Variation of R as a function of theta13 - for any model
+  // No variation done here, just calculate R and store it
+  
+  // Work in progress
+  
+  // You need to pass the generated files with fluxes up to Earth
+  
+  InitOutput(model, target, source, option);
+  
+  // Here is the loop for the parameter variation
+  
+  m_Xx = pointX;
 
-  /// October 06 2014 - AO
-  /// Adding - 
-  /// Variation of R as a function of theta13 - for any model
-  /// Work in progress
+  m_config->UseVaryingNbeta( true );
+  
+  m_config->SetPar3( m_Xx ); // Par3 == alpha
+  
+  std::cout << (*m_config) << std::endl;
+  
+  MuTrackEvents * mu1 = new MuTrackEvents(m_data_xsec_neut.c_str(), m_data_xsec_anti.c_str(), 
+                                          m_data_pshadow.c_str(), m_config );
     
+  double TkSum = mu1->Evaluate( );
+    
+  m_MuTks  = mu1->m_NuMuTracks;
+  m_TauTks = mu1->m_NuTauTracks;
+    
+  ShowerEvents * sh1 =  new ShowerEvents(m_data_xsec_neut.c_str(), m_data_xsec_anti.c_str(), 
+                                           m_data_pshadow.c_str(), m_config );
+    
+  m_HadShw = sh1->Evaluate( );
+  
+  m_HadShwE = sh1->m_CCNuShower;
+    
+  m_HadShwT = sh1->m_CCNutauShower;
+  
+  m_HadShwNC = sh1->m_NCShower;
+  
+  m_Ratio  = TkSum / m_HadShw;
+    
+  std::cout << "NeutrinosDetectionPaper> "
+            << "pointX "   << m_Xx     << '\t'
+            << "muTrk "    << m_MuTks  << '\t' 
+            << "tauTrk "   << m_TauTks << '\t'
+            << "hadShow "  << m_HadShw << '\t'
+            << "R "        << m_Ratio  << std::endl;
+  
+  m_tree->Fill();
+  
+  delete mu1;
+  delete sh1;
+  
+  m_tree->Write();
+  
+  m_output_file->cd("../");
+  
+  
 }
 
 //====================================================================================================

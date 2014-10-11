@@ -39,7 +39,7 @@ public:
 
   void MakeVariation04( const char *, const char *, const char *, double, double, double, double);
 
-  void MakeVariation05( const char *, const char *, const char *, double, double, double, double, double);
+  void EvaluateR( const char *, const char *, const char *, const char *, double, double);
   
   void MakeVariationStdPicture( const char *, const char *, const char *, double, double, double);
   

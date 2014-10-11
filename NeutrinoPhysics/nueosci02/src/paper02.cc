@@ -29,10 +29,7 @@ int main(int iargv, char **argv) {
   avsteps.push_back("5. R vs Ev energy - as in Olga Mena reference" );
 
   //... Added Oct/2014 - AO
-  
-  avsteps.push_back("6. R vs phi_e fraction - standard picture - Form diff. star models" );
-  
-  avsteps.push_back("7. R vs a function of sin2(theta_13) - Form diff. star models" );
+  avsteps.push_back("6. R vs a function of sin2(theta_13) - Form diff. star models");
   
   bool no_dataset = false;
   
@@ -411,18 +408,58 @@ int main(int iargv, char **argv) {
 
   if( execSteps["6"] ) {
     
-    //This is R vs phi_e fraction - for different star models
-    //Work in progress
-
-  }
-
-  //... Added Oct/2014 - AO
-
-  if( execSteps["7"] ) {
-    
-    //This is R vs sin(theta13) - for different star models
+    //This is R vs sin(theta_13) - for different star models
+    //Will calculate for each point in sin(theta_13) for 3 values of Alfa (1.8, 2.0, 2.2)
     //Work in progress
     
+    TFile * infile;
+    std::string model;
+    std::string var;
+    
+    std::map<float,std::string> v_alphas;
+    
+    v_alphas[1.8] = std::string("a1.8");
+    v_alphas[2.0] = std::string("a2.0");
+    v_alphas[2.2] = std::string("a2.2");
+    
+    std::map<float,std::string>::iterator alfaItr;
+    
+    for( itr = dataset.begin(); itr != dataset.end(); ++itr) 
+    {
+      
+      //... This is R vs sin(theta13) for different models
+      
+      std::cout << (*itr) << std::endl;
+      
+      infile = new TFile( (*itr).c_str(), "READ");
+      
+      unsigned pos2 = (*itr).rfind("/");
+      unsigned pos1 = (*itr).rfind("/", pos2-1);
+      
+      model = (*itr).substr(pos1+1, (pos2-pos1-1) );
+      
+      pos2  = (*itr).rfind(".");
+      pos1  = (*itr).rfind("Var", pos2-1);
+      
+      var   = (*itr).substr(pos1, (pos2-pos1) );
+      
+      std::cout << "paper02>  with option " << var << " Model= " << model << std::endl;
+      
+      for( alfaItr = v_alphas.begin(); alfaItr != v_alphas.end(); ++alfaItr) 
+      {
+        
+        nudet->SetFluxHistograms(infile, model.c_str(), "EarthB", "Vacuum", var.c_str() );
+        
+        nudet->EvaluateR(model.c_str(), "EarthB","Vacuum", var.c_str(), 2.0, 3.0); //
+        
+        nudet->ResetFluxHistograms();
+        
+      }
+      
+      infile->Close();
+      
+    }
+
   }
   
   //
