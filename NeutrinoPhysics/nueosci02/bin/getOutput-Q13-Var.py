@@ -25,7 +25,7 @@ job_range  = options.range.split(',')
 first_job = int(job_range[0])
 last_job = int(job_range[1])
 
-variations = {'0'     :'Q13-1',
+variations = {'0.0'   :'Q13-1',
 	      '5.74'  :'Q13-2',
 	      '8.13'  :'Q13-3',
 	      '9.97'  :'Q13-4',
@@ -47,7 +47,7 @@ for job in jobs.select( first_job, last_job ):
 	max_energy = arguments[max_args-1][1].replace('+','')
 	config = arguments[max_args-1][4].split('.')[0].split('_')[-1]
 	phase = 'dCP' + arguments[max_args-1][7]
-        theta13 = arguments[max_args-1][7].split(',')[1]
+        theta13 = arguments[max_args-1][5].split(',')[1]
 	var = variations[theta13]
 	
 	print model,config,max_energy,var,phase

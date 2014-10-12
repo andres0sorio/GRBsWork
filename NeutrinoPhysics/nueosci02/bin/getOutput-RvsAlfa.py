@@ -57,7 +57,7 @@ for job in jobs.select( first_job, last_job ):
 	target = prefix + model + '/' + filename	
 	cmd = 'cp -v ' + source + ' ' + target
 	logfile.write(cmd + '\n')
-	#os.system(cmd)
+	os.system(cmd)
 	print cmd
 
 logfile.close()
