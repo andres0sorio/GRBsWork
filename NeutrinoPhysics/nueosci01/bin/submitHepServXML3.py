@@ -6,7 +6,7 @@ use_file = 1
 
 dcp_vars   = ['0','180']
 theta_vars = ['0.0','5.74','8.13','9.97','11.54','12.92','13.56']
-all_models = ['ModelA,ModelB,ModelC']
+all_models = ['ModelA','ModelB','ModelC']
 
 xmlfi = ''
 
