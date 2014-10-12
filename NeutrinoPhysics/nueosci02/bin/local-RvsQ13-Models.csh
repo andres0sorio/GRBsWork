@@ -9,7 +9,7 @@ setenv LD_LIBRARY_PATH ${CURRENTDIR}:${LD_LIBRARY_PATH}
 
 setenv PAPER_DATA ${PWD}
 
-setenv CMD  "./paper02.exe --steps 6 --input "$DATA" -alfa "$ALFA
+setenv CMD  "./paper02.exe --steps 6 --input "$DATA" --alfa "$ALFA
 
 echo INFO:  launching command: $CMD
 

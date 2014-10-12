@@ -708,7 +708,9 @@ void NeutrinosDetectionPaper::EvaluateR(const char * model,
   // No variation done here, just calculate R and store it
   
   // Work in progress
-  
+
+  m_outdir->cd();
+    
   m_Xx = pointX;
 
   m_config->UseVaryingNbeta( true );
@@ -720,15 +722,15 @@ void NeutrinosDetectionPaper::EvaluateR(const char * model,
   
   MuTrackEvents * mu1 = new MuTrackEvents(m_data_xsec_neut.c_str(), m_data_xsec_anti.c_str(), 
                                           m_data_pshadow.c_str(), m_config );
-    
+ 
   double TkSum = mu1->Evaluate( );
-    
+  
   m_MuTks  = mu1->m_NuMuTracks;
   m_TauTks = mu1->m_NuTauTracks;
-    
+
   ShowerEvents * sh1 =  new ShowerEvents(m_data_xsec_neut.c_str(), m_data_xsec_anti.c_str(), 
                                            m_data_pshadow.c_str(), m_config );
-    
+
   m_HadShw = sh1->Evaluate( );
   
   m_HadShwE = sh1->m_CCNuShower;
@@ -738,7 +740,7 @@ void NeutrinosDetectionPaper::EvaluateR(const char * model,
   m_HadShwNC = sh1->m_NCShower;
   
   m_Ratio  = TkSum / m_HadShw;
-    
+
   std::cout << "NeutrinosDetectionPaper> "
             << "pointX "   << m_Xx     << '\t'
             << "muTrk "    << m_MuTks  << '\t' 
@@ -750,11 +752,7 @@ void NeutrinosDetectionPaper::EvaluateR(const char * model,
   
   delete mu1;
   delete sh1;
-  
-  //m_tree->Write();
-  //m_output_file->cd("../");
-  
-  
+ 
 }
 
 void NeutrinosDetectionPaper::WriteOutput() 
@@ -819,15 +817,17 @@ bool NeutrinosDetectionPaper::InitOutput(const char * model,
   /////
   m_output_file->cd();
   
-  m_output_file->mkdir( TString("Ratio") 
-                        + TString("_")
-                        + TString(model)
-                        + TString("_")
-                        + TString(target) 
-                        + TString("_") 
-                        + TString(source)
-                        + TString("_")
-                        + TString(option))->cd();
+  m_outdir = m_output_file->mkdir( TString("Ratio") 
+                                   + TString("_")
+                                   + TString(model)
+                                   + TString("_")
+                                   + TString(target) 
+                                   + TString("_") 
+                                   + TString(source)
+                                   + TString("_")
+                                   + TString(option));
+  
+  m_outdir->cd();
   
   m_tree = new TTree("data","Data points");
 
@@ -1056,7 +1056,6 @@ void NeutrinosDetectionPaper::SetFluxHistograms(TFile * infile,
   ///
   
   m_output_file->Write();
-  
   m_output_file->cd("../");
   
   std::cout << "SetFluxHistograms " << m_energy_bin.size() << std::endl;

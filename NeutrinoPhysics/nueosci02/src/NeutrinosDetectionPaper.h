@@ -76,6 +76,8 @@ private:
   TTree * m_tree;
   TTree * m_input_tree;
   
+  TDirectory * m_outdir;
+  
   //Output branches
 
   double m_Xx;

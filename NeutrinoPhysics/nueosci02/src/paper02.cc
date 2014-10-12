@@ -476,12 +476,15 @@ int main(int iargv, char **argv) {
 
       std::cout << "paper02>  with option " << Option << " value of Q13= " << theta13 << std::endl;
       
-      if( itr == dataset.begin() ) 
-        nudet->InitOutput(model.c_str(), "EarthB", "Vacuum", Option.c_str() );
-      
       nudet->SetFluxHistograms(infile, model.c_str(), "EarthB", "Vacuum", var.c_str() );
       
-      double sin2q13 = sin(theta13)*sin(theta13); // Enter Sin2(Q13) as the variable
+      if( itr == dataset.begin() ) 
+      {
+        nudet->InitOutput(model.c_str(), "EarthB", "Vacuum", Option.c_str() );
+        std::cout << "paper02> output structure created" << std::endl;
+      }
+            
+      double sin2q13 = sin(theta13*M_PI/180.0)*sin(theta13*M_PI/180.0); // Enter Sin2(Q13) as the variable
       
       nudet->EvaluateR(model.c_str(), "EarthB","Vacuum", var.c_str(), sin2q13 ); //
       
@@ -490,7 +493,7 @@ int main(int iargv, char **argv) {
       infile->Close();
       
     }
-
+    
     ///Write to Output
     nudet->WriteOutput();
         
