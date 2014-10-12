@@ -18,6 +18,7 @@ int main(int iargv, char **argv) {
   std::string steps;
   std::string dmass;
   std::string angles;
+  std::string alfa;
   std::string dCP;
 
   std::vector<std::string> avsteps;
@@ -46,6 +47,7 @@ int main(int iargv, char **argv) {
       ("dCP"      , po::value<std::string>(), "dCP phase ( 0.0, 180.0 , ... )")
       ("dmass2"   , po::value<std::string>(), "use the following delta masses square ( = dm2(Dm23sq),dM2(Dm21sq) )")
       ("angles"   , po::value<std::string>(), "use the following mixing angles ( = theta_1(12),theta_2(13),theta3(23) )")
+      ("alfa"     , po::value<std::string>(), "use the following alfa ( = 1.8, 2.0, 2.2 )")
       ;
     
     po::variables_map vm;
@@ -115,6 +117,14 @@ int main(int iargv, char **argv) {
     else {
       std::cout << "using the mixing angles as in the configuration file \n";
     }
+
+    if (vm.count("alfa")) {
+      alfa = vm["alfa"].as<std::string>();
+      std::cout << "alfa will be set to " <<  alfa << std::endl;
+    } 
+    else {
+      std::cout << "using the alfa as in the configuration file \n";
+    }
     
   }
   
@@ -155,11 +165,21 @@ int main(int iargv, char **argv) {
   std::string dCPtxt ("dCP");
   std::string Option ("Var0");
   
-  std::map<std::string,std::string> v_Vars;
+  std::map<std::string,std::string> v_Vars; //DMass32 variation
   
   v_Vars["0.0014"] = std::string("Var1");
   v_Vars["0.006"]  = std::string("Var2");
   v_Vars["0.0032"] = std::string("Var3");
+
+  std::map<std::string,double> v_Q13; //Theta13 variation
+
+  v_Q13["Q13-1"] = 0.0;
+  v_Q13["Q13-2"] = 5.74;
+  v_Q13["Q13-3"] = 8.13;
+  v_Q13["Q13-4"] = 9.97;
+  v_Q13["Q13-5"] = 11.54;
+  v_Q13["Q13-6"] = 12.92;
+  v_Q13["Q13-7"] = 13.56;
   
   if( dCP.size() != 0 )
   {
@@ -198,6 +218,11 @@ int main(int iargv, char **argv) {
       mixpars->SetPar2( atof( theta[1].c_str() ) );
       mixpars->SetPar3( atof( theta[2].c_str() ) );
     }
+  }
+  
+  if( alfa.size() != 0 )
+  {
+    integ_pars->SetPar3( atof( alfa.c_str() ) ); // Alfa
   }
   
   //............................................................................................
@@ -415,14 +440,7 @@ int main(int iargv, char **argv) {
     TFile * infile;
     std::string model;
     std::string var;
-    
-    std::map<float,std::string> v_alphas;
-    
-    v_alphas[1.8] = std::string("a1.8");
-    v_alphas[2.0] = std::string("a2.0");
-    v_alphas[2.2] = std::string("a2.2");
-    
-    std::map<float,std::string>::iterator alfaItr;
+    double theta13;
     
     for( itr = dataset.begin(); itr != dataset.end(); ++itr) 
     {
@@ -439,27 +457,43 @@ int main(int iargv, char **argv) {
       model = (*itr).substr(pos1+1, (pos2-pos1-1) );
       
       pos2  = (*itr).rfind(".");
-      pos1  = (*itr).rfind("Var", pos2-1);
+      pos1  = (*itr).rfind("Q13", pos2-1);
       
       var   = (*itr).substr(pos1, (pos2-pos1) );
       
-      std::cout << "paper02>  with option " << var << " Model= " << model << std::endl;
+      std::cout << "paper02>  with Variation " << var << " Model= " << model << std::endl;
       
-      for( alfaItr = v_alphas.begin(); alfaItr != v_alphas.end(); ++alfaItr) 
-      {
-        
-        nudet->SetFluxHistograms(infile, model.c_str(), "EarthB", "Vacuum", var.c_str() );
-        
-        nudet->EvaluateR(model.c_str(), "EarthB","Vacuum", var.c_str(), 2.0, 3.0); //
-        
-        nudet->ResetFluxHistograms();
-        
-      }
+      std::vector<std::string> stepstr;
+      boost::split(stepstr, var , boost::is_any_of("_"));
+      
+      theta13 = v_Q13[stepstr[0]];
+      
+      Option.clear();
+      Option.assign("Sin2Q13-");
+      Option.append(alfa);
+      Option.append("-");
+      Option.append(stepstr[1]);
+
+      std::cout << "paper02>  with option " << Option << " value of Q13= " << theta13 << std::endl;
+      
+      if( itr == dataset.begin() ) 
+        nudet->InitOutput(model.c_str(), "EarthB", "Vacuum", Option.c_str() );
+      
+      nudet->SetFluxHistograms(infile, model.c_str(), "EarthB", "Vacuum", var.c_str() );
+      
+      double sin2q13 = sin(theta13)*sin(theta13); // Enter Sin2(Q13) as the variable
+      
+      nudet->EvaluateR(model.c_str(), "EarthB","Vacuum", var.c_str(), sin2q13 ); //
+      
+      nudet->ResetFluxHistograms();
       
       infile->Close();
       
     }
 
+    ///Write to Output
+    nudet->WriteOutput();
+        
   }
   
   //

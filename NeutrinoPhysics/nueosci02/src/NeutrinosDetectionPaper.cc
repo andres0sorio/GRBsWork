@@ -700,8 +700,7 @@ void NeutrinosDetectionPaper::EvaluateR(const char * model,
                                         const char * target, 
                                         const char * source, 
                                         const char * option,
-                                        double pointX,
-                                        double alpha)
+                                        double pointX )
 {
   
   // October 10 2014 - AO
@@ -710,17 +709,12 @@ void NeutrinosDetectionPaper::EvaluateR(const char * model,
   
   // Work in progress
   
-  // You need to pass the generated files with fluxes up to Earth
-  
-  InitOutput(model, target, source, option);
-  
-  // Here is the loop for the parameter variation
-  
   m_Xx = pointX;
 
   m_config->UseVaryingNbeta( true );
-  
-  m_config->SetPar3( m_Xx ); // Par3 == alpha
+
+  //
+  if(m_debug) std::cout << "EvaluateR> using Alfa= " << m_config->GetPar3() << std::endl; // Par3 == alpha
   
   std::cout << (*m_config) << std::endl;
   
@@ -757,11 +751,18 @@ void NeutrinosDetectionPaper::EvaluateR(const char * model,
   delete mu1;
   delete sh1;
   
+  //m_tree->Write();
+  //m_output_file->cd("../");
+  
+  
+}
+
+void NeutrinosDetectionPaper::WriteOutput() 
+{
+  
   m_tree->Write();
-  
   m_output_file->cd("../");
-  
-  
+
 }
 
 //====================================================================================================

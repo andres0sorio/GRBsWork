@@ -39,7 +39,7 @@ public:
 
   void MakeVariation04( const char *, const char *, const char *, double, double, double, double);
 
-  void EvaluateR( const char *, const char *, const char *, const char *, double, double);
+  void EvaluateR( const char *, const char *, const char *, const char *, double );
   
   void MakeVariationStdPicture( const char *, const char *, const char *, double, double, double);
   
@@ -53,14 +53,15 @@ public:
   
   void PropagateThroughEarth( const char *, const char *, const char *, const char *, double, double, double );
   
+  bool InitOutput( const char *, const char *,  const char *, const char * );
 
+  void WriteOutput();
+  
 protected:
   
 private:
   
   bool Init( const char *,  const char *, const char * );
-
-  bool InitOutput( const char *, const char *,  const char *, const char * );
 
   void SetFluxAverages( TFile *, const char *, const char *, const char *);
     
