@@ -81,18 +81,15 @@ void makePlots()
 
   makePlots(v_Variation, v_Labels, 
             "ModelA", "EarthB", "Vacuum", "Set I #delta=0", "SetI_dCP0",
-            "detection-RvsAlfa-All-Models.root", "detection_StdPicture_SetI_RvsAlfa.root");
+            "detection-All-Models-SetI-RvsAlfa.root", "detection_StdPicture_SetI_RvsAlfa.root");
   
   makePlots(v_Variation, v_Labels, 
             "ModelB", "EarthB", "Vacuum", "Set I #delta=0", "SetI_dCP0",
-            "detection-RvsAlfa-All-Models.root", "detection_StdPicture_SetI_RvsAlfa.root");
+            "detection-All-Models-SetI-RvsAlfa.root", "detection_StdPicture_SetI_RvsAlfa.root");
 
   makePlots(v_Variation, v_Labels, 
             "ModelC", "EarthB", "Vacuum", "Set I #delta=0", "SetI_dCP0",
-            "detection-RvsAlfa-All-Models.root", "detection_StdPicture_SetI_RvsAlfa.root");
-
-  // detection_StdPicture_SetI_RvsAlfa.root
-  // detection_StdPicture_SetII_RvsAlfa.root
+            "detection-All-Models-SetI-RvsAlfa.root", "detection_StdPicture_SetI_RvsAlfa.root");
 
   // SET II
 
@@ -100,15 +97,15 @@ void makePlots()
   {
     makePlots(v_Variation, v_Labels, 
               "ModelA", "EarthB", "Vacuum", "Set II #delta=0", "SetII_dCP0",
-              "detection-RvsAlfa-All-Models.root", "detection_StdPicture_SetII_RvsAlfa.root");
+              "detection-All-Models-SetII-RvsAlfa.root", "detection_StdPicture_SetII_RvsAlfa.root");
     
     makePlots(v_Variation, v_Labels, 
               "ModelB", "EarthB", "Vacuum", "Set II #delta=0", "SetII_dCP0",
-              "detection-RvsAlfa-All-Models.root", "detection_StdPicture_SetII_RvsAlfa.root");
+              "detection-All-Models-SetII-RvsAlfa.root", "detection_StdPicture_SetII_RvsAlfa.root");
     
     makePlots(v_Variation, v_Labels, 
               "ModelC", "EarthB", "Vacuum", "Set II #delta=0", "SetII_dCP0",
-              "detection-RvsAlfa-All-Models.root", "detection_StdPicture_SetII_RvsAlfa.root");
+              "detection-All-Models-SetII-RvsAlfa.root", "detection_StdPicture_SetII_RvsAlfa.root");
     
   }
   
@@ -127,15 +124,15 @@ void makePlots()
   
   makePlots(v_Variation, v_Labels,
             "ModelA", "EarthB", "Vacuum", "Set I #delta=#pi", "SetI_dCP180",
-            "detection-RvsAlfa-All-Models.root", "detection_StdPicture_SetI_RvsAlfa.root");
+            "detection-All-Models-SetI-RvsAlfa.root", "detection_StdPicture_SetI_RvsAlfa.root");
 
   makePlots(v_Variation, v_Labels,
             "ModelB", "EarthB", "Vacuum", "Set I #delta=#pi", "SetI_dCP180",
-            "detection-RvsAlfa-All-Models.root", "detection_StdPicture_SetI_RvsAlfa.root");
+            "detection-All-Models-SetI-RvsAlfa.root", "detection_StdPicture_SetI_RvsAlfa.root");
 
   makePlots(v_Variation, v_Labels,
             "ModelC", "EarthB", "Vacuum", "Set I #delta=#pi", "SetI_dCP180",
-            "detection-RvsAlfa-All-Models.root", "detection_StdPicture_SetI_RvsAlfa.root");
+            "detection-All-Models-SetI-RvsAlfa.root", "detection_StdPicture_SetI_RvsAlfa.root");
   
   //... SET II
   
@@ -143,15 +140,15 @@ void makePlots()
   {
     makePlots(v_Variation, v_Labels,
               "ModelA", "EarthB", "Vacuum", "Set II #delta=#pi", "SetII_dCP180",
-              "detection-RvsAlfa-All-Models.root", "detection_StdPicture_SetII_RvsAlfa.root");
+              "detection-All-Models-SetII-RvsAlfa.root", "detection_StdPicture_SetII_RvsAlfa.root");
     
     makePlots(v_Variation, v_Labels,
               "ModelB", "EarthB", "Vacuum", "Set II #delta=#pi", "SetII_dCP180", 
-              "detection-RvsAlfa-All-Models.root", "detection_StdPicture_SetII_RvsAlfa.root");
+              "detection-All-Models-SetII-RvsAlfa.root", "detection_StdPicture_SetII_RvsAlfa.root");
     
     makePlots(v_Variation, v_Labels,
               "ModelC", "EarthB", "Vacuum", "Set II #delta=#pi", "SetII_dCP180", 
-              "detection-RvsAlfa-All-Models.root", "detection_StdPicture_SetII_RvsAlfa.root");
+              "detection-All-Models-SetII-RvsAlfa.root", "detection_StdPicture_SetII_RvsAlfa.root");
     
   }
   

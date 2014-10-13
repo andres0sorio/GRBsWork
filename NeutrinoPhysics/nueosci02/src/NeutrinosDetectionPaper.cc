@@ -47,17 +47,17 @@ NeutrinosDetectionPaper::NeutrinosDetectionPaper( Parameters * pars ) : Graphics
 
   m_e_min  = m_config->GetPar1() * 1.0E9;
   m_e_max  = m_config->GetPar2() * 1.0E9;
- 
+  
   //
-  // Energy binning - IceCube energy resolution of 30%: DEx = 0.30Ex
+  // Energy binning - IceCube energy resolution of 30%: DEx = 0.30Ex - Set by parameter 4 "DeltaE" in config file
   //
-
-  double DEx  = 0.30;
+  
+  double DEx  = m_config->GetPar4();
   double Xx   = m_e_min;
   
   int k = 1;
 
-  m_vbins = new float[100];
+  m_vbins = new float[1000];
 
   m_vbins[0] = Xx; // This is the first lower edge bin value
   m_energy_bin[0] = Xx;
