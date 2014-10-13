@@ -4,25 +4,40 @@ import sys, os, stat, shutil
 # StdPicture
 #--------------------------------------------------------
 
+use_file = 1
+dcp_vars = ['0','180']
+
+#--------------------------------------------------------
+
+cfg    = 'config.xml'
+xmlfi  = 'matrix_config.xml'
+
+if   use_file == 1:
+    xmlfi = 'matrix_config_SetI.xml'
+elif use_file == 2:
+    xmlfi = 'matrix_config_SetII.xml'
+elif use_file == 3:
+    xmlfi = 'matrix_config_Esmaili.xml'
+    cfg   = 'config_Esmaili.xml'
+else:
+    print 'No configuration available'
+    sys.exit()
+
+#--------------------------------------------------------
+
 arguments = []
 
-config='config_Esmaili.xml'
-matrix_config='matrix_config_Esmaili.xml'
+for dcp in dcp_vars:
+    values = ''
+    values = dcp + ',' + xmlfi + ',' + cfg
+    arguments.append( values.split(',') )
 
-## dCP = 0
-deltavalues = str(0) + ',' + matrix_config + ',' + config
-arguments.append( deltavalues.split(',') )
-
-## dCP = 180
-deltavalues = str(180) + ',' + matrix_config + ',' + config
-arguments.append( deltavalues.split(',') )
-
-print arguments
+config = xmlfi.split('_')[2].split('.')[0]
 
 input_sandbox = ['matrix_config.dtd',
                  'config.dtd',
-                 matrix_config,
-		 config, 
+                 xmlfi,
+		 cfg, 
                  'paper02.exe',
                  '../../nueoscilib/lib/libnueosci.so',
                  '../data/XSec_neut.dat',
@@ -44,7 +59,7 @@ mg.ignorefailed = True
 
 #Job declaration and initialisation:
 myjob = Job( application = app, backend = 'Local' )
-myjob.name = 'nueosc.paper02'
+myjob.name = 'Paper02.RvsQ13.Std.' + config
 myjob.splitter = sp
 myjob.merger = mg
 
@@ -52,8 +67,6 @@ myjob.outputsandbox = [output]
 
 for input in input_sandbox:
     myjob.inputsandbox.append( File ( input ) )
-
-myjob.submit()
 
 print "job submission done."
 

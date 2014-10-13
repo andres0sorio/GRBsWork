@@ -38,18 +38,18 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  TString inputFile_SetI("detection-All-Models-SetI-RvsAlfa.root");
-  TString inputFile_SetII("detection-All-Models-SetII-RvsAlfa.root");
+  TString inputFile_111("detection_StdPicture_SetII_RvsAlfa.root");
   
   TString inputFile_Std_SetI("detection_StdPicture_SetI_RvsAlfa.root");
+  
   TString inputFile_Std_SetII("detection_StdPicture_SetII_RvsAlfa.root");
   
   TList * v_Variation = new TList();
   TList * v_Labels = new TList();
-
+  
   TObjString *label;
 
-  TString legend = TString("1:1:1");
+  TString legend = TString("TEST:Ignore:1:1:1");
 
   label = new TObjString( legend.Data() );
   v_Labels->Add( label ); 
@@ -86,46 +86,25 @@ void makePlots()
   v_Variation->Add( label );
 
   makePlots(v_Variation, v_Labels, 
-            "ModelA", "EarthB", "Vacuum", "Set I #delta=0 DE=0.01", "SetI_DE0.01_dCP0",
-            "detection-All-Models-SetI-DE0.01-RvsAlfa.root",inputFile_Std_SetI.Data());
-
-  makePlots(v_Variation, v_Labels, 
-            "ModelA", "EarthB", "Vacuum", "Set I #delta=0", "SetI_dCP0",
-            inputFile_SetI.Data(), inputFile_Std_SetI.Data());
+            "StdPicture", "EarthB", "Vacuum", "Set I #delta=0", "SetI_dCP0",
+            inputFile_Std_SetI.Data(), inputFile_111.Data());
   
-  makePlots(v_Variation, v_Labels, 
-            "ModelB", "EarthB", "Vacuum", "Set I #delta=0", "SetI_dCP0",
-            inputFile_SetI.Data(), inputFile_Std_SetI.Data());
-
-  makePlots(v_Variation, v_Labels, 
-            "ModelC", "EarthB", "Vacuum", "Set I #delta=0", "SetI_dCP0",
-            inputFile_SetI.Data(), inputFile_Std_SetI.Data());
-
   // SET II
-
+  
   if( 0 ) 
   {
     makePlots(v_Variation, v_Labels, 
-              "ModelA", "EarthB", "Vacuum", "Set II #delta=0", "SetII_dCP0",
-              inputFile_SetII.Data(), inputFile_Std_SetII.Data());
-    
-    makePlots(v_Variation, v_Labels, 
-              "ModelB", "EarthB", "Vacuum", "Set II #delta=0", "SetII_dCP0",
-              inputFile_SetII.Data(), inputFile_Std_SetII.Data());
-    
-    makePlots(v_Variation, v_Labels, 
-              "ModelC", "EarthB", "Vacuum", "Set II #delta=0", "SetII_dCP0",
-              inputFile_SetII.Data(), inputFile_Std_SetII.Data());
-    
+              "StdPicture", "EarthB", "Vacuum", "Set II #delta=0", "SetII_dCP0",
+              inputFile_Std_SetII.Data(), inputFile_111.Data());
   }
   
   v_Variation->Clear();
-
+  
   // SET I - Delta CP = 180
-
+  
   label = new TObjString( "Var1_dCP180" );
   v_Variation->Add( label );
-
+  
   label = new TObjString( "Var2_dCP180" );
   v_Variation->Add( label );
   
@@ -133,37 +112,21 @@ void makePlots()
   v_Variation->Add( label );
   
   makePlots(v_Variation, v_Labels,
-            "ModelA", "EarthB", "Vacuum", "Set I #delta=#pi", "SetI_dCP180",
-            inputFile_SetI.Data(), inputFile_Std_SetI.Data());
-
-  makePlots(v_Variation, v_Labels,
-            "ModelB", "EarthB", "Vacuum", "Set I #delta=#pi", "SetI_dCP180",
-            inputFile_SetI.Data(), inputFile_Std_SetI.Data());
-
-  makePlots(v_Variation, v_Labels,
-            "ModelC", "EarthB", "Vacuum", "Set I #delta=#pi", "SetI_dCP180",
-            inputFile_SetI.Data(), inputFile_Std_SetI.Data());
+            "StdPicture", "EarthB", "Vacuum", "Set I #delta=#pi", "SetI_dCP180",
+            inputFile_Std_SetI.Data(), inputFile_111.Data());
   
   //... SET II
   
   if( 0 ) 
   {
     makePlots(v_Variation, v_Labels,
-              "ModelA", "EarthB", "Vacuum", "Set II #delta=#pi", "SetII_dCP180",
-              inputFile_SetII.Data(), inputFile_Std_SetII.Data());
-    
-    makePlots(v_Variation, v_Labels,
-              "ModelB", "EarthB", "Vacuum", "Set II #delta=#pi", "SetII_dCP180", 
-              inputFile_SetII.Data(), inputFile_Std_SetII.Data());
-    
-    makePlots(v_Variation, v_Labels,
-              "ModelC", "EarthB", "Vacuum", "Set II #delta=#pi", "SetII_dCP180", 
-              inputFile_SetII.Data(), inputFile_Std_SetII.Data());
+              "StdPicture", "EarthB", "Vacuum", "Set II #delta=#pi", "SetII_dCP180",
+              inputFile_Std_SetII.Data(), inputFile_111.Data());
     
   }
   
   v_Variation->Clear();
-    
+  
 }
 
 void makePlots( TList      * Variations,
@@ -178,10 +141,11 @@ void makePlots( TList      * Variations,
 {
   
   //Input path
-  TString inpath("./root_files/RvsAlfa/");
+  TString inpath("./root_files/StdPicture/");
+  
   TString inputfile = inpath + TString(infile);
   
-  TString stdpicture_file = TString("./root_files/StdPicture/") + TString(stdpicture);
+  TString stdpicture_file = inpath + TString(stdpicture);
   
   //Output path
   TString path("./paper02-plots/ratio/");

@@ -69,20 +69,26 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
-  makePlots("ModelA", "EarthB", "Vacuum", "detection-sin2theta-SetI.root");
+  makePlots("ModelA", "EarthB", "Vacuum", "SetI", "detection-sin2theta-SetI.root");
 
-  makePlots("ModelB", "EarthB", "Vacuum", "detection-sin2theta-SetI.root");
+  makePlots("ModelB", "EarthB", "Vacuum", "SetI", "detection-sin2theta-SetI.root");
   
-  makePlots("ModelC", "EarthB", "Vacuum", "detection-sin2theta-SetI.root");
+  makePlots("ModelC", "EarthB", "Vacuum", "SetI", "detection-sin2theta-SetI.root");
   
 }
 
 void makePlots( const char * model,
                 const char * target, 
                 const char * src, 
+                const char * config,
                 const char * infile) 
 {
   
+  //Input path
+  TString inpath("./root_files/RvsQ13/");
+  
+  TString inputfile = inpath + TString(infile);
+
   //Output path
   TString path("./paper02-plots/ratio/");
     
@@ -139,7 +145,7 @@ void makePlots( const char * model,
   label = new TObjString( "#alpha = 2.2" );
   v_Labels->Add( label ); 
   
-  TFile * f1 = new TFile(infile);
+  TFile * f1 = new TFile( inputfile.Data() );
   f1->cd();
 
   TList * v_Graphs = new TList();
@@ -280,20 +286,31 @@ void makePlots( const char * model,
   
   leg->Draw();
 
+  double x_Q13_SetI = sin(8.8*TMath::Pi()/180.0)*sin(8.8*TMath::Pi()/180.0);
+  double x_Q13_SetII = sin(12.0*TMath::Pi()/180.0)*sin(12.0*TMath::Pi()/180.0);
+  
+  double y_min = 1.60;
+  double y_max = 2.10;
+  
+  TLine *line = new TLine(x_Q13_SetI, y_min,x_Q13_SetI, y_max);
+  line->Draw();
+  line = new TLine(x_Q13_SetII, y_min,x_Q13_SetII, y_max);
+  line->Draw();
+
   c1->cd();
   
   std::stringstream saveAs;
   
   saveAs.str("");
-  saveAs << path << model << "/pdf/" << "ratio_" << target << "_Sin2Q13" << ".pdf";
+  saveAs << path << model << "/pdf/" << "RvsSin2Q13_" << model << "_" << target << "_" << config << ".pdf";
   c1->SaveAs( saveAs.str().c_str() );
   
   saveAs.str("");
-  saveAs << path << model << "/png/" << "ratio_" << target << "_Sin2Q13" << ".png";
+  saveAs << path << model << "/png/" << "RvsSin2Q13_" << model << "_" << target << "_" << config << ".png";
   c1->SaveAs( saveAs.str().c_str() );
 
   saveAs.str("");
-  saveAs << path << model << "/eps/" << "ratio_" << target << "_Sin2Q13" << ".eps";
+  saveAs << path << model << "/eps/" << "RvsSin2Q13_" << model<< "_" <<  target << "_" << config << ".eps";
   c1->SaveAs( saveAs.str().c_str() );
   
   

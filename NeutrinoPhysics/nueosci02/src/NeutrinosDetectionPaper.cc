@@ -53,12 +53,15 @@ NeutrinosDetectionPaper::NeutrinosDetectionPaper( Parameters * pars ) : Graphics
   //
   
   double DEx  = m_config->GetPar4();
+
+  std::cout << "NeutrinosDetectionPaper> Energy resolution at detector set to: " << DEx << std::endl;
+  
   double Xx   = m_e_min;
   
   int k = 1;
-
-  m_vbins = new float[1000];
-
+  
+  m_vbins = new float[500];
+  
   m_vbins[0] = Xx; // This is the first lower edge bin value
   m_energy_bin[0] = Xx;
   
@@ -618,7 +621,7 @@ void NeutrinosDetectionPaper::MakeVariation04(const char * model,
   std::stringstream Var;
   double phase = m_mixpars->GetPar9();
   
-  Var << "Sin2Q13-" << alpha << "-" << phase;
+  Var << "Sin2Q13-" << alpha << "-dCP" << phase;
   
   InitOutput(model, target, source, Var.str().c_str() );
   
