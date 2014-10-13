@@ -4,19 +4,30 @@ import sys, os, stat, shutil
 # All star models
 #--------------------------------------------------------
 
+datafile = 'all_datasets_models_SetI.dat'
+
+config = ''
 datasets = []
 arguments = []
 
-infile = open('all_datasets_models.dat','r')
+infile = open(datafile,'r')
 
 for line in infile:
     datasets.append(line[:-1])
 infile.close()
 
+if len(datasets) != 0:
+    config = datasets[0].split('_')[2]
+
 for data in datasets:
         values = []
         values.append( data )
         arguments.append( values )
+                
+
+
+
+
 
 input_sandbox = ['config.xml',
                  'config.dtd',
@@ -48,7 +59,7 @@ mg.ignorefailed = True
 
 #Job declaration and initialisation:
 myjob = Job( application = app, backend = 'Local' )
-myjob.name = 'Paper2.All.RvsAlfa'
+myjob.name = 'Paper2.RvsAlfa.' + config
 myjob.splitter = sp
 myjob.merger = mg
 

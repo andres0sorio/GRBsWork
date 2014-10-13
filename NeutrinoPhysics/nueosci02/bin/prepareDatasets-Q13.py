@@ -1,8 +1,8 @@
 #!/usr/bin/python
 import os, sys
-#--------------------------------------------------------
+#-------------------------------------------------------------------------
 from optparse import OptionParser
-#--------------------------------------------------------
+#-------------------------------------------------------------------------
 parser = OptionParser()
 parser.add_option("-c", type = "string", dest="config",
                   help="new directory" )
@@ -11,7 +11,7 @@ parser.add_option("-c", type = "string", dest="config",
 
 if options.config is None:
         parser.error("please provide a configuration set (SetI or SetII)")
-#--------------------------------------------------------
+#-------------------------------------------------------------------------
 
 LOCATION = os.getcwd()
 
@@ -57,9 +57,7 @@ for dataset in datasets:
 	if sys.version_info < (2,7):
 		dataset.seek(-1,2)
 	else:
-		dataset.seek(-1, os.SEEK_END )
+		dataset.seek(-1, os.SEEK_END)
 		
 	dataset.truncate()
 	dataset.close()
-
-

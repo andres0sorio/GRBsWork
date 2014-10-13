@@ -1,20 +1,25 @@
 import sys, os, stat, shutil
-#--------------------------------------------------------
-# submitting to HEP Server / Ganga / R vs alpha variation
+#----------------------------------------------------------
+# submitting to HEP Server / Ganga / R vs Sin2Q13 variation
 # All star models
-#--------------------------------------------------------
+#----------------------------------------------------------
+
+datafile = 'all_datasets_q13_models_SetI.dat'
 
 config = ''
 datasets = []
 arguments = []
 
-alfa_var = ['1.8','2.0','2,2']
-
-infile = open('all_datasets_q13_models.dat','r')
+infile = open(datafile,'r')
 
 for line in infile:
     datasets.append(line[:-1])
 infile.close()
+
+if len(datasets) != 0:
+    config = datasets[0].split('_')[2]
+
+alfa_var = ['1.8','2.0','2.2']
 
 for alfa in alfa_var:
     values = []
@@ -23,9 +28,6 @@ for alfa in alfa_var:
         values.append( data )
         values.append( alfa )
         arguments.append( values )
-
-if len(datasets) != 0:
-    config = datasets[0].split('_')[2]
 
 input_sandbox = ['config.xml',
                  'config.dtd',

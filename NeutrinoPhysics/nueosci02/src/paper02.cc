@@ -24,13 +24,13 @@ int main(int iargv, char **argv) {
   std::vector<std::string> avsteps;
   
   avsteps.push_back("1. R vs the spectral index alpha for the standard picture" );
-  avsteps.push_back("2. R vs the spectral index alpha for different star models - needs step 1" );
+  avsteps.push_back("2. R vs the spectral index alpha for different star models" );
   avsteps.push_back("3. R vs phi_e fraction - standard picture" );
   avsteps.push_back("4. R as a function of sin2(theta_13) - for different dCP values - standard picture" );
   avsteps.push_back("5. R vs Ev energy - as in Olga Mena reference" );
 
   //... Added Oct/2014 - AO
-  avsteps.push_back("6. R vs a function of sin2(theta_13) - Form diff. star models");
+  avsteps.push_back("6. R vs a function of sin2(theta_13) - for diff. star models");
   
   bool no_dataset = false;
   
@@ -236,11 +236,8 @@ int main(int iargv, char **argv) {
   execSteps["3"] = false;
   execSteps["4"] = false;
   execSteps["5"] = false;
-
   //... Added Oct/2014 - AO
-
   execSteps["6"] = false;
-  execSteps["7"] = false;
   
   if( steps.size() != 0 )
   {
@@ -268,10 +265,10 @@ int main(int iargv, char **argv) {
     std::ifstream * m_in = new std::ifstream( input.c_str(), ifstream::in);
     
     if(!m_in->is_open()) {
-      std::cout << "Data> cannot open file" << std::endl;
+      std::cout << "paper02> cannot open file" << std::endl;
       return 0;
     } else { 
-      std::cout << "Data> file is now open" << std::endl;
+      std::cout << "paper02> file is now open" << std::endl;
     }
     
     std::string strfile;

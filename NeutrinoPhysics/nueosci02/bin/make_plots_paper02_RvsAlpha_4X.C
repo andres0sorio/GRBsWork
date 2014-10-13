@@ -40,40 +40,67 @@ void makePlots()
   
   TList * v_Variation = new TList();
   TObjString *label;
+
+  TList * v_Labels = new TList();
+  TString legend = TString("#Delta m^{2}_{32}=1.4 10^{-3} eV^{2}");
   
-  label = new TObjString( "dCP0" );
-  v_Variation->Add( label );
+  label = new TObjString( legend.Data() );
+  v_Labels->Add( label ); 
+
+  legend = TString("#Delta m^{2}_{32}=6.0 10^{-3} eV^{2}");
   
-  label = new TObjString( "SetI-1E17-Var1-dCP0" );
-  v_Variation->Add( label );
-  
-  label = new TObjString( "SetI-1E17-Var2-dCP0" );
+  label = new TObjString( legend.Data() );
+  v_Labels->Add( label ); 
+
+  legend = TString("#Delta m^{2}_{32}=3.2 10^{-3} eV^{2}");
+
+  label = new TObjString( legend.Data() );
+  v_Labels->Add( label ); 
+
+  //... Variations - match the name of the directory in the root file
+
+  label = new TObjString( "Var1_dCP0" );
   v_Variation->Add( label );
 
-  label = new TObjString( "SetI-1E17-Var3-dCP0" );
+  label = new TObjString( "Var2_dCP0" );
   v_Variation->Add( label );
-  
-  makePlots(v_Variation, "EarthB", "Vacuum", "Set I", "alpha_SetI_dCP0", "detection-setI.root");
 
+  label = new TObjString( "Var3_dCP0" );
+  v_Variation->Add( label );
+
+  makePlots(v_Variation, v_Labels, 
+            "ModelA", "EarthB", "Vacuum", "Set I", "SetI_dCP0", "detection-RvsAlfa-All-Models.root");
+  
   v_Variation->Clear();
 
-  label = new TObjString( "dCP1" );
+  /*
+
+  label = new TObjString( "Var1_dCP180" );
   v_Variation->Add( label );
+
+  label = new TObjString( "Var2_dCP180" );
+  v_Variation->Add( label );
+
+  label = new TObjString( "Var3_dCP180" );
+  v_Variation->Add( label );
+
+
+  //label = new TObjString( "SetI-1E17-Var1-dCP1" );
+  //v_Variation->Add( label );
   
-  label = new TObjString( "SetI-1E17-Var1-dCP1" );
-  v_Variation->Add( label );
+  //label = new TObjString( "SetI-1E17-Var2-dCP1" );
+  //v_Variation->Add( label );
   
-  label = new TObjString( "SetI-1E17-Var2-dCP1" );
-  v_Variation->Add( label );
-
-  label = new TObjString( "SetI-1E17-Var3-dCP1" );
-  v_Variation->Add( label );
-
-  makePlots(v_Variation, "EarthB", "Vacuum", "Set I", "alpha_SetI_dCP1", "detection-setI.root");
-
+  //label = new TObjString( "SetI-1E17-Var3-dCP1" );
+  //v_Variation->Add( label );
+  
+  makePlots(v_Variation, "ModelA", "EarthB", "Vacuum", "Set I", "alpha_SetI_dCP180", "detection-RvsAlfa-All-Models.root");
+  
   v_Variation->Clear();
 
-  if( 1 ) 
+  */
+
+  if( 0 ) 
   {
     
     
@@ -89,7 +116,7 @@ void makePlots()
     label = new TObjString( "SetII-1E17-Var3-dCP0" );
     v_Variation->Add( label );
     
-    makePlots(v_Variation, "EarthB", "Vacuum", "Set II", "alpha_SetII_dCP0", "detection-setII.root");
+    //makePlots(v_Variation, "EarthB", "Vacuum", "Set II", "alpha_SetII_dCP0", "detection-setII.root");
     
     v_Variation->Clear();
     
@@ -105,7 +132,7 @@ void makePlots()
     label = new TObjString( "SetII-1E17-Var3-dCP1" );
     v_Variation->Add( label );
     
-    makePlots(v_Variation, "EarthB", "Vacuum", "Set II", "alpha_SetII_dCP1", "detection-setII.root");
+    //makePlots(v_Variation, "EarthB", "Vacuum", "Set II", "alpha_SetII_dCP1", "detection-setII.root");
     
     v_Variation->Clear();
   
@@ -115,74 +142,44 @@ void makePlots()
 }
 
 
-void makePlots( TList      * variations,
+void makePlots( TList      * Variations,
+                TList      * Labels,
+                const char * model,
                 const char * target,
                 const char * src,
-                const char * set,
+                const char * config,
                 const char * param, 
                 const char * infile ) 
 {
   
+  //Input path
+  TString inpath("./root_files/RvsAlfa/");
+
+  TString inputfile = inpath + TString(infile);
+  
   //Output path
   TString path("./paper02-plots/ratio/");
   
-  TList * v_Models = new TList();
-  TList * v_Labels = new TList();
   TList * v_Trees  = new TList();
   TList * v_Graphs = new TList();
   
-  TObjString *label;
-  
-  //Models
-
-  label = new TObjString( "StdPicture" );
-  v_Models->Add( label ); 
-
-  label = new TObjString( "ModelA" );
-  v_Models->Add( label ); 
-
-  label = new TObjString( "ModelA" );
-  v_Models->Add( label ); 
-
-  label = new TObjString( "ModelA" );
-  v_Models->Add( label ); 
-
-  //Labels
-  
-  label = new TObjString( "1:1:1" );
-  v_Labels->Add( label ); 
-  
-  TString varname = TString(set) + TString(" ") + TString("#Delta m^{2}_{32}=1.4 10^{-3} eV^{2}");
-  
-  label = new TObjString( varname.Data() );
-  v_Labels->Add( label ); 
-
-  varname = TString(set) + TString(" ") + TString("#Delta m^{2}_{32}=6.0 10^{-3} eV^{2}");
-  
-  label = new TObjString( varname.Data() );
-  v_Labels->Add( label ); 
-
-  varname = TString(set) + TString(" ") + TString("#Delta m^{2}_{32}=3.2 10^{-3} eV^{2}");
-
-  label = new TObjString( varname.Data() );
-  v_Labels->Add( label ); 
-    
   //Input file
-
-  TFile * f1 = new TFile(infile);
+  
+  TFile * f1 = new TFile( inputfile.Data() );
   
   f1->cd();
-
-  int max = v_Models->GetEntries();
+  
+  int max = Variations->GetEntries();
   
   for( int k = 0; k < max; ++k ) {
     
-    TString model = ((TObjString*)v_Models->At(k))->GetString();
+    TString variation = ((TObjString*)Variations->At(k))->GetString();
     
-    TString option = ((TObjString*)variations->At(k))->GetString();
-
-    TString dataPxx = TString( "Ratio_" ) + TString( model ) + TString("_") 
-      + TString( target ) + TString("_") + TString( src ) + TString("_") + TString(option) +  TString("/data");
+    TString dataPxx = TString( "Ratio_" ) + 
+      TString( model )     + TString("_") + 
+      TString( target )    + TString("_") + 
+      TString( src )       + TString("_") + 
+      TString( variation ) + TString("/data");
     
     std::cout << " " << dataPxx << std::endl;
     
@@ -193,11 +190,13 @@ void makePlots( TList      * variations,
     TGraph * ProbNu = new TGraph();
     
     v_Graphs->Add( ProbNu );
+
+    break;
+    
     
   }
-  
-  
-  TString cname = TString("Ratio") + TString("_") + TString(param);
+
+  TString cname = TString("Ratio") + TString("_") + TString(model) + TString("_") + TString(param);
 
   TString ctitle = TString("track/shower ratio") + TString(" ") + TString(param);
 
@@ -231,12 +230,17 @@ void makePlots( TList      * variations,
     for (Long64_t i=0;i<nentries;i++) {
       PxxTreeNu->GetEntry(i);
       ProbNu->SetPoint( i, xx, yy);
+
+      std::cout << " xx: " << xx << " yy " << yy << std::endl;
+      
     }
 
+    break;
+    
   }
 
-  int linecolor[5] = { 1, 2, 2, 2, 2};
-  int linestyle[5] = { 1, 1, 2, 3, 4};
+  int linecolor[5] = { 2, 2, 2, 2, 1};
+  int linestyle[5] = { 1, 2, 3, 4, 1};
   int linewidth[5] = { 2, 2, 2, 2, 2};
   
   ///
@@ -252,7 +256,7 @@ void makePlots( TList      * variations,
     gg->SetMaximum(2.2);
     gg->SetMinimum(1.4);
     
-    gg->GetXaxis()->SetLimits( 2.0, 3.1);
+    gg->GetXaxis()->SetLimits( 2.0, 3.1 );
     
     gg->GetXaxis()->SetTitle("#alpha");
     gg->GetXaxis()->CenterTitle(true);
@@ -277,7 +281,7 @@ void makePlots( TList      * variations,
     gg->SetLineStyle( linestyle[k] );
     gg->SetLineWidth( linewidth[k] );
     
-    TString alpha = ((TObjString*)v_Labels->At(k))->GetString();      
+    TString alpha = ((TObjString*)Labels->At(k))->GetString();      
     leg->AddEntry( gg, alpha.Data(),"l");
     
     c1->cd();
@@ -288,7 +292,9 @@ void makePlots( TList      * variations,
       
     } else 
       gg->Draw("L");
-    
+
+    break;
+        
   }
   
   leg->Draw();

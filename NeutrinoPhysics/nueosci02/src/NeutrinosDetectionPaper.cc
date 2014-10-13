@@ -377,6 +377,8 @@ void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target,
     
     m_config->SetPar3( m_Xx ); // par3 == alpha
     
+    if(m_debug) std::cout << "MakeVariationStdPicture> using Alfa= " << m_config->GetPar3() << std::endl; // Par3 == alpha
+
     MuTrackEvents * mu1 = new MuTrackEvents(m_data_xsec_neut.c_str(), m_data_xsec_anti.c_str(), 
                                             m_data_pshadow.c_str(), m_config );
     
@@ -453,9 +455,11 @@ void NeutrinosDetectionPaper::MakeVariation02(const char * model,
     
     m_config->SetPar3( m_Xx ); // Par3 == alpha
     
+    if(m_debug) std::cout << "MakeVariation02> using Alfa= " << m_config->GetPar3() << std::endl; // Par3 == alpha
+
     MuTrackEvents * mu1 = new MuTrackEvents(m_data_xsec_neut.c_str(), m_data_xsec_anti.c_str(), 
                                             m_data_pshadow.c_str(), m_config );
-    
+
     double TkSum = mu1->Evaluate( );
     
     m_MuTks  = mu1->m_NuMuTracks;
@@ -517,6 +521,8 @@ void NeutrinosDetectionPaper::MakeVariation03(const char * model,
   float phi_ntau_fr = 0.0;
 
   m_config->SetPar3( 2.0 );
+
+  if(m_debug) std::cout << "MakeVariation03> using Alfa= " << m_config->GetPar3() << std::endl; // Par3 == alpha
 
   phi_nue = Xmin;
 
@@ -620,7 +626,8 @@ void NeutrinosDetectionPaper::MakeVariation04(const char * model,
 
   m_config->SetPar3( alpha );
 
-  std::cout << "MakeVariation04> alpha: " << m_config->GetPar3() << " dCP: " << m_Physics_Vacuum->m_dCP << std::endl;
+  if(m_debug) std::cout << "MakeVariation04> using Alfa= " << m_config->GetPar3() << std::endl; // Par3 == alpha
+  if(m_debug) std::cout << "MakeVariation04> using dCP= " << m_Physics_Vacuum->m_dCP << std::endl;
   
   while(1) 
   {
@@ -707,8 +714,6 @@ void NeutrinosDetectionPaper::EvaluateR(const char * model,
   // Variation of R as a function of theta13 - for any model
   // No variation done here, just calculate R and store it
   
-  // Work in progress
-
   m_outdir->cd();
     
   m_Xx = pointX;
