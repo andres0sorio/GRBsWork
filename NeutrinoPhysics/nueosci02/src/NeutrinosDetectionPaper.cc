@@ -324,6 +324,112 @@ void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target,
  
   //.......................................................................................................................
   // Make the variation of R vs Alpha for the Standard Picture 1:1:1
+  //
+
+  NeutrinoOscInVacuum * m_Physics_Vacuum =  new NeutrinoOscInVacuum( m_mixpars );
+  
+  m_Physics_Vacuum->use_default_pars = false; // -> read parameters from xml file
+
+  m_Physics_Vacuum->initializeAngles();
+  
+  m_Physics_Vacuum->updateMixingMatrix();
+  
+  m_Physics_Vacuum->calcProbabilities();
+  
+  m_Physics_Vacuum->Propagate( 1.0, 2.0, 0.0 );
+
+  m_config->SetPar("N_e", (m_Physics_Vacuum->m_phi_e_f) );
+  m_config->SetPar("N_mu", (m_Physics_Vacuum->m_phi_mu_f) );
+  m_config->SetPar("N_tau", (m_Physics_Vacuum->m_phi_tau_f) );
+  
+  double N1bar = (m_Physics_Vacuum->m_phi_e_f);
+  double N2bar = (m_Physics_Vacuum->m_phi_mu_f);
+  double N3bar = (m_Physics_Vacuum->m_phi_tau_f);
+  
+  m_config->SetPar("N_ae", N1bar );
+  m_config->SetPar("N_amu", N2bar );
+  m_config->SetPar("N_atau", N3bar );
+  
+  std::cout << "MakeVariationStdPicture> alpha: " << m_config->GetPar3() << " dCP: " << m_Physics_Vacuum->m_dCP << std::endl;
+  
+  std::cout << "MakeVariationStdPicture> mixpars: " << m_mixpars << std::endl;
+  
+  //.......................................................................................................................
+  //
+  // For this we assume 1:1:1 at the detector - no propagation through Earth
+  //  - if needed use MakeVariationStdPictureEarth( )
+  //.......................................................................................................................
+
+  InitOutput("StdPicture", target, source, option);
+  
+  // Loop over the varying parameter
+  
+  m_Xx = Xmin;
+  
+  while ( 1 ) {
+    
+    if ( m_Xx >= Xmax ) break;
+    
+    m_config->SetPar3( m_Xx ); // par3 == alpha
+    
+    if(m_debug) std::cout << "MakeVariationStdPicture> using Alfa= " << m_config->GetPar3() << std::endl; // Par3 == alpha
+    
+    MuTrackEvents * mu1 = new MuTrackEvents(m_data_xsec_neut.c_str(), m_data_xsec_anti.c_str(), 
+                                            m_data_pshadow.c_str(), m_config );
+    
+    double TkSum = mu1->Evaluate( );
+    
+    m_MuTks  = mu1->m_NuMuTracks;
+    m_TauTks = mu1->m_NuTauTracks;
+
+    ShowerEvents * sh1 =  new ShowerEvents(m_data_xsec_neut.c_str(), m_data_xsec_anti.c_str(), 
+                                           m_data_pshadow.c_str(), m_config );
+    
+    m_HadShw   = sh1->Evaluate( );
+    
+    m_HadShwE  = sh1->m_CCNuShower;
+    
+    m_HadShwT  = sh1->m_CCNutauShower;
+    
+    m_HadShwNC = sh1->m_NCShower;
+    
+    m_Ratio    = TkSum / m_HadShw;
+
+    std::cout << "NeutrinosDetectionPaper> "
+              << m_Xx     << '\t'
+              << m_MuTks  << '\t' 
+              << m_TauTks << '\t'
+              << m_HadShw << '\t' 
+              << "R= " << m_Ratio  << std::endl;
+    
+    m_tree->Fill();
+    
+    m_Xx = m_Xx + Dx;
+    
+    delete sh1;
+    delete mu1;
+    
+  }
+  
+  m_tree->Write();
+  
+  m_output_file->cd("../");
+  
+  delete m_Physics_Vacuum;
+  
+
+}
+
+void NeutrinosDetectionPaper::MakeVariationStdPictureEarth(const char * target, 
+                                                           const char * source,
+                                                           const char * option,
+                                                           double Xmin, 
+                                                           double Xmax, 
+                                                           double Dx)
+{
+ 
+  //.......................................................................................................................
+  // Make the variation of R vs Alpha for the Standard Picture 1:1:1
   
   NeutrinoOscInVacuum * m_Physics_Vacuum =  new NeutrinoOscInVacuum( m_mixpars );
   
@@ -428,6 +534,7 @@ void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target,
   
 
 }
+
 
 void NeutrinosDetectionPaper::MakeVariation02(const char * model,
                                               const char * target, 

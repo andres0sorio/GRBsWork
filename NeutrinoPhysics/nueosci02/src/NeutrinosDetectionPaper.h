@@ -42,6 +42,8 @@ public:
   void EvaluateR( const char *, const char *, const char *, const char *, double );
   
   void MakeVariationStdPicture( const char *, const char *, const char *, double, double, double);
+
+  void MakeVariationStdPictureEarth( const char *, const char *, const char *, double, double, double);
   
   void SetFluxHistograms( TFile *, const char *, const char *, const char *, const char *);
   

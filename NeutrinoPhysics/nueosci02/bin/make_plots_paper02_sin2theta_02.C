@@ -74,6 +74,9 @@ void makePlots()
   makePlots("ModelB", "EarthB", "Vacuum", "SetI", "detection-sin2theta-SetI.root");
   
   makePlots("ModelC", "EarthB", "Vacuum", "SetI", "detection-sin2theta-SetI.root");
+
+  makePlots("StdPicture", "EarthB", "Vacuum", "SetI", "detection_StdPicture_SetI_RvsSin2Q13.root");
+
   
 }
 
@@ -99,34 +102,45 @@ void makePlots( const char * model,
   v_Variations->Add( var ); 
   var = new TObjString("Sin2Q13-1.8-dCP180");
   v_Variations->Add( var );
-  
-  var = new TObjString("Sin2Q13-2.0-dCP0");
-  v_Variations->Add( var ); 
-  var = new TObjString("Sin2Q13-2.0-dCP180");
-  v_Variations->Add( var );
 
+  if ( TString(model) != TString("StdPicture") ) {
+    
+    var = new TObjString("Sin2Q13-2.0-dCP0");
+    v_Variations->Add( var ); 
+    var = new TObjString("Sin2Q13-2.0-dCP180");
+    v_Variations->Add( var );
+
+  } else {
+
+    var = new TObjString("Sin2Q13-2-dCP0");
+    v_Variations->Add( var ); 
+    var = new TObjString("Sin2Q13-2-dCP180");
+    v_Variations->Add( var );  
+  
+  }
+  
   var = new TObjString("Sin2Q13-2.2-dCP0");
   v_Variations->Add( var ); 
   var = new TObjString("Sin2Q13-2.2-dCP180");
   v_Variations->Add( var );
-
+  
   int * linewidth = new int[6];
   int * linestyle = new int[6];
   int * linecolor = new int[6];
   
-  linewidth[0] = 1;
-  linewidth[1] = 2;
-  linewidth[2] = 1;
-  linewidth[3] = 2;
-  linewidth[4] = 1;
-  linewidth[5] = 2;
+  linewidth[0] = 2;
+  linewidth[1] = 3;
+  linewidth[2] = 2;
+  linewidth[3] = 3;
+  linewidth[4] = 2;
+  linewidth[5] = 3;
 
-  linecolor[0] = 2;
-  linecolor[1] = 1;
-  linecolor[2] = 2;
-  linecolor[3] = 1;
-  linecolor[4] = 2;
-  linecolor[5] = 1;
+  linecolor[0] = 1;
+  linecolor[1] = 2;
+  linecolor[2] = 1;
+  linecolor[3] = 2;
+  linecolor[4] = 1;
+  linecolor[5] = 2;
 
   linestyle[0] = 1;
   linestyle[1] = 1;

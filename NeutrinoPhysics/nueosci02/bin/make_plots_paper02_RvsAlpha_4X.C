@@ -86,7 +86,7 @@ void makePlots()
   v_Variation->Add( label );
 
   makePlots(v_Variation, v_Labels, 
-            "ModelA", "EarthB", "Vacuum", "Set I #delta=0 DE=0.01", "SetI_DE0.01_dCP0",
+            "ModelA", "EarthB", "Vacuum", "Set I #delta=0 DE=0.05", "SetI_DE0.01_dCP0",
             "detection-All-Models-SetI-DE0.01-RvsAlfa.root",inputFile_Std_SetI.Data());
 
   makePlots(v_Variation, v_Labels, 
