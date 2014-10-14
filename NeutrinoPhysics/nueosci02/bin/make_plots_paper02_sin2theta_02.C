@@ -86,7 +86,9 @@ void makePlots( const char * model,
                 const char * config,
                 const char * infile) 
 {
-  
+
+  double MAXY = 2.4;
+    
   //Input path
   TString inpath("./root_files/RvsQ13/");
   
@@ -232,7 +234,7 @@ void makePlots( const char * model,
     gg->SetLineWidth(linewidth[k]);
     gg->SetLineStyle(linestyle[k]);
 
-    gg->SetMaximum(2.1);
+    gg->SetMaximum(MAXY);
     gg->SetMinimum(1.6);
 
     gg->GetXaxis()->SetLimits( 0.0, 0.055 );
@@ -267,35 +269,24 @@ void makePlots( const char * model,
     c1->cd();
 
     if( k == 0 )
-      gg->Draw("ACP");
+      gg->Draw("AC");
     else
-      gg->Draw("CP");
-    
-    TLatex *   tex = new TLatex(0.041, 2.12, model);
+      gg->Draw("C");
+
+    TString ThisModel;
+
+    if( TString(model) == TString("StdPicture") )
+      ThisModel = TString("Std Picture");
+    else 
+    {
+      ThisModel = TString(model);
+      ThisModel.Insert(5," ");
+    }
+        
+    TLatex *   tex = new TLatex(0.041, (MAXY-(MAXY*0.03)), ThisModel.Data() );
     tex->SetLineWidth(2);
     tex->Draw();
   
-  }
-
-
-  if( 0 ) 
-  {
-
-    TGraph * g1 = readTypeFour("../data/esmaili-figure-1-a1.8-dCP0.csv");
-    TGraph * g2 = readTypeFour("../data/esmaili-figure-1-a1.8-dCPpi.csv");
-    
-    g1->SetLineColor(4);
-    g2->SetLineColor(4);
-    g1->SetLineWidth(2);
-    g2->SetLineWidth(2);
-    g1->SetLineStyle(2);
-    g2->SetLineStyle(2);
-    
-    g1->Draw("C");
-    g2->Draw("C");
-        
-    leg->AddEntry( g1, "Esmaili[*]","l");
-
   }
   
   leg->Draw();
@@ -304,7 +295,7 @@ void makePlots( const char * model,
   double x_Q13_SetII = sin(12.0*TMath::Pi()/180.0)*sin(12.0*TMath::Pi()/180.0);
   
   double y_min = 1.60;
-  double y_max = 2.10;
+  double y_max = MAXY;
   
   TLine *line = new TLine(x_Q13_SetI, y_min,x_Q13_SetI, y_max);
   line->Draw();

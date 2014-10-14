@@ -49,7 +49,7 @@ void makePlots()
 
   TObjString *label;
 
-  TString legend = TString("1:1:1");
+  TString legend = TString("1:1:1 at detector");
 
   label = new TObjString( legend.Data() );
   v_Labels->Add( label ); 
@@ -344,12 +344,22 @@ void makePlots( TList      * Variations,
 
   }
 
-  TString cfgTxt = TString(config);
-    
-  TLatex *   tex = new TLatex(2.79, 2.11, model);
+
+
+  TString ThisModel;
+
+  if( TString(model) == TString("StdPicture") )
+    ThisModel = TString("Std Picture");
+  else 
+  {
+    ThisModel = TString(model);
+    ThisModel.Insert(5," ");
+  }
+  
+  TLatex *   tex = new TLatex(2.79, 2.11, ThisModel.Data() );
   tex->SetLineWidth(2);
   tex->Draw();
-  tex = new TLatex(2.79, 2.06, cfgTxt.Data() );
+  tex = new TLatex(2.79, 2.06, config );
   tex->SetLineWidth(2);
   tex->Draw();
   leg->Draw();

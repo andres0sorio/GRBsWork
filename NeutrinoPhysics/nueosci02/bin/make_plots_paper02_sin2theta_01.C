@@ -69,6 +69,8 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
+  // Compare results with Esmaili picture
+
   makePlots("StdPicture", "EarthB", "Vacuum", "detection-sin2theta.root");
   
 }
@@ -78,6 +80,10 @@ void makePlots( const char * model,
                 const char * src, 
                 const char * infile) 
 {
+
+  
+
+
   
   //Output path
   TString path("./paper02-plots/ratio/");
