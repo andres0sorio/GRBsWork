@@ -40,12 +40,7 @@ for job in jobs.select( first_job, last_job ):
 	model = arguments[max_args-1][2]
 	max_energy = arguments[max_args-1][1].replace('+','')
 	config = arguments[max_args-1][4].split('.')[0].split('_')[-1]
-
-	if len(arguments[max_args-1]) == 8:
-		phase = 'dCP' + arguments[max_args-1][7]
-	else:
-		phase = 'dCP180'
-
+	phase = 'dCP' + arguments[max_args-1][7]
         dmass32 = arguments[max_args-1][6].split(',')[0]
 	var = variations[dmass32]
 	

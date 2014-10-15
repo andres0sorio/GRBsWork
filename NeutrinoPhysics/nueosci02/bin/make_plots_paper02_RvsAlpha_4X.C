@@ -37,7 +37,9 @@ void makePlots()
   tdrStyle->SetTitleFontSize(0.08);
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
-
+  
+  bool PlotSetII = true;
+  
   TString inputFile_SetI("detection-All-Models-SetI-RvsAlfa.root");
   TString inputFile_SetII("detection-All-Models-SetII-RvsAlfa.root");
   
@@ -56,9 +58,6 @@ void makePlots()
 
   legend = TString("#Delta m^{2}_{32}=1.4 10^{-3} eV^{2}");
   
-  label = new TObjString( legend.Data() );
-  v_Labels->Add( label ); 
-
   label = new TObjString( legend.Data() );
   v_Labels->Add( label ); 
 
@@ -85,10 +84,13 @@ void makePlots()
   label = new TObjString( "Var3_dCP0" );
   v_Variation->Add( label );
 
-  makePlots(v_Variation, v_Labels, 
-            "ModelA", "EarthB", "Vacuum", "Set I #delta=0 DE=0.05", "SetI_DE0.01_dCP0",
-            "detection-All-Models-SetI-DE0.01-RvsAlfa.root",inputFile_Std_SetI.Data());
-
+  if( 0 ) 
+  {
+    makePlots(v_Variation, v_Labels, 
+              "ModelA", "EarthB", "Vacuum", "Set I #delta=0 DE=0.05", "SetI_DE0.01_dCP0",
+              "detection-All-Models-SetI-DE0.01-RvsAlfa.root",inputFile_Std_SetI.Data());
+  }
+  
   makePlots(v_Variation, v_Labels, 
             "ModelA", "EarthB", "Vacuum", "Set I #delta=0", "SetI_dCP0",
             inputFile_SetI.Data(), inputFile_Std_SetI.Data());
@@ -96,14 +98,14 @@ void makePlots()
   makePlots(v_Variation, v_Labels, 
             "ModelB", "EarthB", "Vacuum", "Set I #delta=0", "SetI_dCP0",
             inputFile_SetI.Data(), inputFile_Std_SetI.Data());
-
+  
   makePlots(v_Variation, v_Labels, 
             "ModelC", "EarthB", "Vacuum", "Set I #delta=0", "SetI_dCP0",
             inputFile_SetI.Data(), inputFile_Std_SetI.Data());
-
+  
   // SET II
 
-  if( 0 ) 
+  if( PlotSetII ) 
   {
     makePlots(v_Variation, v_Labels, 
               "ModelA", "EarthB", "Vacuum", "Set II #delta=0", "SetII_dCP0",
@@ -146,7 +148,7 @@ void makePlots()
   
   //... SET II
   
-  if( 0 ) 
+  if( PlotSetII ) 
   {
     makePlots(v_Variation, v_Labels,
               "ModelA", "EarthB", "Vacuum", "Set II #delta=#pi", "SetII_dCP180",
