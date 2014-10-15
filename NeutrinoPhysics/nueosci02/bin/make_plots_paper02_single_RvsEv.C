@@ -41,19 +41,15 @@ void makePlots()
   TList * v_Variations = new TList();
 
   TObjString *var;
-  //var = new TObjString("RvsEv_1E17");
-  var = new TObjString("RvsEv_dCP1");
-  v_Variations->Add( var );
-
-  var = new TObjString("RvsEv_dCP2");
-  v_Variations->Add( var );
   
-  //makePlots(v_Variations, "ModelA", "EarthB", "Vacuum", "detection-RvsEv.root");
+  var = new TObjString("RvsEv_Var3_dCP0");
+  v_Variations->Add( var );
 
-  //makePlots(v_Variations, "ModelA", "ModelA", "0", "detection.root");
+  var = new TObjString("RvsEv_Var3_dCP180");
+  v_Variations->Add( var );
 
   makePlots(v_Variations, "ModelA", "EarthB", "Vacuum", "detection.root");
-
+  
   v_Variations->Clear();
 
 }
@@ -65,6 +61,9 @@ void makePlots(TList      * variation,
                const char * infile) 
 {
   
+  //Input path
+  TString inpath("./root_files/RvsEv/");
+
   //Output path
   TString path("./paper02-plots/ratio/");
     
@@ -146,7 +145,6 @@ void makePlots(TList      * variation,
     
     InputTree->SetBranchAddress("Xx",&xx);
     InputTree->SetBranchAddress("Ratio",&yy);
-    
     InputTree->SetBranchAddress("MuTks",    &muTrks);
     InputTree->SetBranchAddress("TauTks",   &tauTrks);
     InputTree->SetBranchAddress("HadShwNC", &NCHadShw);

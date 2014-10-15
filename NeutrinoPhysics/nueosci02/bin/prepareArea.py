@@ -13,7 +13,7 @@ if options.path is None:
         parser.error("please give a path")
 #--------------------------------------------------------
 
-target = ['results']
+target = ['results','root_files']
 
 for tg in target:
 	if not os.path.isdir(tg):
@@ -39,3 +39,12 @@ cmd = 'rm paper02-plots; ln -s ' + sym_link + ' paper02-plots'
 
 os.system(cmd)
 
+##Prepare the directories to contain all rootfiles (output_* & detection_*) needed
+
+data_dirs = ['ModelA','ModelB','ModelC','RvsAlfa','RvsEv','RvsQ13','StdPicture']
+
+for dir in data_dirs:
+        subdir = target[1] + '/' + dir
+	if not os.path.isdir(subdir):
+		os.mkdir( subdir )
+                

@@ -274,7 +274,8 @@ void makePlots( const char * model,
       gg->Draw("C");
 
     TString ThisModel;
-
+    TString ThisConfig;
+    
     if( TString(model) == TString("StdPicture") )
       ThisModel = TString("Std Picture");
     else 
@@ -282,10 +283,20 @@ void makePlots( const char * model,
       ThisModel = TString(model);
       ThisModel.Insert(5," ");
     }
-        
+
+    ThisConfig = TString(config);
+    ThisConfig.Insert(3," ");
+      
     TLatex *   tex = new TLatex(0.041, (MAXY-(MAXY*0.03)), ThisModel.Data() );
     tex->SetLineWidth(2);
     tex->Draw();
+
+    if ( TString(model) != TString("StdPicture") ) {
+      tex = new TLatex(0.041, (MAXY-(MAXY*0.048)), ThisConfig.Data() );
+      tex->SetLineWidth(2);
+      tex->Draw();
+    }
+      
   
   }
   

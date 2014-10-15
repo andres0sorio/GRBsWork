@@ -107,8 +107,11 @@ NeutrinosDetectionPaper::~NeutrinosDetectionPaper() {
 
 //=============================================================================
 
-void NeutrinosDetectionPaper::MakeVariation01(const char * model, const char * target, const char * source, const char * var
-                                              , double dCP)
+void NeutrinosDetectionPaper::MakeVariation01(const char * model, 
+                                              const char * target, 
+                                              const char * source, 
+                                              const char * var)
+
 {
  
   // source ----> (progragation) -----> target
@@ -121,7 +124,7 @@ void NeutrinosDetectionPaper::MakeVariation01(const char * model, const char * t
   InitOutput(model, target, source, variation.Data() );
   
   //.........................................................................................
-
+  
   // Run the convolution
     
   std::map<std::string, TH1F*> xsecConv_histos;
@@ -179,7 +182,7 @@ void NeutrinosDetectionPaper::MakeVariation01(const char * model, const char * t
       
       h1C->SetBinContent( k, phi*result );
       
-      //std::cout << " convolve: x0 " << x0 << " " << phi*result << std::endl;
+      if(m_debug) std::cout << "MakeVariation01> convolve: x0 " << x0 << " " << phi*result << std::endl;
       
       delete nminteg;
       
@@ -192,7 +195,8 @@ void NeutrinosDetectionPaper::MakeVariation01(const char * model, const char * t
   }
     
   //
-  
+  std::cout << "MakeVariation01> now doing the xsecbar" << std::endl;
+
   for( itr = xsecbarConvolve.begin(); itr != xsecbarConvolve.end(); ++itr) 
   {
     
@@ -228,12 +232,12 @@ void NeutrinosDetectionPaper::MakeVariation01(const char * model, const char * t
       
       h1C->SetBinContent( k, phi * result );
       
-      //std::cout << " convolve-bar: x0 " << x0 << " " << phi*result << std::endl;
+      if(m_debug) std::cout << "MakeVariation01> convolve-bar: x0 " << x0 << " " << phi*result << std::endl;
       
       delete nminteg;
       
     }
-    
+
     ff->DestroyInterpolator();
     
     delete ff;
@@ -241,26 +245,38 @@ void NeutrinosDetectionPaper::MakeVariation01(const char * model, const char * t
   }
   
   //.........................................................................................
+  
+  if(m_debug) std::cout << "MakeVariation01> Energy convolution done. Proceeding to R" << std::endl;
+
   TH1F * Tks;
   TH1F * Shw = (TH1F*)xsecConv_histos["phi_e_conv"]->Clone("Showers");
   
   Shw->Add( xsecbarConv_histos["phi_ae_conv"] );
 
-  if( dCP == 0 ) 
-  {
-    Shw->Add( xsecConv_histos["phi_tau_conv"] );
-    Shw->Add( xsecbarConv_histos["phi_atau_conv"] );
-    Tks = (TH1F*)xsecConv_histos["phi_mu_conv"]->Clone("Tracks");
-    Tks->Add ( xsecbarConv_histos["phi_amu_conv"] );
-  } 
-  else if ( dCP == 180.0 ) 
-  {
-    Shw->Add( xsecConv_histos["phi_mu_conv"] );
-    Shw->Add( xsecbarConv_histos["phi_amu_conv"] );
-    Tks = (TH1F*)xsecConv_histos["phi_tau_conv"]->Clone("Tracks");
-    Tks->Add ( xsecbarConv_histos["phi_atau_conv"] );
-  } 
-  else { } 
+  //... There is a problem here with the dealing of the dCP - or something not well understood
+  //... This stops us to reproduce figure 5 Mena
+  //... AO Oct-2014
+  
+  
+  //double dCP = m_mixpars->GetPar9();
+  //if( dCP == 0 ) 
+  //{
+  
+  Shw->Add( xsecConv_histos["phi_tau_conv"] );
+  Shw->Add( xsecbarConv_histos["phi_atau_conv"] );
+  
+  Tks = (TH1F*)xsecConv_histos["phi_mu_conv"]->Clone("Tracks");
+  Tks->Add ( xsecbarConv_histos["phi_amu_conv"] );
+    
+  //} 
+  //else if ( dCP == 180.0 ) 
+  //{
+  //Shw->Add( xsecConv_histos["phi_mu_conv"] );
+  //Shw->Add( xsecbarConv_histos["phi_amu_conv"] );
+  //Tks = (TH1F*)xsecConv_histos["phi_tau_conv"]->Clone("Tracks");
+  //Tks->Add ( xsecbarConv_histos["phi_atau_conv"] );
+  //} 
+  //else { } 
     
   Shw->Divide( Tks );
   
@@ -286,7 +302,6 @@ void NeutrinosDetectionPaper::MakeVariation01(const char * model, const char * t
               << "R "       << m_Ratio    << '\n';
         
     m_tree->Fill();
-    
     
   }
   
@@ -352,7 +367,7 @@ void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target,
   
   std::cout << "MakeVariationStdPicture> alpha: " << m_config->GetPar3() << " dCP: " << m_Physics_Vacuum->m_dCP << std::endl;
   
-  std::cout << "MakeVariationStdPicture> mixpars: " << m_mixpars << std::endl;
+  std::cout << "MakeVariationStdPicture> mixpars: " << (*m_mixpars) << std::endl;
   
   //.......................................................................................................................
   //

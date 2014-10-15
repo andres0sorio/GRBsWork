@@ -386,13 +386,9 @@ int main(int iargv, char **argv) {
     TFile * infile;
     std::string model;
     std::string var;
-    
-    double *dCP = new double[10];
-    dCP[0] = 0.0;
-    dCP[1] = 180.0;
-    
-    int k = 0;
-    
+
+    nudet->SetMixingParameters ( mixpars );
+     
     for( itr = dataset.begin(); itr != dataset.end(); ++itr) 
     {
      
@@ -406,22 +402,22 @@ int main(int iargv, char **argv) {
       unsigned pos1 = (*itr).rfind("/", pos2-1);
       
       model = (*itr).substr(pos1+1, (pos2-pos1-1) );
-
+      
       pos2  = (*itr).rfind(".");
-      pos1  = (*itr).rfind("-", pos2-1);
+      pos1  = (*itr).rfind("Var", pos2-1);
 
-      var   = (*itr).substr(pos1+1, (pos2-pos1-1) );
+      var   = (*itr).substr(pos1, (pos2-pos1) );
+      
+      std::cout << "paper02> MakeVariation01 with option " << var << " Model " << model << std::endl;
 
       nudet->SetFluxHistograms(infile, model.c_str(), "EarthB", "Vacuum", var.c_str() );
       
-      nudet->MakeVariation01(model.c_str(), "EarthB", "Vacuum", var.c_str(), dCP[k] ); //
-
+      nudet->MakeVariation01(model.c_str(), "EarthB", "Vacuum", var.c_str() ); //
+      
       nudet->ResetFluxHistograms();
       
       infile->Close();
 
-      ++k;
-      
     }
     
   }
