@@ -20,6 +20,10 @@ int main(int iargv, char **argv) {
   std::string angles;
   std::string alfa;
   std::string dCP;
+  std::string target;
+  std::string source;
+  
+
 
   std::vector<std::string> avsteps;
   
@@ -48,12 +52,14 @@ int main(int iargv, char **argv) {
       ("dmass2"   , po::value<std::string>(), "use the following delta masses square ( = dm2(Dm23sq),dM2(Dm21sq) )")
       ("angles"   , po::value<std::string>(), "use the following mixing angles ( = theta_1(12),theta_2(13),theta3(23) )")
       ("alfa"     , po::value<std::string>(), "use the following alfa ( = 1.8, 2.0, 2.2 )")
+      ("target"   , po::value<std::string>(), "use the following target ( = Star Model, Vacuum, EarthB )")
+      ("source"   , po::value<std::string>(), "use the following source ( = 0, Star Model, Vacuum )")
       ;
     
     po::variables_map vm;
     po::store(po::parse_command_line(iargv, argv, desc), vm);
     po::notify(vm);
-
+    
     if (vm.count("help")) 
     {
       std::cout << desc;
@@ -124,6 +130,24 @@ int main(int iargv, char **argv) {
     } 
     else {
       std::cout << "using the alfa as in the configuration file \n";
+    }
+
+    if (vm.count("target")) {
+      target = vm["target"].as<std::string>();
+      std::cout << "target will be set to " <<  target << std::endl;
+    } 
+    else {
+      target = std::string("EarthB");
+      std::cout << "using the default target " << target << "\n";
+    }
+    
+    if (vm.count("source")) {
+      source = vm["source"].as<std::string>();
+      std::cout << "source will be set to " << source << std::endl;
+    } 
+    else {
+      source = std::string("Vacuum");
+      std::cout << "using the default source " << source << "\n";
     }
     
   }
@@ -312,7 +336,7 @@ int main(int iargv, char **argv) {
         
     nudet->SetMixingParameters ( mixpars );
 
-    nudet->MakeVariationStdPicture("EarthB","Vacuum", Option.c_str(), 2.0, 3.1, 0.05); //
+    nudet->MakeVariationStdPicture(target.c_str(),source.c_str(), Option.c_str(), 2.0, 3.1, 0.05); //
     
   }
   
@@ -347,9 +371,9 @@ int main(int iargv, char **argv) {
       
       std::cout << "paper02> MakeVariation02 with option " << var << " Model " << model << std::endl;
       
-      nudet->SetFluxHistograms(infile, model.c_str(), "EarthB", "Vacuum", var.c_str() );
+      nudet->SetFluxHistograms(infile, model.c_str(), target.c_str(), source.c_str(), var.c_str() );
       
-      nudet->MakeVariation02(model.c_str(), "EarthB","Vacuum", var.c_str(), 2.0, 3.1, 0.05); //
+      nudet->MakeVariation02(model.c_str(), target.c_str(),source.c_str(), var.c_str(), 2.0, 3.1, 0.05); //
       
       nudet->ResetFluxHistograms();
       
@@ -363,7 +387,7 @@ int main(int iargv, char **argv) {
     
     //This is R vs phi_e fraction - Standard picture
 
-    nudet->MakeVariation03("StdPicture", "EarthB", "Vacuum", 0.0, 1000.0, 1.0); //
+    nudet->MakeVariation03("StdPicture", target.c_str(), source.c_str(), 0.0, 1000.0, 1.0); //
   
   }
 
@@ -373,11 +397,11 @@ int main(int iargv, char **argv) {
     
     nudet->SetMixingParameters (  mixpars );
     
-    nudet->MakeVariation04("StdPicture", "EarthB", "Vacuum", 0.0, 15.0, 1.0, 1.8 ); //
+    nudet->MakeVariation04("StdPicture", target.c_str(), source.c_str(), 0.0, 15.0, 1.0, 1.8 ); //
     
-    nudet->MakeVariation04("StdPicture", "EarthB", "Vacuum", 0.0, 15.0, 1.0, 2.0 ); //
+    nudet->MakeVariation04("StdPicture", target.c_str(), source.c_str(), 0.0, 15.0, 1.0, 2.0 ); //
     
-    nudet->MakeVariation04("StdPicture", "EarthB", "Vacuum", 0.0, 15.0, 1.0, 2.2 ); //
+    nudet->MakeVariation04("StdPicture", target.c_str(), source.c_str(), 0.0, 15.0, 1.0, 2.2 ); //
     
   }
   
@@ -410,9 +434,9 @@ int main(int iargv, char **argv) {
       
       std::cout << "paper02> MakeVariation01 with option " << var << " Model " << model << std::endl;
 
-      nudet->SetFluxHistograms(infile, model.c_str(), "EarthB", "Vacuum", var.c_str() );
+      nudet->SetFluxHistograms(infile, model.c_str(), target.c_str(), source.c_str(), var.c_str() );
       
-      nudet->MakeVariation01(model.c_str(), "EarthB", "Vacuum", var.c_str() ); //
+      nudet->MakeVariation01(model.c_str(), target.c_str(), source.c_str(), var.c_str() ); //
       
       nudet->ResetFluxHistograms();
       
@@ -469,17 +493,17 @@ int main(int iargv, char **argv) {
 
       std::cout << "paper02>  with option " << Option << " value of Q13= " << theta13 << std::endl;
       
-      nudet->SetFluxHistograms(infile, model.c_str(), "EarthB", "Vacuum", var.c_str() );
+      nudet->SetFluxHistograms(infile, model.c_str(), target.c_str(), source.c_str(), var.c_str() );
       
       if( itr == dataset.begin() ) 
       {
-        nudet->InitOutput(model.c_str(), "EarthB", "Vacuum", Option.c_str() );
+        nudet->InitOutput(model.c_str(), target.c_str(), source.c_str(), Option.c_str() );
         std::cout << "paper02> output structure created" << std::endl;
       }
             
       double sin2q13 = sin(theta13*M_PI/180.0)*sin(theta13*M_PI/180.0); // Enter Sin2(Q13) as the variable
       
-      nudet->EvaluateR(model.c_str(), "EarthB","Vacuum", var.c_str(), sin2q13 ); //
+      nudet->EvaluateR(model.c_str(), target.c_str(), source.c_str(), var.c_str(), sin2q13 ); //
       
       nudet->ResetFluxHistograms();
       
@@ -489,7 +513,7 @@ int main(int iargv, char **argv) {
     
     ///Write to Output
     nudet->WriteOutput();
-        
+    
   }
   
   //

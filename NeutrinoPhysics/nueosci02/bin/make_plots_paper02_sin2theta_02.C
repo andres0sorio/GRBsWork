@@ -60,21 +60,36 @@ void makePlots()
   tdrStyle->SetPadLeftMargin(0.14);
   tdrStyle->SetPadRightMargin(0.08);
   tdrStyle->SetPadTopMargin(0.10);
-  tdrStyle->SetPadBottomMargin(0.13);
+  tdrStyle->SetPadBottomMargin(0.14);
   tdrStyle->SetLegendBorderSize(0);
   tdrStyle->SetTitleYOffset(0.8);
   tdrStyle->SetOptStat(0);
   tdrStyle->SetOptFit(0);
   tdrStyle->SetTitleFontSize(0.08);
   tdrStyle->SetStatStyle(0);
+  tdrStyle->SetStatStyle(0);
+  tdrStyle->SetFrameLineWidth(2);
   tdrStyle->cd();
 
+  bool plotSetII = true;
+  
   makePlots("ModelA", "EarthB", "Vacuum", "SetI", "detection-sin2theta-SetI.root");
 
   makePlots("ModelB", "EarthB", "Vacuum", "SetI", "detection-sin2theta-SetI.root");
   
   makePlots("ModelC", "EarthB", "Vacuum", "SetI", "detection-sin2theta-SetI.root");
 
+  if( plotSetII ) 
+  {
+    
+    makePlots("ModelA", "EarthB", "Vacuum", "SetII", "detection-sin2theta-SetII.root");
+
+    makePlots("ModelB", "EarthB", "Vacuum", "SetII", "detection-sin2theta-SetII.root");
+    
+    makePlots("ModelC", "EarthB", "Vacuum", "SetII", "detection-sin2theta-SetII.root");
+
+  }
+  
   makePlots("StdPicture", "EarthB", "Vacuum", "SetI", "detection_StdPicture_SetI_RvsSin2Q13.root");
 
   
@@ -208,6 +223,8 @@ void makePlots( const char * model,
   TString cname = TString("Ratio") + TString("_") + TString(model) +  TString("_") + TString(var);
   
   TCanvas * c1 = new TCanvas( cname.Data(), "track/shower ratio", 206,141,722,575); 
+
+  c1->SetBorderSize(2);
     
   TLegend * leg = new TLegend(0.18,0.64,0.44,0.87);
   
@@ -243,10 +260,10 @@ void makePlots( const char * model,
     gg->GetXaxis()->CenterTitle(true);
     gg->GetXaxis()->SetLabelFont(42);
     gg->GetXaxis()->SetLabelOffset(0.006);
-    gg->GetXaxis()->SetLabelSize(0.05);
-    gg->GetXaxis()->SetTitleSize(0.05);
+    gg->GetXaxis()->SetLabelSize(0.06);
+    gg->GetXaxis()->SetTitleSize(0.06);
     gg->GetXaxis()->SetTickLength(0.05);
-    gg->GetXaxis()->SetTitleOffset(1.10);
+    gg->GetXaxis()->SetTitleOffset(1.07);
     gg->GetXaxis()->SetTitleFont(42);
     gg->GetXaxis()->SetNdivisions(509);
     gg->GetYaxis()->SetTitle("R");
@@ -254,8 +271,8 @@ void makePlots( const char * model,
     gg->GetYaxis()->SetNdivisions(509);
     gg->GetYaxis()->SetLabelFont(42);
     gg->GetYaxis()->SetLabelOffset(0.007);
-    gg->GetYaxis()->SetLabelSize(0.05);
-    gg->GetYaxis()->SetTitleSize(0.05);
+    gg->GetYaxis()->SetLabelSize(0.06);
+    gg->GetYaxis()->SetTitleSize(0.06);
     gg->GetYaxis()->SetTitleOffset(0.93);
     gg->GetYaxis()->SetTitleFont(42);
 
@@ -277,7 +294,7 @@ void makePlots( const char * model,
     TString ThisConfig;
     
     if( TString(model) == TString("StdPicture") )
-      ThisModel = TString("Std Picture");
+      ThisModel = TString("No matter effect");
     else 
     {
       ThisModel = TString(model);
@@ -287,12 +304,12 @@ void makePlots( const char * model,
     ThisConfig = TString(config);
     ThisConfig.Insert(3," ");
       
-    TLatex *   tex = new TLatex(0.041, (MAXY-(MAXY*0.03)), ThisModel.Data() );
+    TLatex *   tex = new TLatex(0.033, (MAXY-(MAXY*0.035)), ThisModel.Data() );
     tex->SetLineWidth(2);
     tex->Draw();
 
     if ( TString(model) != TString("StdPicture") ) {
-      tex = new TLatex(0.041, (MAXY-(MAXY*0.048)), ThisConfig.Data() );
+      tex = new TLatex(0.033, (MAXY-(MAXY*0.055)), ThisConfig.Data() );
       tex->SetLineWidth(2);
       tex->Draw();
     }
@@ -309,9 +326,9 @@ void makePlots( const char * model,
   double y_max = MAXY;
   
   TLine *line = new TLine(x_Q13_SetI, y_min,x_Q13_SetI, y_max);
-  line->Draw();
+  //line->Draw();
   line = new TLine(x_Q13_SetII, y_min,x_Q13_SetII, y_max);
-  line->Draw();
+  //line->Draw();
 
   c1->cd();
   

@@ -7,6 +7,9 @@
 // 2013-03-02 : Andres Osorio
 //-----------------------------------------------------------------------------
 
+double YMAX = 2.6;
+double YMIN = 1.6;
+
 void topTitle(const char *title)
 {
   TLatex latex;
@@ -38,6 +41,9 @@ void makePlots()
   tdrStyle->SetStatStyle(0);
   tdrStyle->cd();
 
+  TString target("EarthB");
+  TString source("Vacuum");
+  
   TList * v_Variations = new TList();
 
   TObjString *var;
@@ -48,7 +54,7 @@ void makePlots()
   var = new TObjString("RvsEv_Var3_dCP180");
   v_Variations->Add( var );
 
-  makePlots(v_Variations, "ModelA", "EarthB", "Vacuum", "detection.root");
+  makePlots(v_Variations, "ModelA", target.Data(), source.Data(), "detection.root");
   
   v_Variations->Clear();
 
@@ -197,8 +203,12 @@ void makePlots(TList      * variation,
     gg->SetMarkerColor(1);
     gg->SetLineColor(1);
     gg->SetFillColor(10);
-    gg->SetMaximum(2.4);
-    gg->SetMinimum(1.6);
+
+    //gg->SetMaximum(2.4);
+    //gg->SetMinimum(1.6);
+    
+    gg->SetMaximum( YMAX );
+    gg->SetMinimum( YMIN );
 
     int pos1 = gg->FindBin( 1.0E11 );
     int pos2 = gg->FindBin( 1.0E16 );

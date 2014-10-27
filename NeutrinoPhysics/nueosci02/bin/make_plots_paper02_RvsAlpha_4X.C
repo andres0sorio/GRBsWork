@@ -36,12 +36,16 @@ void makePlots()
   tdrStyle->SetOptFit(0);
   tdrStyle->SetTitleFontSize(0.08);
   tdrStyle->SetStatStyle(0);
+  tdrStyle->SetFrameLineWidth(2);
   tdrStyle->cd();
   
   bool PlotSetII = true;
   
   TString inputFile_SetI("detection-All-Models-SetI-RvsAlfa.root");
   TString inputFile_SetII("detection-All-Models-SetII-RvsAlfa.root");
+
+  TString inputFile_SetI_dCP180("detection-All-Models-SetI-RvsAlfa-dCP180.root");
+  TString inputFile_SetII_dCP180("detection-All-Models-SetII-RvsAlfa-dCP180.root");
   
   TString inputFile_Std_SetI("detection_StdPicture_SetI_RvsAlfa.root");
   TString inputFile_Std_SetII("detection_StdPicture_SetII_RvsAlfa.root");
@@ -51,7 +55,7 @@ void makePlots()
 
   TObjString *label;
 
-  TString legend = TString("1:1:1 at detector");
+  TString legend = TString("No matter effect");
 
   label = new TObjString( legend.Data() );
   v_Labels->Add( label ); 
@@ -136,15 +140,15 @@ void makePlots()
   
   makePlots(v_Variation, v_Labels,
             "ModelA", "EarthB", "Vacuum", "Set I #delta=#pi", "SetI_dCP180",
-            inputFile_SetI.Data(), inputFile_Std_SetI.Data());
+            inputFile_SetI_dCP180.Data(), inputFile_Std_SetI.Data());
 
   makePlots(v_Variation, v_Labels,
             "ModelB", "EarthB", "Vacuum", "Set I #delta=#pi", "SetI_dCP180",
-            inputFile_SetI.Data(), inputFile_Std_SetI.Data());
+            inputFile_SetI_dCP180.Data(), inputFile_Std_SetI.Data());
 
   makePlots(v_Variation, v_Labels,
             "ModelC", "EarthB", "Vacuum", "Set I #delta=#pi", "SetI_dCP180",
-            inputFile_SetI.Data(), inputFile_Std_SetI.Data());
+            inputFile_SetI_dCP180.Data(), inputFile_Std_SetI.Data());
   
   //... SET II
   
@@ -152,15 +156,15 @@ void makePlots()
   {
     makePlots(v_Variation, v_Labels,
               "ModelA", "EarthB", "Vacuum", "Set II #delta=#pi", "SetII_dCP180",
-              inputFile_SetII.Data(), inputFile_Std_SetII.Data());
+              inputFile_SetII_dCP180.Data(), inputFile_Std_SetII.Data());
     
     makePlots(v_Variation, v_Labels,
               "ModelB", "EarthB", "Vacuum", "Set II #delta=#pi", "SetII_dCP180", 
-              inputFile_SetII.Data(), inputFile_Std_SetII.Data());
+              inputFile_SetII_dCP180.Data(), inputFile_Std_SetII.Data());
     
     makePlots(v_Variation, v_Labels,
               "ModelC", "EarthB", "Vacuum", "Set II #delta=#pi", "SetII_dCP180", 
-              inputFile_SetII.Data(), inputFile_Std_SetII.Data());
+              inputFile_SetII_dCP180.Data(), inputFile_Std_SetII.Data());
     
   }
   
@@ -290,9 +294,9 @@ void makePlots( TList      * Variations,
 
   }
 
-  int linecolor[6] = { 1, 2, 2, 2, 2, 1};
-  int linestyle[6] = { 1, 1, 2, 3, 4, 1};
-  int linewidth[6] = { 2, 2, 2, 2, 2, 2};
+  int linecolor[6] = { 2, 1, 1, 1, 1, 1};
+  int linestyle[6] = { 2, 2, 3, 1, 4, 1};
+  int linewidth[6] = { 3, 3, 3, 3, 3, 3};
   
   ///
   
@@ -351,7 +355,7 @@ void makePlots( TList      * Variations,
   TString ThisModel;
 
   if( TString(model) == TString("StdPicture") )
-    ThisModel = TString("Std Picture");
+    ThisModel = TString("No matter effect");
   else 
   {
     ThisModel = TString(model);

@@ -28,15 +28,15 @@ if not os.path.isdir(source):
 	print 'cannot continue - no root files'
 	sys.exit(1)
 
-arguments = []
-datasets = []
+arguments  = []
+datasets   = []
 
 outfile = open('all_datasets_models_' + cfg + '.dat','w')
 
 for model in models:
 	for phase in dcp:
 		dataset_name = 'dataset_' + model + '_' + cfg + '_' + phase + '_RvsAlfa.dat'
-		dataset = open (dataset_name,'w')
+		dataset = open (dataset_name,'r+')
 		datasets.append(dataset)
 		
 		outfile.write(dataset_name + '\n')
@@ -51,13 +51,23 @@ for model in models:
 			file = source + model + '/' + '_'.join(arguments) + '.root'
 			if os.path.isfile(file):
 				dataset.write(file + '\n')
-					
+			else:
+				print 'Error: file not found: ', file
+				
 for dataset in datasets:
+
+	dataset.seek(0)
+	first_char = dataset.read(1)
 	
-	if sys.version_info < (2,7):
-		dataset.seek(-1,2)
+	if not first_char:
+		print 'Warning - dataset is EMPTY:', dataset.name
+		dataset.close()
 	else:
-		dataset.seek(-1, os.SEEK_END)
+		if sys.version_info < (2,7):
+			dataset.seek(-1,2)
+		else:
+			dataset.seek(-1, os.SEEK_END)
 		
-	dataset.truncate()
-	dataset.close()
+		dataset.truncate()
+		dataset.close()
+

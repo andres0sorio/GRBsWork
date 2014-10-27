@@ -19,6 +19,7 @@ void topTitle(const char *title)
 
 void makePlots() 
 {
+ 
   gROOT->SetStyle("Plain");
   gROOT->SetBatch(false);
   // --- Use the CMS TDR style
@@ -27,13 +28,13 @@ void makePlots()
   tdrStyle->SetErrorX(0.5);
   tdrStyle->SetPadLeftMargin(0.10);
   tdrStyle->SetPadRightMargin(0.10);
-
   tdrStyle->SetLegendBorderSize(0);
   tdrStyle->SetTitleYOffset(0.8);
   tdrStyle->SetOptStat(0);
   tdrStyle->SetOptFit(0);
   tdrStyle->SetTitleFontSize(0.08);
   tdrStyle->SetStatStyle(0);
+  tdrStyle->SetFrameLineWidth(1);
   tdrStyle->cd();
 
   //Figure 4 - these plots go into paper
