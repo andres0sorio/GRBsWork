@@ -31,7 +31,9 @@ public:
   
   virtual ~NeutrinosDetectionPaper( ); ///< Destructor
   
-  void MakeVariation01( const char *, const char *, const char *, const char * );
+  void EvaluateRvsEnergyMena( const char *, const char *, const char *, const char * );
+
+  void EvaluateRvsEnergy( const char *, const char *, const char *, const char * ); //Introduced Oct-2014
   
   void MakeVariation02( const char *, const char *, const char *, const char *, double, double, double);
 

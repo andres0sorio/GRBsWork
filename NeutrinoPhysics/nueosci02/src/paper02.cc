@@ -22,8 +22,6 @@ int main(int iargv, char **argv) {
   std::string dCP;
   std::string target;
   std::string source;
-  
-
 
   std::vector<std::string> avsteps;
   
@@ -32,9 +30,9 @@ int main(int iargv, char **argv) {
   avsteps.push_back("3. R vs phi_e fraction - standard picture" );
   avsteps.push_back("4. R as a function of sin2(theta_13) - for different dCP values - standard picture" );
   avsteps.push_back("5. R vs Ev energy - as in Olga Mena reference" );
-
   //... Added Oct/2014 - AO
   avsteps.push_back("6. R vs a function of sin2(theta_13) - for diff. star models");
+  avsteps.push_back("7. R vs Ev energy - as in Olga Mena reference using our integration Method" );
   
   bool no_dataset = false;
   
@@ -262,6 +260,7 @@ int main(int iargv, char **argv) {
   execSteps["5"] = false;
   //... Added Oct/2014 - AO
   execSteps["6"] = false;
+  execSteps["7"] = false;
   
   if( steps.size() != 0 )
   {
@@ -432,11 +431,11 @@ int main(int iargv, char **argv) {
 
       var   = (*itr).substr(pos1, (pos2-pos1) );
       
-      std::cout << "paper02> MakeVariation01 with option " << var << " Model " << model << std::endl;
+      std::cout << "paper02> EvaluateRvsEnergyMena with option " << var << " Model " << model << std::endl;
 
       nudet->SetFluxHistograms(infile, model.c_str(), target.c_str(), source.c_str(), var.c_str() );
       
-      nudet->MakeVariation01(model.c_str(), target.c_str(), source.c_str(), var.c_str() ); //
+      nudet->EvaluateRvsEnergyMena(model.c_str(), target.c_str(), source.c_str(), var.c_str() ); //
       
       nudet->ResetFluxHistograms();
       
@@ -513,6 +512,49 @@ int main(int iargv, char **argv) {
     
     ///Write to Output
     nudet->WriteOutput();
+    
+  }
+
+  //... Added Oct/2014 - AO - Evaluate R vs Energy in similar fashion to Olga Mena
+  
+  if( execSteps["7"] ) {
+    
+    TFile * infile;
+    std::string model;
+    std::string var;
+
+    nudet->SetMixingParameters ( mixpars );
+     
+    for( itr = dataset.begin(); itr != dataset.end(); ++itr) 
+    {
+     
+      //... This is R vs Ev bins - Olga Mena [] XCheck - using our integration Method
+      
+      std::cout << (*itr) << std::endl;
+      
+      infile = new TFile( (*itr).c_str(), "READ");
+      
+      unsigned pos2 = (*itr).rfind("/");
+      unsigned pos1 = (*itr).rfind("/", pos2-1);
+      
+      model = (*itr).substr(pos1+1, (pos2-pos1-1) );
+      
+      pos2  = (*itr).rfind(".");
+      pos1  = (*itr).rfind("Var", pos2-1);
+      
+      var   = (*itr).substr(pos1, (pos2-pos1) );
+      
+      std::cout << "paper02> EvaluateRvsEnergy with option " << var << " Model " << model << std::endl;
+
+      nudet->SetFluxHistograms(infile, model.c_str(), target.c_str(), source.c_str(), var.c_str() );
+      
+      nudet->EvaluateRvsEnergy(model.c_str(), target.c_str(), source.c_str(), var.c_str() ); //
+      
+      nudet->ResetFluxHistograms();
+      
+      infile->Close();
+      
+    }
     
   }
   

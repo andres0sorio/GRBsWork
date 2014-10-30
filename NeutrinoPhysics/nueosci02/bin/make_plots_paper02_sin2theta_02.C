@@ -103,7 +103,11 @@ void makePlots( const char * model,
 {
 
   double MAXY = 2.4;
-    
+  
+  double x_Q13_SetI = sin(8.8*TMath::Pi()/180.0)*sin(8.8*TMath::Pi()/180.0);
+  
+  double x_Q13_SetII = sin(12.0*TMath::Pi()/180.0)*sin(12.0*TMath::Pi()/180.0);
+
   //Input path
   TString inpath("./root_files/RvsQ13/");
   
@@ -319,8 +323,7 @@ void makePlots( const char * model,
   
   leg->Draw();
 
-  double x_Q13_SetI = sin(8.8*TMath::Pi()/180.0)*sin(8.8*TMath::Pi()/180.0);
-  double x_Q13_SetII = sin(12.0*TMath::Pi()/180.0)*sin(12.0*TMath::Pi()/180.0);
+  
   
   double y_min = 1.60;
   double y_max = MAXY;

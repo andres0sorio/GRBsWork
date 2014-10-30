@@ -107,13 +107,13 @@ NeutrinosDetectionPaper::~NeutrinosDetectionPaper() {
 
 //=============================================================================
 
-void NeutrinosDetectionPaper::MakeVariation01(const char * model, 
-                                              const char * target, 
-                                              const char * source, 
-                                              const char * var)
-
+void NeutrinosDetectionPaper::EvaluateRvsEnergyMena(const char * model, 
+                                                    const char * target, 
+                                                    const char * source, 
+                                                    const char * var)
+  
 {
- 
+  
   // source ----> (progragation) -----> target
   //
   // This method reproduces Olga Mena's reference Figure 5 - the shower-to-muon ratio
@@ -182,7 +182,7 @@ void NeutrinosDetectionPaper::MakeVariation01(const char * model,
       
       h1C->SetBinContent( k, phi*result );
       
-      if(m_debug) std::cout << "MakeVariation01> convolve: x0 " << x0 << " " << phi*result << std::endl;
+      if(m_debug) std::cout << "EvaluateRvsEnergyMena> convolve: x0 " << x0 << " " << phi*result << std::endl;
       
       delete nminteg;
       
@@ -195,7 +195,7 @@ void NeutrinosDetectionPaper::MakeVariation01(const char * model,
   }
     
   //
-  std::cout << "MakeVariation01> now doing the xsecbar" << std::endl;
+  std::cout << "EvaluateRvsEnergyMena> now doing the xsecbar" << std::endl;
 
   for( itr = xsecbarConvolve.begin(); itr != xsecbarConvolve.end(); ++itr) 
   {
@@ -232,7 +232,7 @@ void NeutrinosDetectionPaper::MakeVariation01(const char * model,
       
       h1C->SetBinContent( k, phi * result );
       
-      if(m_debug) std::cout << "MakeVariation01> convolve-bar: x0 " << x0 << " " << phi*result << std::endl;
+      if(m_debug) std::cout << "EvaluateRvsEnergyMena> convolve-bar: x0 " << x0 << " " << phi*result << std::endl;
       
       delete nminteg;
       
@@ -246,7 +246,7 @@ void NeutrinosDetectionPaper::MakeVariation01(const char * model,
   
   //.........................................................................................
   
-  if(m_debug) std::cout << "MakeVariation01> Energy convolution done. Proceeding to R" << std::endl;
+  if(m_debug) std::cout << "EvaluateRvsEnergyMena> Energy convolution done. Proceeding to R" << std::endl;
 
   TH1F * Tks;
   TH1F * Shw = (TH1F*)xsecConv_histos["phi_e_conv"]->Clone("Showers");
@@ -256,7 +256,6 @@ void NeutrinosDetectionPaper::MakeVariation01(const char * model,
   //... There is a problem here with the dealing of the dCP - or something not well understood
   //... This stops us to reproduce figure 5 Mena
   //... AO Oct-2014
-  
   
   //double dCP = m_mixpars->GetPar9();
   //if( dCP == 0 ) 
@@ -327,6 +326,121 @@ void NeutrinosDetectionPaper::MakeVariation01(const char * model,
   
   m_output_file->cd("../");
     
+}
+
+void NeutrinosDetectionPaper::EvaluateRvsEnergy(const char * model, 
+                                                const char * target, 
+                                                const char * source, 
+                                                const char * var)
+  
+{
+  
+  // source ----> (progragation) -----> target
+  //
+  // This method works out the R as a function of energy in similar - but not exactly - way as  Olga Mena's reference 
+  //                 Figure 5 - the shower-to-muon ratio
+  // we use our integration methods
+  //
+
+  TString variation = TString("RvsEv") + TString("_") + TString(var);
+  
+  InitOutput(model, target, source, variation.Data() );
+  
+  //.........................................................................................
+  
+  //std::map<std::string, TH1F*> SpectralShape_histos;
+  
+  std::map<std::string,std::string> Flux_Nbeta;
+  
+  Flux_Nbeta["phi_e"]    = std::string("N_e");
+  Flux_Nbeta["phi_mu"]   = std::string("N_mu");
+  Flux_Nbeta["phi_tau"]  = std::string("N_tau");
+  Flux_Nbeta["phi_ae"]   = std::string("N_ae");
+  Flux_Nbeta["phi_amu"]  = std::string("N_amu");
+  Flux_Nbeta["phi_atau"] = std::string("N_atau");
+  
+  std::map<std::string,std::string>::iterator itr;
+  
+  int max_bins = m_energy_bin.size();
+  
+  max_bins = 2;
+  
+  std::cout << " max_bins " << max_bins << std::endl;
+  
+  int kbin = 1;
+  
+  while( kbin < max_bins ) {
+    
+    for( itr = Flux_Nbeta.begin(); itr != Flux_Nbeta.end(); ++itr) {
+      
+      // TH1F * h1C = (TH1F*)m_flux_histos[ itr->first ]->Clone( itr->second.c_str() );      
+      // SpectralShape_histos[itr->second] = h1C;
+      
+      double flux = m_flux_histos[itr->first]->GetBinContent(kbin); 
+      m_config->SetPar( (itr->second).c_str() , flux ); // Set constant flux in the range
+  
+      // Reset the limits of integration
+
+
+
+      std::cout << "EvaluateRvsEnergy> " << kbin << " " << itr->first << " " << itr->second << " " << flux << std::endl;
+      
+    }
+    
+    // Do integration now
+    
+    if(m_debug) std::cout << "EvaluateRvsEnergy> using Alfa= " << m_config->GetPar3() << std::endl; // Par3 == alpha
+    
+    MuTrackEvents * mu1 = new MuTrackEvents(m_data_xsec_neut.c_str(), m_data_xsec_anti.c_str(), 
+                                            m_data_pshadow.c_str(), m_config );
+    
+    double TkSum = mu1->Evaluate( );
+    
+    m_MuTks  = mu1->m_NuMuTracks;
+    
+    m_TauTks = mu1->m_NuTauTracks;
+    
+    ShowerEvents * sh1 =  new ShowerEvents(m_data_xsec_neut.c_str(), m_data_xsec_anti.c_str(), 
+                                           m_data_pshadow.c_str(), m_config );
+    
+    m_HadShw   = sh1->Evaluate( );
+    
+    m_HadShwE  = sh1->m_CCNuShower;
+    
+    m_HadShwT  = sh1->m_CCNutauShower;
+    
+    m_HadShwNC = sh1->m_NCShower;
+    
+    m_Ratio    =   (m_MuTks) / (m_HadShw);
+    
+    std::cout << "EvaluateRvsEnergy> "
+              << kbin     << '\t'
+              << TkSum    << '\t'
+              << m_MuTks  << '\t' 
+              << m_TauTks << '\t'
+              << m_HadShw << '\t'
+              << "R= " << m_Ratio  << std::endl;
+    
+    m_tree->Fill();
+    
+    delete sh1;
+    delete mu1;
+ 
+    ++kbin;
+    
+  }
+  
+  m_tree->Write();
+
+  /*
+    std::map<std::string, TH1F*>::iterator histoItr;
+    for( histoItr = SpectralShape_histos.begin(); histoItr != SpectralShape_histos.end(); ++histoItr)
+    delete histoItr->second;
+    SpectralShape_histos.clear();
+  */
+  
+  m_output_file->cd("../");
+  
 }
 
 void NeutrinosDetectionPaper::MakeVariationStdPicture(const char * target, 

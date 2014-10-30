@@ -36,6 +36,11 @@ outfile = open('all_datasets_models_' + cfg + '.dat','w')
 for model in models:
 	for phase in dcp:
 		dataset_name = 'dataset_' + model + '_' + cfg + '_' + phase + '_RvsAlfa.dat'
+
+		if not os.path.isfile(dataset_name):
+			emptyfile_cmd = "touch " + dataset_name
+			os.system(emptyfile_cmd)
+		
 		dataset = open (dataset_name,'r+')
 		datasets.append(dataset)
 		
