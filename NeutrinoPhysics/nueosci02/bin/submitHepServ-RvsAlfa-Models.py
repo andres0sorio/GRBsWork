@@ -21,10 +21,10 @@ if len(datasets) != 0:
 
 for data in datasets:
         values = []
-        values.append( data )
+        inputdata = data.split('/')[2]
+        values.append( inputdata )
         arguments.append( values )
                 
-
 
 
 
