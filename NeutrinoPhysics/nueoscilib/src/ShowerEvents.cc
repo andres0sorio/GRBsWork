@@ -18,7 +18,7 @@ ShowerEvents::ShowerEvents(const char * nuxsec, const char * antinuxsec, Paramet
   m_phi_nu[0] = m_input->GetPar("N_e");
   m_phi_nu[1] = m_input->GetPar("N_mu");
   m_phi_nu[2] = m_input->GetPar("N_tau");
-    
+
   m_phi_anu[0] = m_input->GetPar("N_ae");
   m_phi_anu[1] = m_input->GetPar("N_amu");
   m_phi_anu[2] = m_input->GetPar("N_atau");
@@ -111,18 +111,16 @@ float ShowerEvents::EvaluateNCContribution()
     gg->SetParameters( m_input );
     
     /*
-    ROOT::Math::GSLIntegrator * nminteg = new ROOT::Math::GSLIntegrator( Integrals::AbsError,
-                                                                         Integrals::RelError,
-                                                                         Integrals::SubIntervals);
+      ROOT::Math::GSLIntegrator * nminteg = new ROOT::Math::GSLIntegrator( Integrals::AbsError,
+      Integrals::RelError,
+      Integrals::SubIntervals);
     */
-
     
-    ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( ROOT::Math::IntegrationOneDim::kADAPTIVESINGULAR,
-                                                                          ROOT::Math::Integration::kGAUSS61,
+    ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( Integrals::IntMethod,
+                                                                          Integrals::KronRule,
                                                                           Integrals::AbsError, 
                                                                           Integrals::RelError, 
                                                                           Integrals::SubIntervals );
-
     
     nminteg->SetFunction( *(ROOT::Math::IGenFunction*)ff );
     
@@ -180,16 +178,16 @@ float ShowerEvents::EvaluateCCNueContribution()
   gg->SetParameters( m_input );
   
   /*
-  ROOT::Math::GSLIntegrator * nminteg = new ROOT::Math::GSLIntegrator( Integrals::AbsError,
-                                                                       Integrals::RelError,
-                                                                       Integrals::SubIntervals);
+    ROOT::Math::GSLIntegrator * nminteg = new ROOT::Math::GSLIntegrator( Integrals::AbsError,
+    Integrals::RelError,
+    Integrals::SubIntervals);
   */
 
-  ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( ROOT::Math::IntegrationOneDim::kADAPTIVESINGULAR,
-                                                                          ROOT::Math::Integration::kGAUSS31,
-                                                                          Integrals::AbsError, 
-                                                                          Integrals::RelError, 
-                                                                          Integrals::SubIntervals );
+  ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( Integrals::IntMethod,
+                                                                        Integrals::KronRule,
+                                                                        Integrals::AbsError, 
+                                                                        Integrals::RelError, 
+                                                                        Integrals::SubIntervals );
   
   nminteg->SetFunction( *(ROOT::Math::IGenFunction*)ff );
   
@@ -238,19 +236,20 @@ float ShowerEvents::EvaluateCCNutauContribution()
   gg->SetParameters( m_input );
   
   /*
-  ROOT::Math::GSLIntegrator * nminteg = new ROOT::Math::GSLIntegrator( Integrals::AbsError,
-                                                                       Integrals::RelError,
-                                                                       Integrals::SubIntervals);
+    ROOT::Math::GSLIntegrator * nminteg = new ROOT::Math::GSLIntegrator( Integrals::AbsError,
+    Integrals::RelError,
+    Integrals::SubIntervals);
   */
   
-  ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( ROOT::Math::IntegrationOneDim::kADAPTIVESINGULAR,
-                                                                        ROOT::Math::Integration::kGAUSS31,
+  ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( Integrals::IntMethod,
+                                                                        Integrals::KronRule,
                                                                         Integrals::AbsError, 
                                                                         Integrals::RelError, 
                                                                         Integrals::SubIntervals );
+
   nminteg->SetFunction( *(ROOT::Math::IGenFunction*)ff );
   
-  float m_sh_Th = m_input->GetPar10();
+  float m_sh_Th  = m_input->GetPar10();
   float m_nu_Cut = m_input->GetPar2();
   
   double resultA = nminteg->Integral(m_sh_Th, m_nu_Cut);

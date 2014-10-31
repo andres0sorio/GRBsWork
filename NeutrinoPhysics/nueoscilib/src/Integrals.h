@@ -25,6 +25,8 @@ double dFnub( double * x, double * par);
 
 double dsigmady( double * x );
 
+
+
 //=============================================================================
 
 class Integrals {
@@ -69,6 +71,10 @@ public:
   static const double RelError;
   static const int SubIntervals;
   static const double NMFactor;
+
+  //AO Added Oct 2014 - full control of integration
+  static const ROOT::Math::Integration::Type IntMethod;
+  static const ROOT::Math::Integration::GKRule KronRule;
 
  protected:
   

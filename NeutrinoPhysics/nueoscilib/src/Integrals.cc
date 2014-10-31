@@ -16,11 +16,39 @@
 // Standard constructor, destructor and Setters of Base class Integrals
 //=============================================================================
 
-///Constant parameters
+// GSL Integration parameters
+
 const int    Integrals::SubIntervals = 1000;
 const double Integrals::AbsError     = 1.0e-4;
 const double Integrals::RelError     = 1.0e-3;
-const double Integrals::NMFactor     = 1.0e8;
+const double Integrals::NMFactor     = 1.0e10;
+
+/*
+  ... GSL Integration methods
+  
+  kGAUSS: simple Gauss integration method with fixed rule
+  kLEGENDRE: Gauss-Legendre integration
+  kNONADAPTIVE : to be used for smooth functions
+  kADAPTIVE : to be used for general functions without singularities.
+  kADAPTIVESINGULAR: default adaptive integration type which can be used in the case of the presence of singularities.
+
+  ... Gauss-KronRod integration rule for ADAPTIVE integration type
+  
+  Enumerator:
+  kGAUSS15 
+  kGAUSS21 
+  kGAUSS31 
+  kGAUSS41 
+  kGAUSS51 
+  kGAUSS61 
+
+*/
+
+const ROOT::Math::Integration::Type Integrals::IntMethod = ROOT::Math::IntegrationOneDim::kADAPTIVE;
+//const ROOT::Math::Integration::Type Integrals::IntMethod = ROOT::Math::IntegrationOneDim::kADAPTIVESINGULAR;
+
+const ROOT::Math::Integration::GKRule Integrals::KronRule = ROOT::Math::Integration::kGAUSS31;
+//const ROOT::Math::Integration::GKRule Integrals::KronRule = ROOT::Math::Integration::kGAUSS51;
 
 Integrals::Integrals() { 
   m_debug = false;
@@ -284,17 +312,15 @@ double m_Numu_integral_dx::DoEval(double enu) const{
   float m_y_upp = ( enu - m_mu_Th) / enu;  
   
   /*
-  ROOT::Math::GSLIntegrator * nminteg =   new ROOT::Math::GSLIntegrator( Integrals::AbsError,
-                                                                         Integrals::RelError,
-                                                                         Integrals::SubIntervals);
+    ROOT::Math::GSLIntegrator * nminteg = new ROOT::Math::GSLIntegrator( Integrals::AbsError,
+    Integrals::RelError,
+    Integrals::SubIntervals);
   */
 
-  //kADAPTIVESINGULAR - 
-  ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( ROOT::Math::IntegrationOneDim::kADAPTIVESINGULAR,
-                                                                        ROOT::Math::Integration::kGAUSS31,
+  ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( IntMethod,
+                                                                        KronRule,
                                                                         AbsError, RelError, SubIntervals );
-  
-  
+    
   nminteg->SetFunction( *(ROOT::Math::IGenFunction*)ff );
   
   double result = nminteg->Integral(m_y_low , m_y_upp);
@@ -381,12 +407,10 @@ double m_Nutau_integral_dx::DoEval(double enut) const{
     Integrals::SubIntervals);
   */
   
-  //kADAPTIVESINGULAR
-  ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( ROOT::Math::IntegrationOneDim::kADAPTIVESINGULAR,
-                                                                        ROOT::Math::Integration::kGAUSS31,
+  ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( IntMethod,
+                                                                        KronRule,
                                                                         AbsError, RelError, SubIntervals );
-  
-  
+    
   nminteg->SetFunction( *(ROOT::Math::IGenFunction*)ff );
   
   double result = nminteg->Integral(m_y_low , m_y_upp);
@@ -420,13 +444,13 @@ double m_Nutau_integral_dxdy::DoEval(double y) const{
   float z_upp = 0.5 * E_tau * ( 1.0 + Beta);
   
   /*
-  ROOT::Math::GSLIntegrator * nminteg = new ROOT::Math::GSLIntegrator( Integrals::AbsError,
-                                                                       Integrals::RelError,
-                                                                       Integrals::SubIntervals);
+    ROOT::Math::GSLIntegrator * nminteg = new ROOT::Math::GSLIntegrator( Integrals::AbsError,
+    Integrals::RelError,
+    Integrals::SubIntervals);
   */
   
-  ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( ROOT::Math::IntegrationOneDim::kADAPTIVESINGULAR,
-                                                                        ROOT::Math::Integration::kGAUSS31,
+  ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( IntMethod,
+                                                                        KronRule,
                                                                         AbsError, RelError, SubIntervals );
   
   nminteg->SetFunction( *(ROOT::Math::IGenFunction*)ff );

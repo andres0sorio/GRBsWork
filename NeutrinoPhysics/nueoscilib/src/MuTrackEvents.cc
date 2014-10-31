@@ -91,21 +91,17 @@ float MuTrackEvents::EvaluateNuMuContribution() {
   ff->SetParameters( m_input );
 
   /*
-  ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( Integrals::AbsError,
-                                                                        Integrals::RelError,
-                                                                        Integrals::SubIntervals);
+    ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( Integrals::AbsError,
+    Integrals::RelError,
+    Integrals::SubIntervals);
   */
   
-  ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( ROOT::Math::IntegrationOneDim::kADAPTIVESINGULAR,
-                                                                        ROOT::Math::Integration::kGAUSS31,
+  ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( Integrals::IntMethod,
+                                                                        Integrals::KronRule,
                                                                         Integrals::AbsError, 
                                                                         Integrals::RelError, 
                                                                         Integrals::SubIntervals );
   
-  
-  
-
-
   nminteg->SetFunction( *(ROOT::Math::IGenFunction*)ff );
   
   float m_mu_Th = m_input->GetPar1();
@@ -140,13 +136,13 @@ float MuTrackEvents::EvaluateNuTauContribution() {
   ff->SetParameters( m_input );
   
   /*
-  ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( Integrals::AbsError,
-                                                                        Integrals::RelError,
-                                                                        Integrals::SubIntervals);
+    ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( Integrals::AbsError,
+    Integrals::RelError,
+    Integrals::SubIntervals);
   */
   
-  ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( ROOT::Math::IntegrationOneDim::kADAPTIVESINGULAR,
-                                                                        ROOT::Math::Integration::kGAUSS31,
+  ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( Integrals::IntMethod,
+                                                                        Integrals::KronRule,
                                                                         Integrals::AbsError, 
                                                                         Integrals::RelError, 
                                                                         Integrals::SubIntervals );
