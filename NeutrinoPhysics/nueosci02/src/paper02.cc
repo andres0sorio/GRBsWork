@@ -33,6 +33,7 @@ int main(int iargv, char **argv) {
   //... Added Oct/2014 - AO
   avsteps.push_back("6. R vs a function of sin2(theta_13) - for diff. star models");
   avsteps.push_back("7. R vs Ev energy - as in Olga Mena reference using our integration Method" );
+  avsteps.push_back("8. Fluxes vs Ev energy" );
   
   bool no_dataset = false;
   
@@ -261,6 +262,7 @@ int main(int iargv, char **argv) {
   //... Added Oct/2014 - AO
   execSteps["6"] = false;
   execSteps["7"] = false;
+  execSteps["8"] = false;
   
   if( steps.size() != 0 )
   {
@@ -552,6 +554,47 @@ int main(int iargv, char **argv) {
       nudet->SetFluxHistograms(infile, model.c_str(), target.c_str(), source.c_str(), var.c_str() );
       
       nudet->EvaluateRvsEnergy(model.c_str(), target.c_str(), source.c_str(), var.c_str() ); //
+      
+      nudet->ResetFluxHistograms();
+      
+      infile->Close();
+      
+    }
+    
+  }
+
+  if( execSteps["8"] ) {
+    
+    TFile * infile;
+    std::string model;
+    std::string var;
+    
+    nudet->SetMixingParameters ( mixpars );
+    
+    //... Xcheck why I am not getting 0.333 when energy -> 10^17 ?
+    
+    for( itr = dataset.begin(); itr != dataset.end(); ++itr) 
+    {
+      
+      //... This is Fluxes vs Ev bins 
+      
+      std::cout << (*itr) << std::endl;
+      
+      infile = new TFile( (*itr).c_str(), "READ");
+      
+      unsigned pos2 = (*itr).rfind("/");
+      unsigned pos1 = (*itr).rfind("/", pos2-1);
+      
+      model = (*itr).substr(pos1+1, (pos2-pos1-1) );
+      
+      pos2  = (*itr).rfind(".");
+      pos1  = (*itr).rfind("Var", pos2-1);
+      
+      var   = (*itr).substr(pos1, (pos2-pos1) );
+      
+      std::cout << "paper02> EvaluateRvsEnergy with option " << var << " Model " << model << std::endl;
+      
+      nudet->SetFluxHistograms(infile, model.c_str(), target.c_str(), source.c_str(), var.c_str() );
       
       nudet->ResetFluxHistograms();
       

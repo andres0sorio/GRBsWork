@@ -40,6 +40,14 @@ void makePlots()
   //Figure 4 - these plots go into paper
   //Star -> Vacuum -> Earth ( Profile B )
 
+  TString inputFile_ModelA_SetI();
+  TString inputFile_ModelB_SetI();
+  TString inputFile_ModelC_SetI();
+
+  TString inputFile_ModelA_SetII();
+  TString inputFile_ModelB_SetII();
+  TString inputFile_ModelC_SetII();
+
   makePlots("EarthB", "SetI",
             "./root_files/ModelA/output_ModelA_SetI.root", 
             "./root_files/ModelB/output_ModelB_SetI.root", 

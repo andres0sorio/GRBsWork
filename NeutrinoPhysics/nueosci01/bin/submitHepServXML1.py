@@ -4,12 +4,12 @@ import sys, os, stat, shutil
 
 use_file = 1
 
-dcp = '0'
+dmasses = '0.0032,0.00008'
 
 steps = '1,2,3'
 
-dmass_vars = ['0.0014','0.006','0.0032']
-all_models = ['ModelA','ModelB','ModelC']
+dcp_values = ['0','180']
+all_models = ['ModelA','ModelB','ModelC','ZeroPt']
 
 xmlfi = ''
 
@@ -32,24 +32,22 @@ if xmlfi == 'model_config_SetI.xml':
 #Set II - march 21
 if xmlfi == 'model_config_SetII.xml':
     angles = '33.8,12.0,45.0'
-    
+
 config = xmlfi.split('_')[2].split('.')[0]
 
 script = './local_xml2.csh'
 
 output = 'output.root'
 
-#OK Ready now to loop over Dmasses and Models
+#OK Ready now to loop over Model and dCP
 
-for dmass32 in dmass_vars:
+for model in all_models:
 
-    for model in all_models:
-
-        dmasses = dmass32 + ',' + '0.00008'
+    for dcp in dcp_values:
 
         x0  = 1.0e11
         arguments = []
-        
+
         while x0 < xmax:
 
             x1 = x0*dx
@@ -85,7 +83,7 @@ for dmass32 in dmass_vars:
 
         #Job declaration and initialisation:
         myjob = Job( application = app, backend = 'Local' )
-        myjob.name = 'nueosc.' + model + '.' + config
+        myjob.name = 'nueosc.' + model + '.' + dcp + '.' + config
         myjob.splitter = sp
         myjob.merger = mg
 
@@ -94,5 +92,7 @@ for dmass32 in dmass_vars:
         for input in input_sandbox:
             myjob.inputsandbox.append( File ( input ) )
 
-        print myjob.name + " submission done."
+        #myjob.submit()
+
+        print "job submission done."
 

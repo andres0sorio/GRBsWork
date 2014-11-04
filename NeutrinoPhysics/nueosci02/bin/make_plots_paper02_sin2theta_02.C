@@ -73,20 +73,33 @@ void makePlots()
 
   bool plotSetII = true;
   
-  makePlots("ModelA", "EarthB", "Vacuum", "SetI", "detection-sin2theta-SetI.root");
+  TString inputFile_SetI("detection_Models_SetI_RvsSin2Q13.root");
 
-  makePlots("ModelB", "EarthB", "Vacuum", "SetI", "detection-sin2theta-SetI.root");
+  TString inputFile_SetII("detection_Models_SetII_RvsSin2Q13.root");
+
+  TString inputFile_ModelA_SetI("detection_ModelA_SetI_RvsSin2Q13.root");
+
   
-  makePlots("ModelC", "EarthB", "Vacuum", "SetI", "detection-sin2theta-SetI.root");
+  if( 0 ) { 
+    makePlots("ModelA", "EarthB", "Vacuum", "SetI", inputFile_SetI.Data() );
+  }
 
+  //... AO: Replacement due to bump
+
+  makePlots("ModelA", "EarthB", "Vacuum", "SetI", inputFile_ModelA_SetI.Data() );
+
+  makePlots("ModelB", "EarthB", "Vacuum", "SetI", inputFile_SetI.Data() );
+  
+  makePlots("ModelC", "EarthB", "Vacuum", "SetI", inputFile_SetI.Data() );
+  
   if( plotSetII ) 
   {
     
-    makePlots("ModelA", "EarthB", "Vacuum", "SetII", "detection-sin2theta-SetII.root");
+    makePlots("ModelA", "EarthB", "Vacuum", "SetII", inputFile_SetII.Data() );
 
-    makePlots("ModelB", "EarthB", "Vacuum", "SetII", "detection-sin2theta-SetII.root");
+    makePlots("ModelB", "EarthB", "Vacuum", "SetII", inputFile_SetII.Data() );
     
-    makePlots("ModelC", "EarthB", "Vacuum", "SetII", "detection-sin2theta-SetII.root");
+    makePlots("ModelC", "EarthB", "Vacuum", "SetII", inputFile_SetII.Data() );
 
   }
   
@@ -224,7 +237,7 @@ void makePlots( const char * model,
       
   }
   
-  TString cname = TString("Ratio") + TString("_") + TString(model) +  TString("_") + TString(var);
+  TString cname = TString("Ratio") + TString("_") + TString(model) +  TString("_") + TString(config);
   
   TCanvas * c1 = new TCanvas( cname.Data(), "track/shower ratio", 206,141,722,575); 
 

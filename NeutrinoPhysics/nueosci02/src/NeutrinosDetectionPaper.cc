@@ -1145,20 +1145,32 @@ void NeutrinosDetectionPaper::SetFluxHistograms(TFile * infile,
   
   //Initialize input tree
   bool valid = Init ( target, source, input[0].c_str() );
-  if( !valid ) return;
+  
+  if( !valid ) { 
+    std::cout << "SetFluxHistograms> Error in initialization of tree" << std::endl;
+    return;
+  }
   
   Long64_t nentries = m_input_tree->GetEntries();
-    
+  
   std::cout << "NeutrinosDetectionPaper> n points: " << nentries << std::endl;
   
   for (Long64_t i=0;i<nentries;i++) {
       
     m_input_tree->GetEntry(i);
 
-    //std::cout << "SetFluxHistograms> " << i << " " << m_Ex_in << " " << bin_pos<< " " << m_energy_bin[bin_pos] << '\n';
+    std::cout << "SetFluxHistograms> Neutrino energies: " << i << " " << m_Ex_in << " " << bin_pos << " " << m_energy_bin[bin_pos] << '\n';
     
     if ( m_Ex_in < m_energy_bin[bin_pos] ) 
     {
+
+      std::cout << "SetFluxHistograms> Neutrino fluxes: " 
+                << i << " " 
+                << m_Ex_in 
+                << " e: " <<  m_Phi_e_in 
+                << " m: " <<  m_Phi_m_in 
+                << " t: " <<  m_Phi_t_in
+                << std::endl;
       
       sum["phi_e"] += m_Phi_e_in;
       sum["phi_m"] += m_Phi_m_in;
@@ -1174,7 +1186,7 @@ void NeutrinosDetectionPaper::SetFluxHistograms(TFile * infile,
       sum["phi_t"] = sum["phi_t"] / kval;
       
       //Store the info in the histograms
-      //std::cout << bin_pos << " " << sum["phi_e"] << '\t' << sum["phi_m"] << '\t' << sum["phi_t"] << std::endl; 
+      std::cout << bin_pos << " " << sum["phi_e"] << '\t' << sum["phi_m"] << '\t' << sum["phi_t"] << std::endl; 
       
       m_flux_histos["phi_e"]->SetBinContent(bin_pos, sum["phi_e"]);
       m_flux_histos["phi_mu"]->SetBinContent(bin_pos, sum["phi_m"]);
@@ -1210,9 +1222,7 @@ void NeutrinosDetectionPaper::SetFluxHistograms(TFile * infile,
       
       }
     */
-    
-    
-    
+        
   }
   
   //std::cout << "SetFluxHistograms> bin_pos " << bin_pos << std::endl;
@@ -1248,7 +1258,7 @@ void NeutrinosDetectionPaper::SetFluxHistograms(TFile * infile,
       sum["phi_t"] = sum["phi_t"] / kval;
       
       //Store the info in the histograms
-      //std::cout << bin_pos << " " << sum["phi_e"] << '\t' << sum["phi_m"] << '\t' << sum["phi_t"] << std::endl; 
+      std::cout << bin_pos << " " << sum["phi_e"] << '\t' << sum["phi_m"] << '\t' << sum["phi_t"] << std::endl; 
       
       m_flux_histos["phi_ae"]->SetBinContent(bin_pos, sum["phi_e"]);
       m_flux_histos["phi_amu"]->SetBinContent(bin_pos, sum["phi_m"]);
