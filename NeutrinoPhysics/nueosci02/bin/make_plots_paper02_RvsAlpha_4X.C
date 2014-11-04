@@ -43,12 +43,13 @@ void makePlots()
   
   TString inputFile_SetI("detection-All-Models-SetI-RvsAlfa.root");
   TString inputFile_SetII("detection-All-Models-SetII-RvsAlfa.root");
-
-  TString inputFile_SetI_dCP180("detection-All-Models-SetI-RvsAlfa-dCP180.root");
-  TString inputFile_SetII_dCP180("detection-All-Models-SetII-RvsAlfa-dCP180.root");
   
   TString inputFile_Std_SetI("detection_StdPicture_SetI_RvsAlfa.root");
   TString inputFile_Std_SetII("detection_StdPicture_SetII_RvsAlfa.root");
+
+  //Model B - Using kGAUSS61 instead of kGAUSS51
+  //
+  TString inputFile_ModelB_SetI("detection-ModelB-SetI-RvsAlfa.root");
   
   TList * v_Variation = new TList();
   TList * v_Labels = new TList();
@@ -99,9 +100,18 @@ void makePlots()
             "ModelA", "EarthB", "Vacuum", "Set I #delta=0", "SetI_dCP0",
             inputFile_SetI.Data(), inputFile_Std_SetI.Data());
   
+  if( 0 ) 
+  {
+    makePlots(v_Variation, v_Labels, 
+              "ModelB", "EarthB", "Vacuum", "Set I #delta=0", "SetI_dCP0",
+              inputFile_SetI.Data(), inputFile_Std_SetI.Data());
+  }
+  
+  //Model B - Corrected with KGAUSS61
+  
   makePlots(v_Variation, v_Labels, 
             "ModelB", "EarthB", "Vacuum", "Set I #delta=0", "SetI_dCP0",
-            inputFile_SetI.Data(), inputFile_Std_SetI.Data());
+            inputFile_ModelB_SetI.Data(), inputFile_Std_SetI.Data());
   
   makePlots(v_Variation, v_Labels, 
             "ModelC", "EarthB", "Vacuum", "Set I #delta=0", "SetI_dCP0",
@@ -140,15 +150,24 @@ void makePlots()
   
   makePlots(v_Variation, v_Labels,
             "ModelA", "EarthB", "Vacuum", "Set I #delta=#pi", "SetI_dCP180",
-            inputFile_SetI_dCP180.Data(), inputFile_Std_SetI.Data());
+            inputFile_SetI.Data(), inputFile_Std_SetI.Data());
 
+  if( 0 ) 
+  {
+    makePlots(v_Variation, v_Labels,
+              "ModelB", "EarthB", "Vacuum", "Set I #delta=#pi", "SetI_dCP180",
+              inputFile_SetI.Data(), inputFile_Std_SetI.Data());
+  }
+  
+  //Model B - Corrected with kGAUSS61
+  
   makePlots(v_Variation, v_Labels,
             "ModelB", "EarthB", "Vacuum", "Set I #delta=#pi", "SetI_dCP180",
-            inputFile_SetI_dCP180.Data(), inputFile_Std_SetI.Data());
-
+            inputFile_ModelB_SetI.Data(), inputFile_Std_SetI.Data());
+  
   makePlots(v_Variation, v_Labels,
             "ModelC", "EarthB", "Vacuum", "Set I #delta=#pi", "SetI_dCP180",
-            inputFile_SetI_dCP180.Data(), inputFile_Std_SetI.Data());
+            inputFile_SetI.Data(), inputFile_Std_SetI.Data());
   
   //... SET II
   
@@ -156,15 +175,15 @@ void makePlots()
   {
     makePlots(v_Variation, v_Labels,
               "ModelA", "EarthB", "Vacuum", "Set II #delta=#pi", "SetII_dCP180",
-              inputFile_SetII_dCP180.Data(), inputFile_Std_SetII.Data());
+              inputFile_SetII.Data(), inputFile_Std_SetII.Data());
     
     makePlots(v_Variation, v_Labels,
               "ModelB", "EarthB", "Vacuum", "Set II #delta=#pi", "SetII_dCP180", 
-              inputFile_SetII_dCP180.Data(), inputFile_Std_SetII.Data());
+              inputFile_SetII.Data(), inputFile_Std_SetII.Data());
     
     makePlots(v_Variation, v_Labels,
               "ModelC", "EarthB", "Vacuum", "Set II #delta=#pi", "SetII_dCP180", 
-              inputFile_SetII_dCP180.Data(), inputFile_Std_SetII.Data());
+              inputFile_SetII.Data(), inputFile_Std_SetII.Data());
     
   }
   

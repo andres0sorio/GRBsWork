@@ -368,8 +368,11 @@ int main(int iargv, char **argv) {
 
       var   = (*itr).substr(pos1, (pos2-pos1) );
       
-      std::cout << "paper02> MakeVariation02 with option " << var << " Model " << model << std::endl;
+      std::cerr << "paper02> " << (*itr) << std::endl;
+      std::cerr << "paper02> MakeVariation02 with option " << var << " Model " << model << std::endl;
       
+      std::cout << "paper02> MakeVariation02 with option " << var << " Model " << model << std::endl;
+
       nudet->SetFluxHistograms(infile, model.c_str(), target.c_str(), source.c_str(), var.c_str() );
       
       nudet->MakeVariation02(model.c_str(), target.c_str(),source.c_str(), var.c_str(), 2.0, 3.1, 0.05); //
