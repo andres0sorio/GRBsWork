@@ -37,52 +37,6 @@ void makePlots()
   tdrStyle->SetFrameLineWidth(1);
   tdrStyle->cd();
 
-  //... These plots go into paper - Figs 7 & 8
-  //Star -> Vacuum -> Earth ( Profile B )
-  
-  TString inputFile_ModelA_SetI("ModelA/output_ModelA_SetI_1e17_dCP0.root");
-  TString inputFile_ModelB_SetI("ModelB/output_ModelB_SetI_1e17_dCP0.root");
-  TString inputFile_ZeroPt_SetI("ZeroPt/output_ZeroPt_SetI_1e17_dCP0.root");
-  
-  TString inputFile_ModelA_SetII("ModelA/output_ModelA_SetII_1e17_dCP0.root");
-  TString inputFile_ModelB_SetII("ModelB/output_ModelB_SetII_1e17_dCP0.root");
-  TString inputFile_ZeroPt_SetII("ZeroPt/output_ZeroPt_SetII_1e17_dCP0.root");
-
-
-  
-  makePlots("EarthB", "Vacuum", "SetI",
-            inputFile_ModelA_SetI.Data(),
-            inputFile_ModelB_SetI.Data(),
-            inputFile_ZeroPt_SetI.Data());
-  
-  makePlots("EarthB", "Vacuum", "SetII",
-            inputFile_ModelA_SetII.Data(),
-            inputFile_ModelB_SetII.Data(),
-            inputFile_ZeroPt_SetII.Data());
-
-  //... These plots are for debugging & understanding
-  //Star -> Vacuum -> (Earth surface)
-
-  makePlots("Vacuum", "ModelX", "SetI",
-            inputFile_ModelA_SetI.Data(),
-            inputFile_ModelB_SetI.Data(),
-            inputFile_ZeroPt_SetI.Data());
-  
-  makePlots("Vacuum", "ModelX", "SetII",
-            inputFile_ModelA_SetII.Data(),
-            inputFile_ModelB_SetII.Data(),
-            inputFile_ZeroPt_SetII.Data());
-
-  makePlots("ModelX", "0", "SetI",
-            inputFile_ModelA_SetI.Data(),
-            inputFile_ModelB_SetI.Data(),
-            inputFile_ZeroPt_SetI.Data());
-  
-  makePlots("ModelX", "0", "SetII",
-            inputFile_ModelA_SetII.Data(),
-            inputFile_ModelB_SetII.Data(),
-            inputFile_ZeroPt_SetII.Data());
-
   //... Debuging lambdas - inverted positions 1->3 3->1 - Nov 05/2014
   //... in NeutrinosOscVarDensity.cc
   //... Data generated using jobs 484,491
@@ -124,7 +78,7 @@ void makePlots( const char * target,
   //..................................................................................................
 
   //Input path
-  TString inpath("./root_files/");
+  TString inpath("./root_files_debug/");
   
   //Output path
   TString path("./paper02-plots/flux/");
@@ -203,13 +157,13 @@ void makePlots( const char * target,
   v_Labels->Add( label ); 
 
   TList * v_Title = new TList();
-  label = new TObjString( "(a) Vacuum (inside star)" );
+  label = new TObjString( "(a) Vacuum (inside star) -DBG" );
   v_Title->Add( label ); 
-  label = new TObjString( "(b) Model A" );
+  label = new TObjString( "(b) Model A -DBG" );
   v_Title->Add( label ); 
-  label = new TObjString( "(c) Model B" );
+  label = new TObjString( "(c) Model B -DBG" );
   v_Title->Add( label ); 
-  label = new TObjString( "(d) Model A" );
+  label = new TObjString( "(d) Model A -DBG" );
   v_Title->Add( label );
   
   TList * PeeTree = new TList();
@@ -424,15 +378,15 @@ void makePlots( const char * target,
   std::stringstream saveAs;
     
   saveAs.str("");
-  saveAs << path << target << "/pdf/" << "nueosc_flux_" << target << "_" << config << "_4x_MenaFormat_F4" << ".pdf";
+  saveAs << path << target << "/pdf/" << "nueosc_flux_" << target << "_" << config << "_4x_MenaFormat_F4_DBG" << ".pdf";
   c1->SaveAs( saveAs.str().c_str() );
   
   saveAs.str("");
-  saveAs << path << target << "/png/" << "nueosc_flux_" << target << "_" << config << "_4x_MenaFormat_F4" << ".png";
+  saveAs << path << target << "/png/" << "nueosc_flux_" << target << "_" << config << "_4x_MenaFormat_F4_DBG" << ".png";
   c1->SaveAs( saveAs.str().c_str() );
 
   saveAs.str("");
-  saveAs << path << target << "/eps/" << "nueosc_flux_" << target << "_" << config << "_4x_MenaFormat_F4" << ".eps";
+  saveAs << path << target << "/eps/" << "nueosc_flux_" << target << "_" << config << "_4x_MenaFormat_F4_DBG" << ".eps";
   c1->SaveAs( saveAs.str().c_str() );
   
 }

@@ -22,7 +22,7 @@ dcp_vars = ['0','180']
 
 dmass_vars = ['0.0014','0.006','0.0032']
 
-config = xmlfi.split('_')[2]
+config = xmlfi.split('_')[2].split('.')[0]
 
 for dcp in dcp_vars:
     for dmass in dmass_vars:

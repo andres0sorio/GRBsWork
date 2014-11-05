@@ -206,7 +206,7 @@ void makePlots( TList      * variations,
     
     v_Canvas_Combined->Add( c1 );
     
-    cname = TString("Fluxes") + TString("_antiphi_") + TString(option);
+    cname = TString("Combined") + TString("_antiphi_") + TString(option);
     
     ctitle = TString("Flux for anti-neutrinos ") + TString(" ") + TString(option);
     
@@ -226,9 +226,9 @@ void makePlots( TList      * variations,
   int varpos = 0;
   int idx  = 1;
 
-  int linecolor[6] = { 1, 2, 1, 2, 1, 2};
+  int linecolor[6] = { 1, 1, 4, 4, 2, 2};
   int linestyle[6] = { 1, 1, 2, 2, 3, 3};
-  int linewidth[6] = { 2, 2, 2, 2, 2, 2};
+  int linewidth[6] = { 3, 3, 3, 3, 3, 3};
 
   TLegend * leg[2];
   

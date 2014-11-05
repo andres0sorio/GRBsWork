@@ -27,10 +27,10 @@ variations = {'0.0'   :'Q13-1',
 	      '12.92' :'Q13-6',
 	      '13.56' :'Q13-7' }
 
-outfile = open("Summary-Q13-Var.csv" , "w")
+outfile = open("Summary-Q13-Var.csv", "w")
 
 for job in jobs.select( first_job, last_job ):
-
+	
 	list_of_args = []
 	
 	arguments = job.splitter.args
@@ -42,7 +42,8 @@ for job in jobs.select( first_job, last_job ):
         theta13 = arguments[max_args-1][5].split(',')[1]
 	var = variations[theta13]
 	dmasses = arguments[max_args-1][6]
-
+	angles = arguments[max_args-1][5]
+	
 	list_of_args.append(model)
 	list_of_args.append(config)
 	list_of_args.append(angles)
@@ -51,13 +52,13 @@ for job in jobs.select( first_job, last_job ):
 	list_of_args.append(phase)
 	
 	row = ','.join(list_of_args)
-
-	#outfile.write( row + '\n' )
-
+	
+	outfile.write( row + '\n' )
+	
 	print row
-
-
-#logfile.close()
-
+	
+	
+	outfile.close()
+	
 print "Done"
 

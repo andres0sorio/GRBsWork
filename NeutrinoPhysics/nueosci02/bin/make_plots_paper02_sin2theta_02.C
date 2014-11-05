@@ -79,6 +79,8 @@ void makePlots()
 
   TString inputFile_ModelA_SetI("detection_ModelA_SetI_RvsSin2Q13.root");
 
+  TString inputFile_ModelA_SetII("detection_ModelA_SetII_RvsSin2Q13.root");
+  
   
   if( 0 ) { 
     makePlots("ModelA", "EarthB", "Vacuum", "SetI", inputFile_SetI.Data() );
@@ -95,7 +97,13 @@ void makePlots()
   if( plotSetII ) 
   {
     
-    makePlots("ModelA", "EarthB", "Vacuum", "SetII", inputFile_SetII.Data() );
+    if( 0 ) {
+      makePlots("ModelA", "EarthB", "Vacuum", "SetII", inputFile_SetII.Data() );
+    }
+
+    //... AO: Replacement due to bump
+
+    makePlots("ModelA", "EarthB", "Vacuum", "SetII", inputFile_ModelA_SetII.Data() );
 
     makePlots("ModelB", "EarthB", "Vacuum", "SetII", inputFile_SetII.Data() );
     

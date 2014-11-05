@@ -22,7 +22,7 @@ for tg in target:
 path =options.path
 
 types = ['probs','flux','ratio']
-objects = ['StdPicture','ModelA','ModelB','ModelC','Vacuum','ZeroPt','EarthA','EarthB','Lambdas']
+objects = ['StdPicture','ModelA','ModelB','ModelC','Vacuum','ZeroPt','EarthA','EarthB','Lambdas','ModelX']
 file_ext = ['eps','png','pdf']
 
 for type in types:
