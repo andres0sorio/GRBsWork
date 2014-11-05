@@ -47,8 +47,8 @@ const double Integrals::NMFactor     = 1.0e10;
 const ROOT::Math::Integration::Type Integrals::IntMethod = ROOT::Math::IntegrationOneDim::kADAPTIVE;
 //const ROOT::Math::Integration::Type Integrals::IntMethod = ROOT::Math::IntegrationOneDim::kADAPTIVESINGULAR;
 
-const ROOT::Math::Integration::GKRule Integrals::KronRule = ROOT::Math::Integration::kGAUSS51;
-//const ROOT::Math::Integration::GKRule Integrals::KronRule = ROOT::Math::Integration::kGAUSS61;
+//const ROOT::Math::Integration::GKRule Integrals::KronRule = ROOT::Math::Integration::kGAUSS51;
+const ROOT::Math::Integration::GKRule Integrals::KronRule = ROOT::Math::Integration::kGAUSS61;
 
 Integrals::Integrals() { 
   m_debug = false;

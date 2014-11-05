@@ -32,8 +32,8 @@ if not os.path.isdir(source):
 	print 'cannot continue - no root files'
 	sys.exit(1)
 
-arguments  = []
-datasets   = []
+arguments = []
+datasets  = []
 
 outfile = open('all_datasets_models_' + cfg + '.dat','w')
 

@@ -25,7 +25,8 @@ for alfa in alfa_var:
     values = []
     for data in datasets:
         values = []
-        values.append( data )
+        inputdata = data.split('/')[2]
+        values.append( inputdata )
         values.append( alfa )
         arguments.append( values )
 

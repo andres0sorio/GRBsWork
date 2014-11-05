@@ -22,20 +22,25 @@ dcp    = ['dCP0','dCP180']
 vars   = ['Q13-1','Q13-2','Q13-3','Q13-4','Q13-5','Q13-6','Q13-7']
 energy = '1e17'
 
+target = './datasets/'
 source = LOCATION + '/root_files/'
 
+if not os.path.isdir(target):
+	os.makedirs( target )
+	
 if not os.path.isdir(source):
 	print 'cannot continue - no root files'
 	sys.exit(1)
 
 arguments = []
-datasets = []
+datasets  = []
 
 outfile = open('all_datasets_q13_models_' + cfg + '.dat','w')
 
 for model in models:
 	for phase in dcp:
-		dataset_name = 'dataset_' + model + '_' + cfg + '_' + phase + '_RvsQ13.dat'
+		
+		dataset_name = target + 'dataset_' + model + '_' + cfg + '_' + phase + '_RvsQ13.dat'
 		dataset = open (dataset_name,'w')
 		datasets.append(dataset)
 		

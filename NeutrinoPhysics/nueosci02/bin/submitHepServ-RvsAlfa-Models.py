@@ -19,13 +19,14 @@ infile.close()
 if len(datasets) != 0:
     config = datasets[0].split('_')[2]
 
+
+
 for data in datasets:
         values = []
         inputdata = data.split('/')[2]
         values.append( inputdata )
         arguments.append( values )
                 
-
 
 
 

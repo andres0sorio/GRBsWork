@@ -26,7 +26,7 @@ void makePlots()
   gROOT->ProcessLine(".L tdrStyle.C");
   setTDRStyle();
   tdrStyle->SetErrorX(0.5);
-  tdrStyle->SetPadLeftMargin(0.14);
+  tdrStyle->SetPadLeftMargin(0.16);
   tdrStyle->SetPadRightMargin(0.08);
   tdrStyle->SetPadTopMargin(0.10);
   tdrStyle->SetPadBottomMargin(0.15);
@@ -39,7 +39,7 @@ void makePlots()
   tdrStyle->SetFrameLineWidth(2);
   tdrStyle->cd();
 
-  bool plotSetII = false;
+  bool plotSetII = true;
   
   TString inputFile_SetI("detection-All-Models-SetI-RvsAlfa.root");
 
@@ -57,9 +57,9 @@ void makePlots()
   label = new TObjString( "Var3_dCP0" );
   v_Variation->Add( label );
   
-  makePlots(v_Variation, "ModelA", "EarthB", "Vacuum", inputFile_SetI.Data() );
-  //makePlots(v_Variation, "ModelB", "EarthB", "Vacuum", inputFile_SetI.Data() );
-  //makePlots(v_Variation, "ModelC", "EarthB", "Vacuum", inputFile_SetI.Data() );
+  makePlots(v_Variation, "ModelA", "EarthB", "Vacuum", "SetI", inputFile_SetI.Data() );
+  makePlots(v_Variation, "ModelB", "EarthB", "Vacuum", "SetI", inputFile_SetI.Data() );
+  makePlots(v_Variation, "ModelC", "EarthB", "Vacuum", "SetI", inputFile_SetI.Data() );
   
   v_Variation->Clear();
   
@@ -72,9 +72,9 @@ void makePlots()
   label = new TObjString( "Var3_dCP180" );
   v_Variation->Add( label );
   
-  //makePlots(v_Variation, "ModelA", "EarthB", "Vacuum", inputFile_SetI.Data() );
-  //makePlots(v_Variation, "ModelB", "EarthB", "Vacuum", inputFile_SetI.Data() );
-  //makePlots(v_Variation, "ModelC", "EarthB", "Vacuum", inputFile_SetI.Data() );
+  makePlots(v_Variation, "ModelA", "EarthB", "Vacuum", "SetI", inputFile_SetI.Data() );
+  makePlots(v_Variation, "ModelB", "EarthB", "Vacuum", "SetI", inputFile_SetI.Data() );
+  makePlots(v_Variation, "ModelC", "EarthB", "Vacuum", "SetI", inputFile_SetI.Data() );
   
   v_Variation->Clear();
   
@@ -90,9 +90,9 @@ void makePlots()
     label = new TObjString( "Var3_dCP0" );
     v_Variation->Add( label );
     
-    makePlots(v_Variation, "ModelA", "EarthB", "Vacuum", inputFile_SetII.Data() );
-    makePlots(v_Variation, "ModelB", "EarthB", "Vacuum", inputFile_SetII.Data() );
-    makePlots(v_Variation, "ModelC", "EarthB", "Vacuum", inputFile_SetII.Data() );
+    makePlots(v_Variation, "ModelA", "EarthB", "Vacuum", "SetII", inputFile_SetII.Data() );
+    makePlots(v_Variation, "ModelB", "EarthB", "Vacuum", "SetII", inputFile_SetII.Data() );
+    makePlots(v_Variation, "ModelC", "EarthB", "Vacuum", "SetII", inputFile_SetII.Data() );
     
     v_Variation->Clear();
     
@@ -105,9 +105,9 @@ void makePlots()
     label = new TObjString( "Var3_dCP180" );
     v_Variation->Add( label );
     
-    makePlots(v_Variation, "ModelA", "EarthB", "Vacuum", inputFile_SetII.Data() );
-    makePlots(v_Variation, "ModelB", "EarthB", "Vacuum", inputFile_SetII.Data() );
-    makePlots(v_Variation, "ModelC", "EarthB", "Vacuum", inputFile_SetII.Data() );
+    makePlots(v_Variation, "ModelA", "EarthB", "Vacuum", "SetII", inputFile_SetII.Data() );
+    makePlots(v_Variation, "ModelB", "EarthB", "Vacuum", "SetII", inputFile_SetII.Data() );
+    makePlots(v_Variation, "ModelC", "EarthB", "Vacuum", "SetII", inputFile_SetII.Data() );
     
     v_Variation->Clear();
     
@@ -119,6 +119,7 @@ void makePlots( TList      * variations,
                 const char * model,
                 const char * target,
                 const char * src,
+                const char * config,
                 const char * infile ) 
 {
   
@@ -197,7 +198,7 @@ void makePlots( TList      * variations,
   
     //... AO - Added nov 2014
     
-    cname = TString("Fluxes") + TString("_phi_") + TString(option);
+    cname = TString("Combined") + TString("_phi_") + TString(option);
     
     ctitle = TString("Flux for neutrinos") + TString(" ") + TString(option);
     
@@ -224,9 +225,60 @@ void makePlots( TList      * variations,
   int ccpos = 0;
   int varpos = 0;
   int idx  = 1;
+
+  int linecolor[6] = { 1, 2, 1, 2, 1, 2};
+  int linestyle[6] = { 1, 1, 2, 2, 3, 3};
+  int linewidth[6] = { 2, 2, 2, 2, 2, 2};
+
+  TLegend * leg[2];
   
+  leg[0] = new TLegend(0.66,0.62,0.89,0.85);
+  
+  leg[0]->SetBorderSize(0);
+  leg[0]->SetTextSize(0.04);
+  leg[0]->SetLineColor(1);
+  leg[0]->SetLineStyle(1);
+  leg[0]->SetLineWidth(1);
+  leg[0]->SetFillColor(0);
+  leg[0]->SetFillStyle(0);
+
+  leg[1] = new TLegend(0.66,0.62,0.89,0.85);
+    
+  leg[1]->SetBorderSize(0);
+  leg[1]->SetTextSize(0.04);
+  leg[1]->SetLineColor(1);
+  leg[1]->SetLineStyle(1);
+  leg[1]->SetLineWidth(1);
+  leg[1]->SetFillColor(0);
+  leg[1]->SetFillStyle(0);
+
   max = v_Graphs->GetEntries();
   
+  TString yTitle[2];
+  yTitle[0] = TString("#phi ( E_{#nu} )");
+  yTitle[1] = TString("#phi ( E_{#bar{#nu}})");
+
+  TList * v_Flavour = new TList();
+  TObjString *flavour;
+
+  flavour = new TObjString( "e" );
+  v_Flavour->Add( flavour );
+  
+  flavour = new TObjString( "e" );
+  v_Flavour->Add( flavour );
+  
+  flavour = new TObjString( "#mu" );
+  v_Flavour->Add( flavour );
+  
+  flavour = new TObjString( "#mu" );
+  v_Flavour->Add( flavour );
+  
+  flavour = new TObjString( "#tau" );
+  v_Flavour->Add( flavour );
+  
+  flavour = new TObjString( "#tau" );
+  v_Flavour->Add( flavour );
+
   for( int k = 0; k < max; ++k ) { 
 
     if ( idx > 6 ) 
@@ -245,7 +297,7 @@ void makePlots( TList      * variations,
     gg->SetMaximum( 0.40 );
     gg->SetMinimum( 0.28 );
 
-    gg->GetXaxis()->SetTitle("E_{v} [eV]");
+    gg->GetXaxis()->SetTitle("E_{#nu} (eV)");
     gg->GetXaxis()->CenterTitle(true);
     gg->GetXaxis()->SetLabelFont(42);
     gg->GetXaxis()->SetLabelOffset(0.006);
@@ -254,7 +306,7 @@ void makePlots( TList      * variations,
     gg->GetXaxis()->SetTickLength(0.05);
     gg->GetXaxis()->SetTitleOffset(1.22);
     gg->GetXaxis()->SetTitleFont(42);
-    gg->GetYaxis()->SetTitle("#phi");
+    gg->GetYaxis()->SetTitle(yTitle[(k%2)]);
     gg->GetYaxis()->CenterTitle(true);
     gg->GetYaxis()->SetNdivisions(509);
     gg->GetYaxis()->SetLabelFont(42);
@@ -263,20 +315,18 @@ void makePlots( TList      * variations,
     gg->GetYaxis()->SetTitleSize(0.06);
     gg->GetYaxis()->SetTitleOffset(1.22);
     gg->GetYaxis()->SetTitleFont(42);
-    
-    gg->SetLineWidth(3);
-    
-    if ( (k % 2) == 0 ) 
-    {
-      gg->SetLineColor( 1 );
 
-    }
-    else 
-    {
-      gg->SetLineColor( 2 );
-    }
-              
+    // Configure each graph
+    
+    int kk = (k%6);
+    
+    gg->SetLineColor( linecolor[kk] );
+    gg->SetLineWidth( linewidth[kk] );
+    gg->SetLineStyle( linestyle[kk] );
+                  
     gg->Draw();
+
+    //... Save the graphs
    
     if( idx == 6 ) 
     {
@@ -311,6 +361,12 @@ void makePlots( TList      * variations,
     
     std::cout << "k: " << k << " " << (k%2) << " " << (k%6) << " " << varpos << " " << ccpos << std::endl;
     
+    if( k < 6 ) 
+    {
+      TString alpha = ((TObjString*)v_Flavour->At(k))->GetString();      
+      leg[(k%2)]->AddEntry( gg,alpha.Data(),"l");
+    }
+        
     c1 = (TCanvas*)v_Canvas_Combined->At(ccpos);
     c1->SetLogx();
     c1->cd();
@@ -320,8 +376,36 @@ void makePlots( TList      * variations,
     else
       gg->Draw("SAME");
     
-    TLine *line = new TLine(1.0e+11,0.33,1.0e+16,0.33);
-    line->Draw();
+        
+    if( (k%6) == 4 || (k%6) == 5 ) 
+    {
+
+      //TLine *line = new TLine(1.0e+11,0.3333,1.0e+16,0.3333);
+      //line->Draw();
+      
+      leg[(k%2)]->DrawClone();
+
+      
+      std::stringstream saveAs;
+  
+      saveAs.str("");
+      saveAs << path << model << "/pdf/" << c1->GetName() << "_" << config << "_" << model << ".pdf";
+      c1->SaveAs( saveAs.str().c_str() );
+      
+      saveAs.str("");
+      saveAs << path << model << "/png/" << c1->GetName() << "_" << config << "_" << model << ".png";
+      c1->SaveAs( saveAs.str().c_str() );
+      
+      saveAs.str("");
+      saveAs << path << model << "/eps/" << c1->GetName() << "_" << config << "_" << model << ".eps";
+      c1->SaveAs( saveAs.str().c_str() );
+
+      saveAs.str("");
+
+
+      
+    }
+    
 
     
     //

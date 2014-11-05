@@ -252,7 +252,7 @@ void makePlots( const char * model,
   leg->SetLineStyle(1);
   leg->SetLineWidth(1);
   leg->SetFillColor(0);
-  leg->SetFillStyle(1001);
+  leg->SetFillStyle(0);
 
   int labelpos = 0;
   
