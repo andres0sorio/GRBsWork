@@ -71,7 +71,7 @@ void makePlots()
 
   // Compare results with Esmaili picture
 
-  makePlots("StdPicture", "EarthB", "Vacuum", "detection-sin2theta.root");
+  makePlots("StdPicture", "EarthB", "Vacuum", "root_files/StdPicture/detection-sin2theta-Esmaili.root");
   
 }
 
@@ -91,19 +91,19 @@ void makePlots( const char * model,
   TList * v_Variations = new TList();
   TObjString *var;
 
-  var = new TObjString("Sin2Q13-1.8-0");
+  var = new TObjString("Sin2Q13-1.8-dCP0");
   v_Variations->Add( var ); 
-  var = new TObjString("Sin2Q13-1.8-180");
+  var = new TObjString("Sin2Q13-1.8-dCP180");
   v_Variations->Add( var );
   
-  var = new TObjString("Sin2Q13-2-0");
+  var = new TObjString("Sin2Q13-2-dCP0");
   v_Variations->Add( var ); 
-  var = new TObjString("Sin2Q13-2-180");
+  var = new TObjString("Sin2Q13-2-dCP180");
   v_Variations->Add( var );
 
-  var = new TObjString("Sin2Q13-2.2-0");
+  var = new TObjString("Sin2Q13-2.2-dCP0");
   v_Variations->Add( var ); 
-  var = new TObjString("Sin2Q13-2.2-180");
+  var = new TObjString("Sin2Q13-2.2-dCP180");
   v_Variations->Add( var );
 
   int * linewidth = new int[6];

@@ -122,7 +122,9 @@ void makePlots( TList      * variations,
                 const char * config,
                 const char * infile ) 
 {
-  
+
+  bool normalize = false;
+    
   //Input path
   TString inpath("./root_files/RvsAlfa/");
   TString inputfile = inpath + TString(infile);
@@ -371,12 +373,19 @@ void makePlots( TList      * variations,
     c1->SetLogx();
     c1->cd();
     
+    double norm = gg->Integral("width");
+    std::cout << "Normalization factor " << norm << std::endl;
+    
+    if ( normalize )
+      gg->Scale( 1.0 / norm );
+    
     if( (k%6) == 0 || (k%6) == 1 ) 
       gg->Draw();
     else
       gg->Draw("SAME");
     
-        
+    
+            
     if( (k%6) == 4 || (k%6) == 5 ) 
     {
 

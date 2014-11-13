@@ -63,11 +63,11 @@ float MuTrackEvents::Evaluate() {
   m_NuMuTracks = v1;
     
   //... get Nu_tau / Anti-Nu_tau contribution
-
+  
   float v2 = EvaluateNuTauContribution();
   
   std::cout << "MuTrackEvents> EvaluateNuTauContribution> done \n";
-
+  
   m_NuTauTracks = v2;
 
   return (v1 + v2);
@@ -90,12 +90,6 @@ float MuTrackEvents::EvaluateNuMuContribution() {
   ff->SetData(nu_xsec_data, antinu_xsec_data, pshadow_data);
   ff->SetParameters( m_input );
 
-  /*
-    ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( Integrals::AbsError,
-    Integrals::RelError,
-    Integrals::SubIntervals);
-  */
-  
   ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( Integrals::IntMethod,
                                                                         Integrals::KronRule,
                                                                         Integrals::AbsError, 
@@ -107,14 +101,36 @@ float MuTrackEvents::EvaluateNuMuContribution() {
   float m_mu_Th = m_input->GetPar1();
   float m_nu_Cut = m_input->GetPar2();
   
-  double result = nminteg->Integral(m_mu_Th, m_nu_Cut);
+  double resultA = nminteg->Integral(m_mu_Th, m_nu_Cut);
   
   ff->DestroyInterpolator();
   
   delete ff;
+    
+  // AO nov 2014
+  // [ Numu -> antiNumu ]
+  
+  m_antiNumu_integral_dx * gg = new m_antiNumu_integral_dx();
+  
+  m_input->SetKonst1( kk * m_sfactor );
+  
+  gg->SetData(nu_xsec_data, antinu_xsec_data, pshadow_data);
+  gg->SetParameters( m_input );
+  
+  nminteg->SetFunction( *(ROOT::Math::IGenFunction*)gg );
+  
+  m_mu_Th = m_input->GetPar1();
+  m_nu_Cut = m_input->GetPar2();
+  
+  double resultB = nminteg->Integral(m_mu_Th, m_nu_Cut);
+  
+  gg->DestroyInterpolator();
+  
+  delete gg;
+  
   delete nminteg;
   
-  return (result/m_sfactor);
+  return ( (resultA+resultB) / m_sfactor);
 
 }
 
@@ -135,12 +151,6 @@ float MuTrackEvents::EvaluateNuTauContribution() {
   ff->SetData(nu_xsec_data, antinu_xsec_data, pshadow_data);
   ff->SetParameters( m_input );
   
-  /*
-    ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( Integrals::AbsError,
-    Integrals::RelError,
-    Integrals::SubIntervals);
-  */
-  
   ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( Integrals::IntMethod,
                                                                         Integrals::KronRule,
                                                                         Integrals::AbsError, 
@@ -152,14 +162,36 @@ float MuTrackEvents::EvaluateNuTauContribution() {
   float m_mu_Th = m_input->GetPar1();
   float m_nu_Cut = m_input->GetPar2();
   
-  double result = nminteg->Integral(m_mu_Th, m_nu_Cut);
+  double resultA = nminteg->Integral(m_mu_Th, m_nu_Cut);
   
   ff->DestroyInterpolator();
   
   delete ff;
+
+  // AO nov 2014
+  // [Nutau -> antiNutau ]
+
+  m_antiNutau_integral_dx * gg = new m_antiNutau_integral_dx();
+  
+  m_input->SetKonst1( kk * m_sfactor );
+  
+  gg->SetData(nu_xsec_data, antinu_xsec_data, pshadow_data);
+  gg->SetParameters( m_input );
+    
+  nminteg->SetFunction( *(ROOT::Math::IGenFunction*)gg );
+  
+  m_mu_Th = m_input->GetPar1();
+  m_nu_Cut = m_input->GetPar2();
+  
+  double resultB = nminteg->Integral(m_mu_Th, m_nu_Cut);
+  
+  gg->DestroyInterpolator();
+  
+  delete gg;
+
   delete nminteg;
   
-  return (result/m_sfactor);
+  return ( (resultA+resultB) / m_sfactor);
   
 }
 

@@ -187,7 +187,8 @@ void NeutrinoOscInVarDensity::updateMixingMatrix( )
 
   initializeMatrix( m_invUr );
     
-  // this is the CKM Matrix 
+  // this is the CKM Matrix - ONLY REAL PART
+
   (*m_Ur) (0,0) = real( std::complex<long double>( cosTh(1,2)*cosTh(1,3), 0.0L) );
   
   (*m_Ur) (0,1) = real( std::complex<long double>( cosTh(1,3)*sinTh(1,2), 0.0L) );

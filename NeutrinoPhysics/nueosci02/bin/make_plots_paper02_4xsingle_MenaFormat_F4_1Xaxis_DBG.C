@@ -44,11 +44,20 @@ void makePlots()
   TString inputFile_ModelA_SetI_DBG("ModelA/output_ModelA_SetI_1e17_dCP0_debug.root");
   TString inputFile_ModelB_SetI_DBG("ModelB/output_ModelB_SetI_1e17_dCP0_debug.root");
   TString inputFile_ZeroPt_SetI_DBG("ZeroPt/output_ZeroPt_SetI_1e17_dCP0_debug.root");
+
+  TString inputFile_ModelA_SetI_180_DBG("ModelA/output_ModelA_SetI_1e17_dCP180_debug.root");
+  TString inputFile_ModelB_SetI_180_DBG("ModelB/output_ModelB_SetI_1e17_dCP180_debug.root");
+  TString inputFile_ZeroPt_SetI_180_DBG("ZeroPt/output_ZeroPt_SetI_1e17_dCP180_debug.root");
   
-  makePlots("EarthB", "Vacuum", "SetI",
+  makePlots("EarthB", "Vacuum", "SetI", "dCP0",
             inputFile_ModelA_SetI_DBG.Data(),
             inputFile_ModelB_SetI_DBG.Data(),
             inputFile_ZeroPt_SetI_DBG.Data());
+
+  makePlots("EarthB", "Vacuum", "SetI", "dCP180",
+            inputFile_ModelA_SetI_180_DBG.Data(),
+            inputFile_ModelB_SetI_180_DBG.Data(),
+            inputFile_ZeroPt_SetI_180_DBG.Data());
   
   
 }
@@ -56,6 +65,7 @@ void makePlots()
 void makePlots( const char * target, 
                 const char * src, 
                 const char * config,
+                const char * dCP,
                 const char * infileA ,  const char * infileB,  const char * infileC)
 {
 
@@ -236,8 +246,13 @@ void makePlots( const char * target,
   std::cout << " " << nGraphs << std::endl;
 
   Float_t small = 1e-5; //Referee request
+
+  TString cname = TString("Fluxes-Mena-F4_") 
+    + TString(target) + TString("_") 
+    + TString(config) + TString("_")
+    + TString(dCP);
   
-  TCanvas * c1 = new TCanvas(target, "Fluxes for different models and falvours", 1483,27,893,992);
+  TCanvas * c1 = new TCanvas(cname.Data(), "Fluxes for different models and falvours", 1483,27,893,992);
   
   c1->Divide(1,4,small,small); //Referee request
 
@@ -378,15 +393,18 @@ void makePlots( const char * target,
   std::stringstream saveAs;
     
   saveAs.str("");
-  saveAs << path << target << "/pdf/" << "nueosc_flux_" << target << "_" << config << "_4x_MenaFormat_F4_DBG" << ".pdf";
+  saveAs << path << target << "/pdf/" << "nueosc_flux_" << target << "_" << config << dCP 
+         << "_" << "_4x_MenaFormat_F4_DBG" << ".pdf";
   c1->SaveAs( saveAs.str().c_str() );
   
   saveAs.str("");
-  saveAs << path << target << "/png/" << "nueosc_flux_" << target << "_" << config << "_4x_MenaFormat_F4_DBG" << ".png";
+  saveAs << path << target << "/png/" << "nueosc_flux_" << target << "_" << config << dCP 
+         << "_" << "_4x_MenaFormat_F4_DBG" << ".png";
   c1->SaveAs( saveAs.str().c_str() );
 
   saveAs.str("");
-  saveAs << path << target << "/eps/" << "nueosc_flux_" << target << "_" << config << "_4x_MenaFormat_F4_DBG" << ".eps";
+  saveAs << path << target << "/eps/" << "nueosc_flux_" << target << "_" << config << dCP 
+         << "_" << "_4x_MenaFormat_F4_DBG" << ".eps";
   c1->SaveAs( saveAs.str().c_str() );
   
 }

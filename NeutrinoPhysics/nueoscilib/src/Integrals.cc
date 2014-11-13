@@ -47,7 +47,7 @@ const double Integrals::NMFactor     = 1.0e10;
 const ROOT::Math::Integration::Type Integrals::IntMethod = ROOT::Math::IntegrationOneDim::kADAPTIVE;
 //const ROOT::Math::Integration::Type Integrals::IntMethod = ROOT::Math::IntegrationOneDim::kADAPTIVESINGULAR;
 
-//const ROOT::Math::Integration::GKRule Integrals::KronRule = ROOT::Math::Integration::kGAUSS51;
+//const ROOT::Math::Integration::GKRule Integrals::KronRule = ROOT::Math::Integration::kGAUSS21;
 const ROOT::Math::Integration::GKRule Integrals::KronRule = ROOT::Math::Integration::kGAUSS61;
 
 Integrals::Integrals() { 
@@ -204,6 +204,21 @@ ROOT::Math::IBaseFunctionOneDim* m_Numu_integral_dxdy::Clone() const{
   
 }
 
+
+ROOT::Math::IBaseFunctionOneDim* m_antiNumu_integral_dx::Clone() const{
+  
+  m_antiNumu_integral_dx * f1 = new m_antiNumu_integral_dx();
+  return f1;
+  
+}
+
+ROOT::Math::IBaseFunctionOneDim* m_antiNumu_integral_dxdy::Clone() const{
+  
+  m_antiNumu_integral_dxdy * f1 = new m_antiNumu_integral_dxdy();
+  return f1;
+  
+}
+
 ROOT::Math::IBaseFunctionOneDim* m_Nutau_integral_dx::Clone() const{
   
   m_Nutau_integral_dx * f1 = new m_Nutau_integral_dx();
@@ -221,6 +236,29 @@ ROOT::Math::IBaseFunctionOneDim* m_Nutau_integral_dxdy::Clone() const{
 ROOT::Math::IBaseFunctionOneDim* m_Nutau_integral_dxdydz::Clone() const{
   
   m_Nutau_integral_dxdydz * f1 = new m_Nutau_integral_dxdydz();
+  return f1;
+  
+}
+
+// AO nov 2014
+
+ROOT::Math::IBaseFunctionOneDim* m_antiNutau_integral_dx::Clone() const{
+  
+  m_antiNutau_integral_dx * f1 = new m_antiNutau_integral_dx();
+  return f1;
+  
+}
+
+ROOT::Math::IBaseFunctionOneDim* m_antiNutau_integral_dxdy::Clone() const{
+  
+  m_antiNutau_integral_dxdy * f1 = new m_antiNutau_integral_dxdy();
+  return f1;
+  
+}
+
+ROOT::Math::IBaseFunctionOneDim* m_antiNutau_integral_dxdydz::Clone() const{
+  
+  m_antiNutau_integral_dxdydz * f1 = new m_antiNutau_integral_dxdydz();
   return f1;
   
 }
@@ -299,7 +337,8 @@ ROOT::Math::IBaseFunctionOneDim* convolveXsecbar::Clone() const{
 }
 
 //=============================================================================
-// N.1
+// N.1 - A
+
 double m_Numu_integral_dx::DoEval(double enu) const{
   
   m_Numu_integral_dxdy * ff = new m_Numu_integral_dxdy( *(Integrals*)this );
@@ -311,16 +350,37 @@ double m_Numu_integral_dx::DoEval(double enu) const{
   float m_y_low = 0.0;
   float m_y_upp = ( enu - m_mu_Th) / enu;  
   
-  /*
-    ROOT::Math::GSLIntegrator * nminteg = new ROOT::Math::GSLIntegrator( Integrals::AbsError,
-    Integrals::RelError,
-    Integrals::SubIntervals);
-  */
-
   ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( IntMethod,
                                                                         KronRule,
                                                                         AbsError, RelError, SubIntervals );
-    
+  
+  nminteg->SetFunction( *(ROOT::Math::IGenFunction*)ff );
+  
+  double result = nminteg->Integral(m_y_low , m_y_upp);
+  
+  delete ff;
+  delete nminteg;
+  
+  return result;
+  
+}
+
+// N.1 - B
+double m_antiNumu_integral_dx::DoEval(double enu) const{
+  
+  m_antiNumu_integral_dxdy * ff = new m_antiNumu_integral_dxdy( *(Integrals*)this );
+  
+  ff->SetVar1 ( enu );
+  
+  float m_mu_Th = m_input->GetPar1();
+  
+  float m_y_low = 0.0;
+  float m_y_upp = ( enu - m_mu_Th) / enu;  
+  
+  ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( IntMethod,
+                                                                        KronRule,
+                                                                        AbsError, RelError, SubIntervals );
+  
   nminteg->SetFunction( *(ROOT::Math::IGenFunction*)ff );
   
   double result = nminteg->Integral(m_y_low , m_y_upp);
@@ -372,8 +432,42 @@ double m_Numu_integral_dxdy::DoEval(double y) const {
   
   double ff = k1 * Rmu ( x1 ) * dFnub( x2, par) * sigma_CC * dsigmady( x3 ) * pshadow;
   
-  sigma_CC_log10 = antinu_xsec_interp->evaluateCC( log10( m_x) );
-  sigma_CC = pow( 10.0, sigma_CC_log10);
+  return ff;
+  
+}
+
+//=============================================================================
+// N.2 - B
+double m_antiNumu_integral_dxdy::DoEval(double y) const {
+  
+  double x1[2];
+  double x2[1];
+  double x3[2];
+  
+  double par[2];
+  
+  // x == Enu
+  
+  double Emu = m_x * ( 1.0 - y );
+  double sigma_CC_log10 = antinu_xsec_interp->evaluateCC( log10( m_x) );
+  double sigma_CC = pow( 10.0, sigma_CC_log10);
+
+  double k1  = m_input->GetKonst1();
+  
+  x1[0] = Emu;
+  x1[1] = m_input->GetPar1(); // Emu_Th
+  
+  x2[0] = m_x;
+
+  x3[0] = y;
+  x3[1] = m_x; // energy in GeV
+      
+  if ( m_input->GetPar14() > 0 ) 
+    m_pshadow->Eval2( m_x );
+  else
+    m_pshadow->Eval();
+  
+  double pshadow = m_pshadow->ANu_PShadow();
   
   pshadow = m_pshadow->ANu_PShadow();
   
@@ -382,16 +476,15 @@ double m_Numu_integral_dxdy::DoEval(double y) const {
   
   double gg = k1 * Rmu ( x1 ) * dFnub( x2, par) * sigma_CC * dsigmady( x3 ) * pshadow;
   
-  return ( ff + gg );
+  return gg;
   
 }
+
 
 //=============================================================================
 // N.3
 double m_Nutau_integral_dx::DoEval(double enut) const{
 
-  //std::cout << "given: enut" << enut << std::endl;
-  
   m_Nutau_integral_dxdy * ff = new m_Nutau_integral_dxdy( *(Integrals*)this );
   
   ff->SetVar1 ( enut ); // ... x == Enu_tau
@@ -401,16 +494,10 @@ double m_Nutau_integral_dx::DoEval(double enut) const{
   float m_y_low = 0.0;
   float m_y_upp = ( enut - m_mu_Th ) / enut;
   
-  /*
-    ROOT::Math::GSLIntegrator * nminteg = new ROOT::Math::GSLIntegrator( Integrals::AbsError,
-    Integrals::RelError,
-    Integrals::SubIntervals);
-  */
-  
   ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( IntMethod,
                                                                         KronRule,
                                                                         AbsError, RelError, SubIntervals );
-    
+  
   nminteg->SetFunction( *(ROOT::Math::IGenFunction*)ff );
   
   double result = nminteg->Integral(m_y_low , m_y_upp);
@@ -430,7 +517,7 @@ double m_Nutau_integral_dxdy::DoEval(double y) const{
   
   ff->SetVar1 ( m_x );
   ff->SetVar2 ( y );
-
+  
   //std::cout << "given: y" << y << std::endl;
   
   float mu_Th = m_input->GetPar1();
@@ -439,15 +526,9 @@ double m_Nutau_integral_dxdy::DoEval(double y) const{
   float E_tau = m_x * ( 1.0 - y );
   float Gamma = M_tau / E_tau;
   float Beta  = sqrt ( 1.0 - (Gamma*Gamma) );
-
+  
   float z_low = mu_Th;
   float z_upp = 0.5 * E_tau * ( 1.0 + Beta);
-  
-  /*
-    ROOT::Math::GSLIntegrator * nminteg = new ROOT::Math::GSLIntegrator( Integrals::AbsError,
-    Integrals::RelError,
-    Integrals::SubIntervals);
-  */
   
   ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( IntMethod,
                                                                         KronRule,
@@ -507,17 +588,115 @@ double m_Nutau_integral_dxdydz::DoEval(double z) const{
   
   double ff = k1 * Rmu ( xx ) * dFnub( x2, par) * fBLimOne( yy ) * sigma_CC * dsigmady( x3 ) * pshadow;
   
-  sigma_CC_log10 = antinu_xsec_interp->evaluateCC( log10( m_x ) );
-  sigma_CC = pow( 10.0, sigma_CC_log10);
+  return ff;
   
-  pshadow = m_pshadow->ANu_PShadow();
+}
+
+//=============================================================================
+// N.3 - B
+
+double m_antiNutau_integral_dx::DoEval(double enut) const{
+  
+  m_antiNutau_integral_dxdy * ff = new m_antiNutau_integral_dxdy( *(Integrals*)this );
+  
+  ff->SetVar1 ( enut ); // ... x == Enu_tau
+  
+  float m_mu_Th = m_input->GetPar1();
+  
+  float m_y_low = 0.0;
+  float m_y_upp = ( enut - m_mu_Th ) / enut;
+  
+  ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( IntMethod,
+                                                                        KronRule,
+                                                                        AbsError, RelError, SubIntervals );
+    
+  nminteg->SetFunction( *(ROOT::Math::IGenFunction*)ff );
+  
+  double result = nminteg->Integral(m_y_low , m_y_upp);
+  
+  delete ff;
+  delete nminteg;
+  
+  return result;
+  
+}
+
+//=============================================================================
+// N.4 - B
+double m_antiNutau_integral_dxdy::DoEval(double y) const{
+  
+  m_antiNutau_integral_dxdydz * ff = new m_antiNutau_integral_dxdydz( *(Integrals*)this );
+  
+  ff->SetVar1 ( m_x );
+  ff->SetVar2 ( y );
+  
+  float mu_Th = m_input->GetPar1();
+  
+  float M_tau = 1.7840; // GeV/c^2
+  float E_tau = m_x * ( 1.0 - y );
+  float Gamma = M_tau / E_tau;
+  float Beta  = sqrt ( 1.0 - (Gamma*Gamma) );
+  
+  float z_low = mu_Th;
+  float z_upp = 0.5 * E_tau * ( 1.0 + Beta);
+  
+  ROOT::Math::GSLIntegrator * nminteg =  new ROOT::Math::GSLIntegrator( IntMethod,
+                                                                        KronRule,
+                                                                        AbsError, RelError, SubIntervals );
+  
+  nminteg->SetFunction( *(ROOT::Math::IGenFunction*)ff );
+  
+  double result = nminteg->Integral(z_low , z_upp);
+  
+  delete ff;
+  delete nminteg;
+  
+  return result;
+  
+}
+
+//=============================================================================
+// N.5 - B
+double m_antiNutau_integral_dxdydz::DoEval(double z) const{
+  
+  double xx[2];
+  double yy[2];
+  double x2[1];
+  double x3[2];
+  
+  double par[2];
+  
+  x3[0] = m_y;
+  x3[1] = m_x;
+  
+  float E_tau = m_x * ( 1.0 - m_y );
+  
+  double sigma_CC_log10 = antinu_xsec_interp->evaluateCC( log10( m_x ) );
+  double sigma_CC = pow( 10.0, sigma_CC_log10);
+  
+  double k1 = m_input->GetKonst1();
+  
+  xx[0] = z;
+  xx[1] = m_input->GetPar1(); // Emu_Th
+  
+  yy[0] = E_tau;
+  yy[1] = z;
+  
+  x2[0] = m_x;
+  
+  if ( m_input->GetPar14() > 0 ) 
+    m_pshadow->Eval2( m_x );
+  else
+    m_pshadow->Eval();
+  
+  double pshadow = m_pshadow->ANu_PShadow();
   
   par[0] = m_input->GetPar3(); // alfa
   par[1] = m_input->GetPar("N_amu", m_x); // N_beta = phi_mu
-
+  
   double gg = k1 * Rmu ( xx ) * dFnub( x2, par) * fBLimOne( yy ) * sigma_CC * dsigmady( x3 ) * pshadow;
   
-  return ( ff + gg );
+  return gg;
   
 }
 
@@ -553,7 +732,7 @@ double m_NC_showers_integral_dx::DoEval(double x) const{
   
 }
 
-// N.6 - PShadow in
+// N.6 - B
 double m_antiNC_showers_integral_dx::DoEval(double x) const{
   
   double xx[2];
@@ -563,8 +742,6 @@ double m_antiNC_showers_integral_dx::DoEval(double x) const{
   
   xx[0]  = x;
   
-  // AO dec 2013
-  // P-shadow evaluation - with interpoled data
   if ( m_input->GetPar14() > 0 ) 
     m_pshadow->Eval2( x );
   else

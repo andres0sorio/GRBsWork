@@ -127,6 +127,48 @@ private:
   
 };
 
+// AO nov 2014 [ NuMu -> antiNuMu ]
+
+class m_antiNumu_integral_dx : public ROOT::Math::IBaseFunctionOneDim, public Integrals {
+  
+public:
+  
+  m_antiNumu_integral_dx(): Integrals() {};
+  
+  m_antiNumu_integral_dx( Integrals & base ) : Integrals( base ) {};
+  
+  virtual ~m_antiNumu_integral_dx() {};
+  
+  ROOT::Math::IBaseFunctionOneDim* Clone() const;
+  
+  double DoEval(double x) const;
+
+private:
+    
+};
+
+class m_antiNumu_integral_dxdy : public ROOT::Math::IBaseFunctionOneDim, public Integrals {
+  
+public:
+  
+  m_antiNumu_integral_dxdy() : Integrals() {};
+  
+  m_antiNumu_integral_dxdy( Integrals & base ) : Integrals( base ) {};
+  
+  virtual ~m_antiNumu_integral_dxdy() {};
+  
+  ROOT::Math::IBaseFunctionOneDim* Clone() const;
+  
+  void SetVar1 ( double x1 ) { m_x = x1; };
+  
+private:
+  
+  double m_x;
+  
+  double DoEval(double y) const;
+  
+};
+
 //=============================================================================
 
 class m_Nutau_integral_dx : public ROOT::Math::IBaseFunctionOneDim, public Integrals {
@@ -178,6 +220,73 @@ public:
   m_Nutau_integral_dxdydz( Integrals & base ) : Integrals( base ) {};
   
   virtual ~m_Nutau_integral_dxdydz() {};
+  
+  ROOT::Math::IBaseFunctionOneDim* Clone() const;
+  
+  void SetVar1 ( double x1 ) { m_x = x1; };
+  void SetVar2 ( double x2 ) { m_y = x2; };
+    
+private:
+  
+  double m_x;
+  double m_y;
+  
+  double DoEval(double z) const;
+  
+};
+
+// AO nov 2014
+// [ NuTau -> antiNuTau ]
+
+class m_antiNutau_integral_dx : public ROOT::Math::IBaseFunctionOneDim, public Integrals {
+  
+public:
+  
+  m_antiNutau_integral_dx(): Integrals() {};
+  
+  m_antiNutau_integral_dx( Integrals & base ) : Integrals( base ) {};
+  
+  virtual ~m_antiNutau_integral_dx() {};
+  
+  ROOT::Math::IBaseFunctionOneDim* Clone() const;
+  
+  double DoEval(double x) const;
+
+private:
+    
+};
+
+class m_antiNutau_integral_dxdy : public ROOT::Math::IBaseFunctionOneDim, public Integrals {
+  
+public:
+  
+  m_antiNutau_integral_dxdy() : Integrals() {};
+  
+  m_antiNutau_integral_dxdy( Integrals & base ) : Integrals( base ) {};
+  
+  virtual ~m_antiNutau_integral_dxdy() {};
+  
+  ROOT::Math::IBaseFunctionOneDim* Clone() const;
+  
+  void SetVar1 ( double x1 ) { m_x = x1; };
+  
+private:
+  
+  double m_x;
+  
+  double DoEval(double y) const;
+  
+};
+
+class m_antiNutau_integral_dxdydz : public ROOT::Math::IBaseFunctionOneDim, public Integrals {
+  
+public:
+  
+  m_antiNutau_integral_dxdydz() : Integrals() {};
+  
+  m_antiNutau_integral_dxdydz( Integrals & base ) : Integrals( base ) {};
+  
+  virtual ~m_antiNutau_integral_dxdydz() {};
   
   ROOT::Math::IBaseFunctionOneDim* Clone() const;
   
