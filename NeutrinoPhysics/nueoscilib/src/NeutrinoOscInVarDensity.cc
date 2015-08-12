@@ -46,7 +46,12 @@ NeutrinoOscInVarDensity::NeutrinoOscInVarDensity( MixingParameters * mixpars ) :
   m_phi    = std::complex< long double >(1.0, 1.0);
   
   initializeAngles();
-        
+
+  // AO nov 2014
+  // produce a matrix snapshot
+  
+  m_matrix_snapshot = new std::ofstream("matrix_snapshot.log");
+  
 }
 
 //=============================================================================
@@ -72,6 +77,10 @@ NeutrinoOscInVarDensity::~NeutrinoOscInVarDensity() {
   if( m_deltaKr ) delete m_deltaKr;
   
   if( m_VacProb_AtoB ) delete m_VacProb_AtoB;
+  
+  // AO nov 2014
+  m_matrix_snapshot->close();
+  delete m_matrix_snapshot;
   
 } 
 
@@ -217,7 +226,7 @@ void NeutrinoOscInVarDensity::updateMixingMatrix( )
   if ( !isgood ) 
     std::cout << "NeutrinoOscInVarDensity::updateMixingMatrix> warning> inverse of Matrix not found" << std::endl;
   
-  matrix< long double > UxinvU =  prod( (*m_Ur), (*m_invUr) ); //
+  matrix< long double > UxinvU =  prec_prod( (*m_Ur), (*m_invUr) ); //
   
   std::cout << "NeutrinoOscInVarDensity::updateMixingMatrix> " << UxinvU << std::endl;
   
@@ -256,13 +265,13 @@ void NeutrinoOscInVarDensity::Eval_TnuT(  long double x )
   
   // ~T = UTU-1
 
-  matrix< long double > tmp_UT =  prod( (*m_Ur), (*m_Tab) ); // UT
+  matrix< long double > tmp_UT =  prec_prod( (*m_Ur), (*m_Tab) ); // UT
   
-  (*m_UTU) = prod( tmp_UT, (*m_invUr) ); // = ~T = UTU-1
+  (*m_UTU) = prec_prod( tmp_UT, (*m_invUr) ); // = ~T = UTU-1
 
   // ~T2 = ( ~T x ~T)
 
-  (*m_UTUSq) = prod( (*m_UTU), (*m_UTU) ); // 
+  (*m_UTUSq) = prec_prod( (*m_UTU), (*m_UTU) ); // 
 
 }
 
@@ -306,13 +315,13 @@ void NeutrinoOscInVarDensity::Eval_TnuT(  long double x1, long double x2  )
   
   // ~T = UTU-1
 
-  matrix< long double > tmp_UT =  prod( (*m_Ur), (*m_Tab) ); // UT
+  matrix< long double > tmp_UT =  prec_prod( (*m_Ur), (*m_Tab) ); // UT
   
-  (*m_UTU) = prod( tmp_UT, (*m_invUr) ); // = ~T = UTU-1
+  (*m_UTU) = prec_prod( tmp_UT, (*m_invUr) ); // = ~T = UTU-1
   
   // ~T2 = ( ~T x ~T)
   
-  (*m_UTUSq) = prod( (*m_UTU), (*m_UTU) );
+  (*m_UTUSq) = prec_prod( (*m_UTU), (*m_UTU) );
   
   //Tab squared expressions:
   
@@ -505,3 +514,25 @@ void NeutrinoOscInVarDensity::calcVacProbabilities(long double distance)
   
 }
 
+void NeutrinoOscInVarDensity::makeMatrixSnapshot( double energy ) 
+{
+  
+  
+  (*m_matrix_snapshot) << "*" << energy << std::endl;
+  
+  (*m_matrix_snapshot) << "[v_Lambda] "   << (*v_Lambda)  << '\n';
+  (*m_matrix_snapshot) << "[m_Eab] "      << (*m_Eab)     << '\n';
+  (*m_matrix_snapshot) << "[m_Tab] "      << (*m_Tab)     << '\n';
+  (*m_matrix_snapshot) << "[det(m_Tab)]=" << m_c0         << '\n';
+  (*m_matrix_snapshot) << "[m_Ur] "       << (*m_Ur)      << '\n';
+  (*m_matrix_snapshot) << "[m_invUr] "    << (*m_invUr)   << '\n';
+  (*m_matrix_snapshot) << "[m_UTU] "      << (*m_UTU)     << '\n';
+  (*m_matrix_snapshot) << "[m_UTUSq] "    << (*m_UTUSq)   << '\n';
+  (*m_matrix_snapshot) << "[m_Uf] "       << (*m_Uf)      << '\n';
+  (*m_matrix_snapshot) << "[m_Ufd] "      << (*m_Ufd)     << '\n';
+  (*m_matrix_snapshot) << "[m_TabSq] "    << (*m_TabSq)   << '\n';
+  (*m_matrix_snapshot) << "[m_Tmona] "    << (*m_Tmona)   << '\n';
+  (*m_matrix_snapshot) << "[m_T2mona] "   << (*m_T2mona)  << '\n';
+  
+
+}

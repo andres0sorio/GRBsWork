@@ -28,6 +28,7 @@ void makePlots()
   tdrStyle->SetErrorX(0.5);
   tdrStyle->SetPadLeftMargin(0.10);
   tdrStyle->SetPadRightMargin(0.10);
+  tdrStyle->SetPadBottomMargin(0.10);
   tdrStyle->SetLegendBorderSize(0);
   tdrStyle->SetTitleYOffset(0.8);
   tdrStyle->SetOptStat(0);
@@ -47,8 +48,6 @@ void makePlots()
   TString inputFile_ModelA_SetII("ModelA/output_ModelA_SetII_1e17_dCP0.root");
   TString inputFile_ModelB_SetII("ModelB/output_ModelB_SetII_1e17_dCP0.root");
   TString inputFile_ZeroPt_SetII("ZeroPt/output_ZeroPt_SetII_1e17_dCP0.root");
-
-
   
   makePlots("EarthB", "Vacuum", "SetI",
             inputFile_ModelA_SetI.Data(),
@@ -59,42 +58,54 @@ void makePlots()
             inputFile_ModelA_SetII.Data(),
             inputFile_ModelB_SetII.Data(),
             inputFile_ZeroPt_SetII.Data());
-
-  //... These plots are for debugging & understanding
-  //Star -> Vacuum -> (Earth surface)
-
-  makePlots("Vacuum", "ModelX", "SetI",
-            inputFile_ModelA_SetI.Data(),
-            inputFile_ModelB_SetI.Data(),
-            inputFile_ZeroPt_SetI.Data());
   
-  makePlots("Vacuum", "ModelX", "SetII",
-            inputFile_ModelA_SetII.Data(),
-            inputFile_ModelB_SetII.Data(),
-            inputFile_ZeroPt_SetII.Data());
-
-  makePlots("ModelX", "0", "SetI",
-            inputFile_ModelA_SetI.Data(),
-            inputFile_ModelB_SetI.Data(),
-            inputFile_ZeroPt_SetI.Data());
+  if( 0 ) 
+  {
+    
+    
+    //... These plots are for debugging & understanding
+    //Star -> Vacuum -> (Earth surface)
+    
+    makePlots("Vacuum", "ModelX", "SetI",
+              inputFile_ModelA_SetI.Data(),
+              inputFile_ModelB_SetI.Data(),
+              inputFile_ZeroPt_SetI.Data());
+    
+    makePlots("Vacuum", "ModelX", "SetII",
+              inputFile_ModelA_SetII.Data(),
+              inputFile_ModelB_SetII.Data(),
+              inputFile_ZeroPt_SetII.Data());
+    
+    makePlots("ModelX", "0", "SetI",
+              inputFile_ModelA_SetI.Data(),
+              inputFile_ModelB_SetI.Data(),
+              inputFile_ZeroPt_SetI.Data());
+    
+    makePlots("ModelX", "0", "SetII",
+              inputFile_ModelA_SetII.Data(),
+              inputFile_ModelB_SetII.Data(),
+              inputFile_ZeroPt_SetII.Data());
+    
+  }
   
-  makePlots("ModelX", "0", "SetII",
-            inputFile_ModelA_SetII.Data(),
-            inputFile_ModelB_SetII.Data(),
-            inputFile_ZeroPt_SetII.Data());
-
   //... Debuging lambdas - inverted positions 1->3 3->1 - Nov 05/2014
   //... in NeutrinosOscVarDensity.cc
   //... Data generated using jobs 484,491
+  //... Nov 27: those files where delete - nothing changed
+
+  if( 0 ) 
+  {
+    
+    TString inputFile_ModelA_SetI_DBG("ModelA/output_ModelA_SetI_1e17_dCP0_debug.root");
+    TString inputFile_ModelB_SetI_DBG("ModelB/output_ModelB_SetI_1e17_dCP0_debug.root");
+    TString inputFile_ZeroPt_SetI_DBG("ZeroPt/output_ZeroPt_SetI_1e17_dCP0_debug.root");
   
-  TString inputFile_ModelA_SetI_DBG("ModelA/output_ModelA_SetI_1e17_dCP0_debug.root");
-  TString inputFile_ModelB_SetI_DBG("ModelB/output_ModelB_SetI_1e17_dCP0_debug.root");
-  TString inputFile_ZeroPt_SetI_DBG("ZeroPt/output_ZeroPt_SetI_1e17_dCP0_debug.root");
+    makePlots("EarthB", "Vacuum", "SetI",
+              inputFile_ModelA_SetI_DBG.Data(),
+              inputFile_ModelB_SetI_DBG.Data(),
+              inputFile_ZeroPt_SetI_DBG.Data());
   
-  makePlots("EarthB", "Vacuum", "SetI",
-            inputFile_ModelA_SetI_DBG.Data(),
-            inputFile_ModelB_SetI_DBG.Data(),
-            inputFile_ZeroPt_SetI_DBG.Data());
+  }
   
   
 }
@@ -285,10 +296,26 @@ void makePlots( const char * target,
   
   TCanvas * c1 = new TCanvas(target, "Fluxes for different models and falvours", 1483,27,893,992);
   
-  c1->Divide(1,4,small,small); //Referee request
+  c1->Divide(1,5,small,small); //Referee request
+
+  c1->cd(1);
+  gPad->SetPad(0, 0.7600, 0.9999999, 1.0000);
+
+  c1->cd(2);
+  gPad->SetPad(0, 0.5200, 0.9999999, 0.7600);
+  
+  c1->cd(3);
+  gPad->SetPad(0, 0.2800, 0.9999999, 0.5200);
+
+  c1->cd(4);
+  gPad->SetPad(0, 0.0400, 0.9999999, 0.2800);
+  
+  c1->cd(5);
+  gPad->SetPad(0, 0.0000, 0.9999999, 0.0400);
 
   c1->Draw();
   
+
   for( int k=0; k < nGraphs; ++k) 
   {
     
@@ -315,8 +342,12 @@ void makePlots( const char * target,
     
       if ( idxc == 1 )
         gPad->SetBottomMargin(small);
-      else if ( idxc == 4)
+      else if ( idxc == 4) 
+      {
         gPad->SetTopMargin(small);
+        gPad->SetBottomMargin(0.1176);
+      }
+                
       else { }
       
       if ( idxc == 2 || idxc == 3 ) 
@@ -340,10 +371,10 @@ void makePlots( const char * target,
       g1->GetYaxis()->SetNdivisions(503);
       TString yaxis = ((TObjString*)v_Labels->At( idxc-1))->GetString();
       g1->GetYaxis()->SetTitle( yaxis.Data() );
-      g1->GetXaxis()->SetTitle("E_{#nu} (eV)");
+      //g1->GetXaxis()->SetTitle("E_{#nu} (eV)       ");
       
       g1->GetXaxis()->CenterTitle(true); 
-      g1->GetXaxis()->SetLabelOffset(0.007);
+      g1->GetXaxis()->SetLabelOffset(0.005);
       g1->GetXaxis()->SetLabelSize(0.10);
       g1->GetXaxis()->SetTitleSize(0.11);
       g1->GetXaxis()->SetTitleOffset(0.5);
@@ -405,6 +436,13 @@ void makePlots( const char * target,
     idx += 1;
     
   }
+
+  c1->cd(5);
+  
+  TLatex * XTitle = new TLatex(0.46,0.21,"E_{#nu} (eV)");
+  XTitle->SetTextFont(22);
+  XTitle->SetTextSize(0.68);
+  XTitle->Draw();
   
   c1->cd(1);
   TGraph * g1 = (TGraph*)PhiGraphs->At(0);

@@ -309,8 +309,9 @@ void NeutrinosInMediumPaper::GenerateDatapoints(const char * out_model,
         h_paper01[histo11.Data()]->Fill( m_Physics->m_TmDiff + 1001.0L);
 
         h_paper01[histo12.Data()]->Fill( m_Physics->m_T2mDiff + 1002.0L);
-        
-        
+
+        m_Physics->makeMatrixSnapshot( Ex );
+                
       }
       
       m_tree->Fill();
@@ -426,9 +427,9 @@ void NeutrinosInMediumPaper::Propagate(const char * out_model, const char * in_m
     
     m_Physics->setPotential( profA );
 
-    for (Long64_t i=0;i<nentries;i++) {
+    for (Long64_t ientry = 0; ientry < nentries; ientry++) {
       
-      m_input_tree->GetEntry(i);
+      m_input_tree->GetEntry(ientry);
       
       //... we do now the propagation
         

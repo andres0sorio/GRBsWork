@@ -39,7 +39,7 @@ void makePlots()
   tdrStyle->SetFrameLineWidth(2);
   tdrStyle->cd();
   
-  bool PlotSetII = true;
+  bool PlotSetII = false;
   
   TString inputFile_SetI("detection-All-Models-SetI-RvsAlfa.root");
   TString inputFile_SetII("detection-All-Models-SetII-RvsAlfa.root");
@@ -402,7 +402,7 @@ void makePlots( TList      * Variations,
   c1->SaveAs( saveAs.str().c_str() );
   
   saveAs.str("");
-  saveAs << path << model << "/eps/" << "RVsAlfa_" << model << "_" << target << "_" << param << ".eps";
+  saveAs << path << model << "/eps/" << "RvsAlfa_" << model << "_" << target << "_" << param << ".eps";
   c1->SaveAs( saveAs.str().c_str() );
   
   

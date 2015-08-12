@@ -111,12 +111,14 @@ public:
   matrix< std::complex< long double> > * m_Ufd; // A_alfa,beta conjugate
   
   TF1 * f_Ve;
+
+  void makeMatrixSnapshot( double );
   
 protected:
   
 private:
   
-
+  std::ofstream * m_matrix_snapshot;
   
 };
 #endif // NEUTRINOOSCINVARDENSITY_H
